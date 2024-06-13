@@ -110,10 +110,32 @@ const { _data, pending, error, refresh } = await useAsyncData(
 
 
 
-const properties = computed(() => store.properties.map(property => ({
-  ...property,
-  images: property.images.length ? JSON.parse(property.images) : [] // Assuming 'images' is a JSON string of URLs
-})));
+// const properties = computed(() => store.properties.map(property => ({
+//   ...property,
+//   images: property.images.length ? JSON.parse(property.images) : [] // Assuming 'images' is a JSON string of URLs
+// })));
+
+const properties = computed(() => {
+  let filteredProperties = store.properties
+
+  if (showSold.value !== null) {
+    filteredProperties = filteredProperties.filter(property => property.sold === showSold.value)
+  }
+
+  return filteredProperties
+    .sort((a, b) => {
+      // Sort by sold status first (unsold properties first)
+      if (a.sold !== b.sold) {
+        return a.sold - b.sold
+      }
+      // Then sort by creation date (most recent first)
+      return new Date(b.CreatedAt) - new Date(a.CreatedAt)
+    })
+    .map(property => ({
+      ...property,
+      images: property.images.length ? JSON.parse(property.images) : [] // Assuming 'images' is a JSON string of URLs
+    }))
+})
 
 const showModal = ref(false);
 const propertyToDelete = ref(null);
