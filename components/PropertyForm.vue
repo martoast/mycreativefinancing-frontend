@@ -257,9 +257,8 @@ const defaultProperty = {
   nearby_homes: [],
   price_history: [],
   tax_history: [],
+  contact_recipients: [],
   monthly_hoa_fee: null
-
-
 };
 
 
@@ -343,6 +342,7 @@ const fetchPropertyData = async () => {
         property.value.nearby_homes = response._data.nearbyHomes;
         property.value.price_history = response._data.priceHistory;
         property.value.tax_history = response._data.taxHistory;
+        property.value.contact_recipients = response._data.ContactRecipients;
         property.value.monthly_hoa_fee = response._data.monthlyHoaFee;
         // Update other properties as needed
       } else {
@@ -378,7 +378,8 @@ const handleSubmit = async (e) => {
     images: JSON.stringify(property.value.images),
     nearby_homes: JSON.stringify(property.value.nearby_homes),
     price_history: JSON.stringify(property.value.price_history),
-    tax_history: JSON.stringify(property.value.tax_history)
+    tax_history: JSON.stringify(property.value.tax_history),
+    contact_recipients: JSON.stringify(property.value.contact_recipients)
   };
     console.log('Creating new property...', propertyToSubmit);
     await propertiesStore.store({ property: propertyToSubmit });

@@ -125,6 +125,22 @@
             </div>
           </section>
 
+          <!-- Contact Recipients -->
+          <section class="mt-6">
+              <h3 class="text-xl font-semibold text-white">Contact Recipients</h3>
+              <div class="space-y-4 text-base text-white mt-2">
+                <div v-for="recipient in property.contact_recipients" :key="recipient.zuid" class="flex items-center space-x-4">
+                  <img :src="recipient.image_url" :alt="recipient.display_name" class="w-16 h-16 rounded-full object-cover">
+                  <div>
+                    <p class="font-medium">{{ recipient.display_name }}</p>
+                    <p class="text-sm">{{ recipient.badge_type }}</p>
+                    <p class="text-sm">Rating: {{ recipient.rating_average }} ({{ recipient.review_count }} reviews)</p>
+                    <p class="text-sm">Phone: ({{ recipient.phone.areacode }}) {{ recipient.phone.prefix }}-{{ recipient.phone.number }}</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
           <section class="mt-6">
               <h3 class="text-xl font-semibold text-white">Nearby Homes</h3>
               <div class="overflow-x-auto mt-2">
@@ -291,6 +307,7 @@ const property = computed(() => ({
   images: store.property.images.length ? JSON.parse(store.property.images) : [],
   tax_history: store.property.tax_history ? JSON.parse(store.property.tax_history) : [],
   price_history: store.property.price_history ? JSON.parse(store.property.price_history) : [],
+  contact_recipients: store.property.contact_recipients ? JSON.parse(store.property.contact_recipients) : [],
 }))
 
 const isModalOpen = ref(false)
