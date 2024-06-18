@@ -174,6 +174,11 @@
                 max="100"
               >
             </div>
+
+            <div class="col-span-3">
+              <label for="transaction_document_url" class="block text-sm font-medium leading-6">Transaction Document Url</label>
+              <input v-model="property.transaction_document_url" type="text" id="transaction_document_url" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Url">
+            </div>
           
           </div>
 
@@ -258,7 +263,9 @@ const defaultProperty = {
   price_history: [],
   tax_history: [],
   contact_recipients: [],
-  monthly_hoa_fee: null
+  monthly_hoa_fee: null,
+  transaction_document_url: null,
+
 };
 
 
@@ -344,6 +351,8 @@ const fetchPropertyData = async () => {
         property.value.tax_history = response._data.taxHistory;
         property.value.contact_recipients = response._data.ContactRecipients;
         property.value.monthly_hoa_fee = response._data.monthlyHoaFee;
+        property.value.transaction_document_url = response._data.TransactionDocumentUrl;
+        
         // Update other properties as needed
       } else {
         console.error('Response error:', response.status);
