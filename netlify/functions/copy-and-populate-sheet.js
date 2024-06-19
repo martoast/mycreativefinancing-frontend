@@ -115,7 +115,7 @@ exports.handler = async (event, context) => {
       {
         updateCells: {
           start: { sheetId: newSheetId, rowIndex: 17, columnIndex: 3 }, // D18
-          rows: [{ values: [{ userEnteredValue: { numberValue: property.transaction_document_url } }] }],
+          rows: [{ values: [{ userEnteredValue: { stringValue: property.transaction_document_url } }] }],
           fields: 'userEnteredValue'
         }
       }
