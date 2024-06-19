@@ -89,7 +89,7 @@ exports.handler = async (event, context) => {
       {
         updateCells: {
           start: { sheetId: newSheetId, rowIndex: 9, columnIndex: 6 }, // G10
-          rows: [{ values: [{ userEnteredValue: { numberValue: property.interest_rate } }] }],
+          rows: [{ values: [{ userEnteredValue: { numberValue: parseFloat(property.interest_rate) / 100 } }] }],
           fields: 'userEnteredValue'
         }
       },
