@@ -48,10 +48,10 @@ exports.handler = async (event, context) => {
 
     // Step 1: Copy the existing sheet
     const copyResponse = await sheets.spreadsheets.sheets.copyTo({
-      spreadsheetId: '16U8KuQzV2jMaKINl3aZsu7yqPDEhDxtAteiwpALbAtQ', // Replace with your Google Sheet ID
+      spreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc', // Replace with your Google Sheet ID
       sheetId: 0, // Assuming Sheet1 has ID 0, you might need to adjust this
       requestBody: {
-        destinationSpreadsheetId: '16U8KuQzV2jMaKINl3aZsu7yqPDEhDxtAteiwpALbAtQ'
+        destinationSpreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc'
       }
     });
 
@@ -59,7 +59,7 @@ exports.handler = async (event, context) => {
 
     // Step 2: Rename the new sheet
     await sheets.spreadsheets.batchUpdate({
-      spreadsheetId: '16U8KuQzV2jMaKINl3aZsu7yqPDEhDxtAteiwpALbAtQ',
+      spreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc',
       requestBody: {
         requests: [
           {
@@ -79,36 +79,50 @@ exports.handler = async (event, context) => {
     const requests = [
       {
         updateCells: {
-          start: { sheetId: newSheetId, rowIndex: 2, columnIndex: 3 }, // D3
+          start: { sheetId: newSheetId, rowIndex: 2, columnIndex: 1 }, // B3
           rows: [{ values: [{ userEnteredValue: { stringValue: property.address } }] }],
           fields: 'userEnteredValue'
         }
       },
       {
         updateCells: {
-          start: { sheetId: newSheetId, rowIndex: 9, columnIndex: 3 }, // D10
+          start: { sheetId: newSheetId, rowIndex: 9, columnIndex: 6 }, // G10
           rows: [{ values: [{ userEnteredValue: { numberValue: property.interest_rate } }] }],
           fields: 'userEnteredValue'
         }
       },
       {
         updateCells: {
-          start: { sheetId: newSheetId, rowIndex: 11, columnIndex: 3 }, // D12
+          start: { sheetId: newSheetId, rowIndex: 10, columnIndex: 6 }, // G11
+          rows: [{ values: [{ userEnteredValue: { numberValue: property.price } }] }],
+          fields: 'userEnteredValue'
+        }
+      },
+      {
+        updateCells: {
+          start: { sheetId: newSheetId, rowIndex: 11, columnIndex: 6 }, // G12
           rows: [{ values: [{ userEnteredValue: { numberValue: property.balance_to_close } }] }],
           fields: 'userEnteredValue'
         }
       },
       {
         updateCells: {
-          start: { sheetId: newSheetId, rowIndex: 12, columnIndex: 3 }, // D13
+          start: { sheetId: newSheetId, rowIndex: 12, columnIndex: 6 }, // G13
           rows: [{ values: [{ userEnteredValue: { numberValue: property.monthly_holding_cost } }] }],
+          fields: 'userEnteredValue'
+        }
+      },
+      {
+        updateCells: {
+          start: { sheetId: newSheetId, rowIndex: 17, columnIndex: 3 }, // D18
+          rows: [{ values: [{ userEnteredValue: { numberValue: property.transaction_document_url } }] }],
           fields: 'userEnteredValue'
         }
       }
     ];
 
     await sheets.spreadsheets.batchUpdate({
-      spreadsheetId: '16U8KuQzV2jMaKINl3aZsu7yqPDEhDxtAteiwpALbAtQ',
+      spreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc',
       requestBody: {
         requests: requests
       }
