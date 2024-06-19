@@ -172,7 +172,7 @@ const deleteProperty = async (property) => {
 const createNetSheet = async (property) => {
   data.loading = true;
   let propertyToSubmit = {
-    ...property.value,
+    ...propertySelected.value,
   }
 
   await sendWebHook(propertyToSubmit)
