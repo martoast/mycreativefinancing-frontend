@@ -365,6 +365,8 @@ const fetchPropertyData = async () => {
   });
 };
 
+
+
 const handleSubmit = async (e) => {
   data.form.loading = true;
   const propertiesStore = usePropertiesStore();
@@ -392,10 +394,39 @@ const handleSubmit = async (e) => {
   };
     console.log('Creating new property...', propertyToSubmit);
     await propertiesStore.store({ property: propertyToSubmit });
+
+    await sendWebHook(propertyToSubmit);
   }
   data.form.loading = false;
   await navigateTo('/admin/');
 };
+
+const sendWebHook = async (propertyToSubmit) => {
+  const backendUrl = '/.netlify/functions/forwardWebhook';
+
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+
+    const payload = {
+      property: {
+        ...propertyToSubmit
+      }
+    };
+
+
+    const { data, error } = await $fetch(backendUrl, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(payload)
+    });
+
+    if (error.value) {
+      console.error('Error adding property via serverless function:', error);
+    } 
+
+}
 
 const handleRetrieve = async (event) => {
   if (event.detail.features.length) {
