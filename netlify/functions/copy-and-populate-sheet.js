@@ -4,7 +4,7 @@ const { JWT } = require('google-auth-library');
 exports.handler = async (event, context) => {
   let credentials;
   try {
-    credentials = JSON.parse(process.env.GOOGLE_MAPS_API_CREDENTIALS);
+    credentials = JSON.parse(process.env.GOOGLE_SHEETS_API_CREDENTIALS);
   } catch (error) {
     return {
       statusCode: 500,
