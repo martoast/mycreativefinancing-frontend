@@ -349,7 +349,7 @@ const fetchPropertyData = async () => {
         property.value.nearby_homes = response._data.nearbyHomes;
         property.value.price_history = response._data.priceHistory;
         property.value.tax_history = response._data.taxHistory;
-        property.value.contact_recipients = response._data.ContactRecipients;
+        property.value.contact_recipients = response._data.contact_recipients;
         property.value.monthly_hoa_fee = response._data.monthlyHoaFee;
         property.value.transaction_document_url = response._data.TransactionDocumentUrl;
         

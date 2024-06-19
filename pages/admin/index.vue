@@ -34,8 +34,8 @@
                   <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6"> </th>
                 </tr>
               </thead>
-              <tbody v-if="properties.length" class="divide-y divide-gray-200 bg-white">
-                <tr v-for="property in properties" :key="property.ID">
+              <tbody v-if="store.properties.length" class="divide-y divide-gray-200 bg-white">
+                <tr v-for="property in store.properties" :key="property.ID">
                   
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ property.address }}</td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" :class="property.sold ? 'text-red-700' : 'text-green-300'">{{ property.sold ? "Sold" : "Available" }}</td>
@@ -106,36 +106,6 @@ const { _data, pending, error, refresh } = await useAsyncData(
   () => store.get(currentPage.value, itemsPerPage, showSold.value)
 )
 
-
-
-
-
-// const properties = computed(() => store.properties.map(property => ({
-//   ...property,
-//   images: property.images.length ? JSON.parse(property.images) : [] // Assuming 'images' is a JSON string of URLs
-// })));
-
-const properties = computed(() => {
-  let filteredProperties = store.properties
-
-  if (showSold.value !== null) {
-    filteredProperties = filteredProperties.filter(property => property.sold === showSold.value)
-  }
-
-  return filteredProperties
-    .sort((a, b) => {
-      // Sort by sold status first (unsold properties first)
-      if (a.sold !== b.sold) {
-        return a.sold - b.sold
-      }
-      // Then sort by creation date (most recent first)
-      return new Date(b.CreatedAt) - new Date(a.CreatedAt)
-    })
-    .map(property => ({
-      ...property,
-      images: property.images.length ? JSON.parse(property.images) : [] // Assuming 'images' is a JSON string of URLs
-    }))
-})
 
 const showModal = ref(false);
 const propertyToDelete = ref(null);
