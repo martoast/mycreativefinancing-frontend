@@ -1,11 +1,21 @@
 const { google } = require('googleapis');
+const { JWT } = require('google-auth-library');
 
 exports.handler = async (event, context) => {
-  const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
+  const credentials = JSON.parse(process.env.GOOGLE_SHEETS_CREDENTIALS);
   const spreadsheetId = '16U8KuQzV2jMaKINl3aZsu7yqPDEhDxtAteiwpALbAtQ'; // Replace with your Google Sheet ID
 
+  const jwtClient = new JWT(
+    credentials.client_email,
+    null,
+    credentials.private_key.replace(/\\n/g, '\n'),
+    ['https://www.googleapis.com/auth/spreadsheets']
+  );
+
   try {
-    const sheets = google.sheets({ version: 'v4', auth: apiKey });
+    await jwtClient.authorize();
+
+    const sheets = google.sheets({ version: 'v4', auth: jwtClient });
     const requestBody = JSON.parse(event.body);
     const property = requestBody.property;
 
