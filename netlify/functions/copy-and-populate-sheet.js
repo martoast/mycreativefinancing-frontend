@@ -43,8 +43,10 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Generate a new sheet name using the property address
-    const newSheetName = 'NET SHEET: ' + property.address;
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+
+    const newSheetName = `NET SHEET: ${property.address} ${formattedDate}`;
 
     // Step 1: Copy the existing sheet
     const copyResponse = await sheets.spreadsheets.sheets.copyTo({
@@ -94,7 +96,7 @@ exports.handler = async (event, context) => {
       {
         updateCells: {
           start: { sheetId: newSheetId, rowIndex: 10, columnIndex: 6 }, // G11
-          rows: [{ values: [{ userEnteredValue: { numberValue: property.price } }] }],
+          rows: [{ values: [{ userEnteredValue: { numberValue: property.purchase_price } }] }],
           fields: 'userEnteredValue'
         }
       },
