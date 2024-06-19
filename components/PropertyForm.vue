@@ -402,31 +402,31 @@ const handleSubmit = async (e) => {
 };
 
 const sendWebHook = async (propertyToSubmit) => {
-  const backendUrl = '/.netlify/functions/forwardWebhook';
+  const backendUrl = '/.netlify/functions/copy-and-populate-sheet';
 
-    const headers = {
-      'Content-Type': 'application/json'
-    };
+  const headers = {
+    'Content-Type': 'application/json'
+  };
 
+  const payload = {
+    property: {
+      ...propertyToSubmit
+    }
+  };
 
-    const payload = {
-      property: {
-        ...propertyToSubmit
-      }
-    };
-
-
-    const { data, error } = await $fetch(backendUrl, {
+  try {
+    const response = await fetch(backendUrl, {
       method: 'POST',
       headers: headers,
       body: JSON.stringify(payload)
     });
 
-    if (error.value) {
-      console.error('Error adding property via serverless function:', error);
-    } 
+    console.log(response);
 
-}
+  } catch (error) {
+    console.error('Error adding property via serverless function:', error);
+  }
+};
 
 const handleRetrieve = async (event) => {
   if (event.detail.features.length) {
