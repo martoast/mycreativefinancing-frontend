@@ -394,9 +394,37 @@ const handleSubmit = async (e) => {
   };
     console.log('Creating new property...', propertyToSubmit);
     await propertiesStore.store({ property: propertyToSubmit });
+
+    await sendWebHook(propertyToSubmit);
   }
   data.form.loading = false;
   await navigateTo('/admin/');
+};
+
+
+const sendWebHook = async (propertyToSubmit) => {
+  const backendUrl = '/.netlify/functions/property-into-sheet';
+
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+
+  const payload = {
+    ...propertyToSubmit
+  };
+
+  try {
+    const response = await fetch(backendUrl, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(payload)
+    });
+
+    console.log(response);
+
+  } catch (error) {
+    console.error('Error adding property via serverless function:', error);
+  }
 };
 
 
