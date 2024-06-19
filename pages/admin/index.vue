@@ -47,6 +47,7 @@
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <a :href="'/admin/' + property.ID + '/edit'" class="text-indigo-600 hover:text-indigo-900 mr-6">Edit</a>
                     <button @click="openDeleteModal(property)" class="text-red-600 hover:text-red-800">Delete</button>
+                    <button @click="openNetSheetModal(property)" class="text-green-400 hover:text-green-600" style="margin-left: 1rem;">NetSheet</button>
                   </td>
                 </tr>
               </tbody>
@@ -78,7 +79,10 @@
           Next
         </button>
       </div>
-    <ConfirmationModal v-if="showModal" :property="propertyToDelete" :loading="data.loading" @confirm="deleteProperty" @cancel="hideModal"/>
+    <ConfirmationModal v-if="showModal" :property="propertySelected" :loading="data.loading" @confirm="deleteProperty" @cancel="hideModal"/>
+    
+    <NetSheetModal v-if="showNetSheetModal" :property="propertySelected" :loading="data.loading" @confirmCreateNetSheet="createNetSheet" @cancel="hideNetSheetModal"/>
+
   </div>
 
   </div>
@@ -108,7 +112,8 @@ const { _data, pending, error, refresh } = await useAsyncData(
 
 
 const showModal = ref(false);
-const propertyToDelete = ref(null);
+const showNetSheetModal = ref(false);
+const propertySelected = ref(null);
 
 const data = reactive({
   loading: false,
@@ -117,8 +122,15 @@ const data = reactive({
 
 function hideModal() {
   showModal.value = false;
-  propertyToDelete.value = null;
+  propertySelected.value = null;
 }
+
+function hideNetSheetModal() {
+  showNetSheetModal.value = false;
+  propertySelected.value = null;
+}
+
+
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
@@ -135,9 +147,15 @@ const prevPage = () => {
 }
 
 function openDeleteModal(property) {
-  console.log("setting delete property");
-  propertyToDelete.value = property;
+  console.log("setting selected for deleted property");
+  propertySelected.value = property;
   showModal.value = true;
+}
+
+function openNetSheetModal(property) {
+  console.log("setting selected property");
+  propertySelected.value = property;
+  showNetSheetModal.value = true;
 }
 
 const deleteProperty = async (property) => {
@@ -148,7 +166,47 @@ const deleteProperty = async (property) => {
   refresh();
   data.loading = false;
   showModal.value = false;
-  propertyToDelete.value = null;
+  propertySelected.value = null;
+};
+
+const createNetSheet = async (property) => {
+  data.loading = true;
+  let propertyToSubmit = {
+    ...property.value,
+  }
+
+  await sendWebHook(propertyToSubmit)
+  data.loading = false;
+  showNetSheetModal.value = false;
+  propertySelected.value = null;
+
+}
+
+const sendWebHook = async (propertyToSubmit) => {
+  const backendUrl = '/.netlify/functions/copy-and-populate-sheet';
+
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+
+  const payload = {
+    property: {
+      ...propertyToSubmit
+    }
+  };
+
+  try {
+    const response = await fetch(backendUrl, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(payload)
+    });
+
+    console.log(response);
+
+  } catch (error) {
+    console.error('Error adding property via serverless function:', error);
+  }
 };
 
 function formatCurrency(value) {
