@@ -2,8 +2,15 @@ const { google } = require('googleapis');
 const { JWT } = require('google-auth-library');
 
 exports.handler = async (event, context) => {
-  const credentials = JSON.parse(process.env.GOOGLE_SHEETS_CREDENTIALS);
-  const spreadsheetId = '16U8KuQzV2jMaKINl3aZsu7yqPDEhDxtAteiwpALbAtQ'; // Replace with your Google Sheet ID
+  let credentials;
+  try {
+    credentials = JSON.parse(process.env.GOOGLE_MAPS_API_CREDENTIALS);
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Error parsing GOOGLE_MAPS_API_CREDENTIALS', details: error.message })
+    };
+  }
 
   const jwtClient = new JWT(
     credentials.client_email,
