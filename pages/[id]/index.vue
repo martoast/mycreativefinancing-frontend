@@ -133,9 +133,9 @@
                   <img :src="recipient.image_url" :alt="recipient.display_name" class="w-16 h-16 rounded-full object-cover">
                   <div>
                     <p class="font-medium">{{ recipient.display_name }}</p>
-                    <p class="text-sm">{{ recipient.badge_type }}</p>
-                    <p class="text-sm">Rating: {{ recipient.rating_average }} ({{ recipient.review_count }} reviews)</p>
+                    
                     <p class="text-sm">Phone: ({{ recipient.phone.areacode }}) {{ recipient.phone.prefix }}-{{ recipient.phone.number }}</p>
+                    <p v-if="recipient.email" class="text-sm">Email: {{ recipient.email }}</p>
                   </div>
                 </div>
               </div>

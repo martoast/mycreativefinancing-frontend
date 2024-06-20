@@ -146,6 +146,27 @@
             <button @click.prevent="addImage" type="button" class="mt-2 text-indigo-500 hover:text-indigo-700">Add Image URL</button>
           </div>
 
+          <!-- Dynamic Contact Recipients Fields -->
+          <div class="col-span-full">
+            <label for="contact_recipients" class="block text-sm font-medium leading-6">Contact Recipients</label>
+            <div v-for="(recipient, index) in property.contact_recipients" :key="index" class="flex flex-col space-y-2 mb-4">
+              <div class="flex space-x-2">
+                <input v-model="recipient.display_name" type="text" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Display Name">
+              </div>
+              <div class="flex space-x-2">
+                <input v-model="recipient.email" type="email" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Email">
+              </div>
+              <div class="flex space-x-2">
+                <input v-model="recipient.phone.prefix" type="text" class="block w-1/4 border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Phone Prefix">
+                <input v-model="recipient.phone.areacode" type="text" class="block w-1/4 border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Area Code">
+                <input v-model="recipient.phone.number" type="text" class="block w-1/2 border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Phone Number">
+              </div>
+              <input v-model="recipient.image_url" type="text" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Image URL">
+              <button @click.prevent="removeContactRecipient(index)" type="button" class="text-red-500 hover:text-red-700">Remove Recipient</button>
+            </div>
+            <button @click.prevent="addContactRecipient" type="button" class="mt-2 text-indigo-500 hover:text-indigo-700">Add Contact Recipient</button>
+          </div>
+
           <div class="sm:col-span-3">
               <label for="purchase_price" class="block text-sm font-medium leading-6">Purchase Price</label>
               <input v-model="property.purchase_price" type="number" id="purchase_price" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Purchase Price">
@@ -274,6 +295,8 @@ const property = ref({ ...defaultProperty });
 onMounted(() => {
   if (props.property) {
     property.value = { ...props.property };
+    
+    // Parsing images
     if (typeof property.value.images === 'string') {
       try {
         property.value.images = JSON.parse(property.value.images);
@@ -282,6 +305,18 @@ onMounted(() => {
         }
       } catch (error) {
         property.value.images = [];
+      }
+    }
+
+    // Parsing contact_recipients
+    if (typeof property.value.contact_recipients === 'string') {
+      try {
+        property.value.contact_recipients = JSON.parse(property.value.contact_recipients);
+        if (!Array.isArray(property.value.contact_recipients)) {
+          property.value.contact_recipients = [];
+        }
+      } catch (error) {
+        property.value.contact_recipients = [];
       }
     }
   }
@@ -377,6 +412,7 @@ const handleSubmit = async (e) => {
     let propertyToSubmit = {
     ...property.value,
     images: JSON.stringify(property.value.images),
+    contact_recipients: JSON.stringify(property.value.contact_recipients)
   };
     console.log('Updating property...', propertyToSubmit);
     await propertiesStore.store({ property: propertyToSubmit });
@@ -511,6 +547,21 @@ const addImage = () => {
 
 const removeImage = (index) => {
   property.value.images.splice(index, 1);
+};
+
+const addContactRecipient = () => {
+  property.value.contact_recipients.push({
+    display_name: '',
+    zuid: '',
+    badge_type: '',
+    phone: '',
+    email: '',
+    image_url: ''
+  });
+};
+
+const removeContactRecipient = (index) => {
+  property.value.contact_recipients.splice(index, 1);
 };
 
 
