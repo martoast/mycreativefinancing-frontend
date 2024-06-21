@@ -43,78 +43,26 @@ exports.handler = async (event, context) => {
       };
     }
 
-    const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0];
+    const spreadsheetId = '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU'; // Replace with your Google Sheet ID
+    const sheetId = 0; // Assuming you want to write to the first sheet
 
-    const newSheetName = `${property.address} ${formattedDate}`;
-
-    // Step 1: Copy the existing sheet
-    const copyResponse = await sheets.spreadsheets.sheets.copyTo({
-      spreadsheetId: '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU', // Replace with your Google Sheet ID
-      sheetId: 0, // Assuming Sheet1 has ID 0, you might need to adjust this
-      requestBody: {
-        destinationSpreadsheetId: '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU'
-      }
+    // Get the current data from the sheet
+    const sheetData = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: 'Sheet1!A1:Z1'
     });
 
-    const newSheetId = copyResponse.data.sheetId;
-
-    // Step 2: Rename the new sheet
-    await sheets.spreadsheets.batchUpdate({
-      spreadsheetId: '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU',
-      requestBody: {
-        requests: [
-          {
-            updateSheetProperties: {
-              properties: {
-                sheetId: newSheetId,
-                title: newSheetName
-              },
-              fields: 'title'
-            }
-          }
-        ]
-      }
-    });
-
-    // Step 3: Ensure the new sheet has enough columns
     const headers = Object.keys(property);
-    const maxColumnIndex = headers.length;
-
-    // Get the current number of columns in the sheet
-    const sheetInfo = await sheets.spreadsheets.get({
-      spreadsheetId: '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU',
-      ranges: [],
-      includeGridData: false
-    });
-
-    const currentSheet = sheetInfo.data.sheets.find(sheet => sheet.properties.sheetId === newSheetId);
-    const currentColumnCount = currentSheet.properties.gridProperties.columnCount;
-
-    if (maxColumnIndex > currentColumnCount) {
-      await sheets.spreadsheets.batchUpdate({
-        spreadsheetId: '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU',
-        requestBody: {
-          requests: [
-            {
-              appendDimension: {
-                sheetId: newSheetId,
-                dimension: 'COLUMNS',
-                length: maxColumnIndex - currentColumnCount
-              }
-            }
-          ]
-        }
-      });
-    }
-
-    // Step 4: Populate the new sheet with the provided data
+    const headerRow = sheetData.data.values ? sheetData.data.values[0] : [];
     const values = headers.map(header => property[header]);
 
-    const requests = [
-      {
+    const requests = [];
+
+    // Step 1: If the header row doesn't exist, write it
+    if (headerRow.length === 0) {
+      requests.push({
         updateCells: {
-          start: { sheetId: newSheetId, rowIndex: 0, columnIndex: 0 },
+          start: { sheetId, rowIndex: 0, columnIndex: 0 },
           rows: [{
             values: headers.map(header => ({
               userEnteredValue: { stringValue: header }
@@ -122,35 +70,38 @@ exports.handler = async (event, context) => {
           }],
           fields: 'userEnteredValue'
         }
-      },
-      {
-        updateCells: {
-          start: { sheetId: newSheetId, rowIndex: 1, columnIndex: 0 },
-          rows: [{
-            values: values.map(value => ({
-              userEnteredValue: { stringValue: typeof value === 'object' ? JSON.stringify(value) : String(value) }
-            }))
-          }],
-          fields: 'userEnteredValue'
-        }
+      });
+    }
+
+    // Step 2: Write the data to the next available row
+    const rowCount = sheetData.data.values ? sheetData.data.values.length : 0;
+    requests.push({
+      updateCells: {
+        start: { sheetId, rowIndex: rowCount, columnIndex: 0 },
+        rows: [{
+          values: values.map(value => ({
+            userEnteredValue: { stringValue: typeof value === 'object' ? JSON.stringify(value) : String(value) }
+          }))
+        }],
+        fields: 'userEnteredValue'
       }
-    ];
+    });
 
     await sheets.spreadsheets.batchUpdate({
-      spreadsheetId: '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU',
+      spreadsheetId,
       requestBody: {
-        requests: requests
+        requests
       }
     });
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Sheet copied, renamed, and populated successfully', newSheetName })
+      body: JSON.stringify({ message: 'Data written to sheet successfully' })
     };
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Error copying, renaming, and populating sheet', details: error.message })
+      body: JSON.stringify({ error: 'Error writing to sheet', details: error.message })
     };
   }
 };
