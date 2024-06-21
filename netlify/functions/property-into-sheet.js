@@ -59,7 +59,6 @@ exports.handler = async (event, context) => {
     const currentSheet = sheetInfo.data.sheets[0]; // Accessing the first sheet
     const currentColumnCount = currentSheet.properties.gridProperties.columnCount;
 
-
     // Ensure the sheet has enough columns
     if (headers.length > currentColumnCount) {
       await sheets.spreadsheets.batchUpdate({
@@ -81,27 +80,12 @@ exports.handler = async (event, context) => {
     // Get the current data from the sheet
     const sheetData = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: 'Sheet1!A1:Z1'
+      range: 'Sheet1!A1:1' // Check the first row for headers
     });
 
     const headerRow = sheetData.data.values ? sheetData.data.values[0] : [];
 
     const requests = [];
-
-    // If the header row doesn't exist, write it
-    if (headerRow.length === 0) {
-      requests.push({
-        updateCells: {
-          start: { sheetId, rowIndex: 0, columnIndex: 0 },
-          rows: [{
-            values: headers.map(header => ({
-              userEnteredValue: { stringValue: header }
-            }))
-          }],
-          fields: 'userEnteredValue'
-        }
-      });
-    }
 
     // Write the data to the next available row
     const rowCount = sheetData.data.values ? sheetData.data.values.length : 0;
