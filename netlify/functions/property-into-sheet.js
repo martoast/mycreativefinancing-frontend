@@ -46,19 +46,48 @@ exports.handler = async (event, context) => {
     const spreadsheetId = '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU'; // Replace with your Google Sheet ID
     const sheetId = 0; // Assuming you want to write to the first sheet
 
+    const headers = Object.keys(property);
+    const values = headers.map(header => property[header]);
+
+    // Get the current number of columns in the sheet
+    const sheetInfo = await sheets.spreadsheets.get({
+      spreadsheetId,
+      ranges: [],
+      includeGridData: false
+    });
+
+    const currentSheet = sheetInfo.data.sheets.find(sheet => sheet.properties.sheetId === sheetId);
+    const currentColumnCount = currentSheet.properties.gridProperties.columnCount;
+
+    // Ensure the sheet has enough columns
+    if (headers.length > currentColumnCount) {
+      await sheets.spreadsheets.batchUpdate({
+        spreadsheetId,
+        requestBody: {
+          requests: [
+            {
+              appendDimension: {
+                sheetId,
+                dimension: 'COLUMNS',
+                length: headers.length - currentColumnCount
+              }
+            }
+          ]
+        }
+      });
+    }
+
     // Get the current data from the sheet
     const sheetData = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range: 'Sheet1!A1:Z1'
     });
 
-    const headers = Object.keys(property);
     const headerRow = sheetData.data.values ? sheetData.data.values[0] : [];
-    const values = headers.map(header => property[header]);
 
     const requests = [];
 
-    // Step 1: If the header row doesn't exist, write it
+    // If the header row doesn't exist, write it
     if (headerRow.length === 0) {
       requests.push({
         updateCells: {
@@ -73,7 +102,7 @@ exports.handler = async (event, context) => {
       });
     }
 
-    // Step 2: Write the data to the next available row
+    // Write the data to the next available row
     const rowCount = sheetData.data.values ? sheetData.data.values.length : 0;
     requests.push({
       updateCells: {
