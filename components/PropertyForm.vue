@@ -446,7 +446,7 @@ const sendWebHook = async (propertyToSubmit) => {
   };
 
   const payload = {
-    ...propertyToSubmit
+    property: propertyToSubmit
   };
 
   try {
