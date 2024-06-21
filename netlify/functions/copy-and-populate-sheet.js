@@ -120,13 +120,6 @@ exports.handler = async (event, context) => {
           rows: [{ values: [{ userEnteredValue: { stringValue: property.transaction_document_url } }] }],
           fields: 'userEnteredValue'
         }
-      },
-      {
-        updateCells: {
-          start: { sheetId: newSheetId, rowIndex: 10, columnIndex: 3 }, // D11
-          rows: [{ values: [{ userEnteredValue: { numberValue: property.purchase_price } }] }],
-          fields: 'userEnteredValue'
-        }
       }
     ];
 
