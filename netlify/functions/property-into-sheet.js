@@ -56,8 +56,9 @@ exports.handler = async (event, context) => {
       includeGridData: false
     });
 
-    const currentSheet = sheetInfo.data.sheets.find(sheet => sheet.properties.sheetId === sheetId);
+    const currentSheet = sheetInfo.data.sheets[0]; // Accessing the first sheet
     const currentColumnCount = currentSheet.properties.gridProperties.columnCount;
+
 
     // Ensure the sheet has enough columns
     if (headers.length > currentColumnCount) {
