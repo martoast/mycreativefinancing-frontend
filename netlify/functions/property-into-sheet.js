@@ -77,17 +77,17 @@ exports.handler = async (event, context) => {
       });
     }
 
-    // Step 3: Get the current data from the sheet
+    // Get the current data from the sheet
     const sheetData = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: 'Sheet1!A1:1' // Check the first row for headers
+      range: 'Sheet1!A1:Z1'
     });
 
     const headerRow = sheetData.data.values ? sheetData.data.values[0] : [];
 
     const requests = [];
 
-    // Step 4: If the header row doesn't exist, write it
+    // If the header row doesn't exist, write it
     if (headerRow.length === 0) {
       requests.push({
         updateCells: {
