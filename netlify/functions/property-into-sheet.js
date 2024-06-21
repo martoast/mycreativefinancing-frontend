@@ -77,8 +77,38 @@ exports.handler = async (event, context) => {
       }
     });
 
-    // Step 3: Populate the new sheet with the provided data
+    // Step 3: Ensure the new sheet has enough columns
     const headers = Object.keys(property);
+    const maxColumnIndex = headers.length;
+
+    // Get the current number of columns in the sheet
+    const sheetInfo = await sheets.spreadsheets.get({
+      spreadsheetId: '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU',
+      ranges: [],
+      includeGridData: false
+    });
+
+    const currentSheet = sheetInfo.data.sheets.find(sheet => sheet.properties.sheetId === newSheetId);
+    const currentColumnCount = currentSheet.properties.gridProperties.columnCount;
+
+    if (maxColumnIndex > currentColumnCount) {
+      await sheets.spreadsheets.batchUpdate({
+        spreadsheetId: '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU',
+        requestBody: {
+          requests: [
+            {
+              appendDimension: {
+                sheetId: newSheetId,
+                dimension: 'COLUMNS',
+                length: maxColumnIndex - currentColumnCount
+              }
+            }
+          ]
+        }
+      });
+    }
+
+    // Step 4: Populate the new sheet with the provided data
     const values = headers.map(header => property[header]);
 
     const requests = [
