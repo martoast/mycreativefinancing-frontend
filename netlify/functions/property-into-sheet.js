@@ -80,7 +80,7 @@ exports.handler = async (event, context) => {
     // Get the current data from the sheet
     const sheetData = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: 'Sheet1!A1:1' // Check the first row for headers
+      range: 'main!A1:1' // Check the first row for headers
     });
 
     const headerRow = sheetData.data.values ? sheetData.data.values[0] : [];
