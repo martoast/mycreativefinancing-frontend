@@ -44,7 +44,6 @@ exports.handler = async (event, context) => {
     }
 
     const spreadsheetId = '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU'; // Replace with your Google Sheet ID
-    const sheetId = 0; // Assuming you want to write to the first sheet
 
     const headers = Object.keys(property);
     const values = headers.map(header => property[header]);
@@ -56,7 +55,14 @@ exports.handler = async (event, context) => {
       includeGridData: false
     });
 
-    const currentSheet = sheetInfo.data.sheets[0]; // Accessing the first sheet
+    const currentSheet = sheetInfo.data.sheets.find(sheet => sheet.properties.title === "main");
+    if (!currentSheet) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'Sheet "main" not found' })
+      };
+    }
+    const sheetId = currentSheet.properties.sheetId;
     const currentColumnCount = currentSheet.properties.gridProperties.columnCount;
 
     // Ensure the sheet has enough columns
