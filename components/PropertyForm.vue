@@ -200,6 +200,31 @@
               <label for="transaction_document_url" class="block text-sm font-medium leading-6">Transaction Document Url</label>
               <input v-model="property.transaction_document_url" type="text" id="transaction_document_url" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Url">
             </div>
+
+            <!-- Escrow -->
+            <div class="sm:col-span-3">
+              <label for="escrow" class="block text-sm font-medium leading-6">Escrow</label>
+              <input v-model="property.escrow" type="number" step="0.01" id="escrow" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Escrow in USD">
+            </div>
+
+            <!-- Deal Holder -->
+            <div class="sm:col-span-3">
+              <label for="deal_holder" class="block text-sm font-medium leading-6">Deal Holder</label>
+              <input v-model="property.deal_holder" type="text" id="deal_holder" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Deal Holder">
+            </div>
+
+            <!-- In House Deal -->
+            <div class="sm:col-span-3 flex items-center">
+              <input v-model="property.in_house_deal" type="checkbox" id="in_house_deal" class="mr-2">
+              <label for="in_house_deal" class="block text-sm font-medium leading-6">In House Deal</label>
+            </div>
+
+            <!-- Rental Restriction -->
+            <div class="sm:col-span-3 flex items-center">
+              <input v-model="property.rental_restriction" type="checkbox" id="rental_restriction" class="mr-2">
+              <label for="rental_restriction" class="block text-sm font-medium leading-6">Rental Restriction</label>
+            </div>
+
           
           </div>
 
@@ -286,6 +311,10 @@ const defaultProperty = {
   contact_recipients: [],
   monthly_hoa_fee: null,
   transaction_document_url: null,
+  escrow: null,
+  deal_holder: '',
+  in_house_deal: false,
+  rental_restriction: false,
 
 };
 

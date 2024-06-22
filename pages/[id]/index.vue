@@ -97,6 +97,11 @@
                 <p><span class="font-medium">Year Built:</span> {{ property.year_built ?? 'N/A' }}</p>
                 <p><span class="font-medium">Lot Size:</span> {{ property.lot_size ?? 'N/A' }}</p>
                 <p><span class="font-medium">Living Area:</span> {{ property.living_area ?? 'N/A' }}</p>
+                <!-- New Fields -->
+    <p><span class="font-medium">Escrow:</span> {{ property.escrow ? formatCurrency(property.escrow) : 'N/A' }}</p>
+    <p><span class="font-medium">Deal Holder:</span> {{ property.deal_holder ?? 'N/A' }}</p>
+    <p><span class="font-medium">In House Deal:</span> {{ property.in_house_deal ? 'Yes' : 'No' }}</p>
+    <p><span class="font-medium">Rental Restriction:</span> {{ property.rental_restriction ? 'Yes' : 'No' }}</p>
               </div>
             </section>
 
