@@ -458,9 +458,15 @@ const handleSubmit = async (e) => {
     contact_recipients: JSON.stringify(property.value.contact_recipients)
   };
     console.log('Creating new property...', propertyToSubmit);
-    await propertiesStore.store({ property: propertyToSubmit });
+    let response = await propertiesStore.store({ property: propertyToSubmit });
 
-    await sendWebHook(propertyToSubmit);
+    let parsedResponse = JSON.parse(response);
+    let propertyID = parsedResponse.ID;
+
+    await sendWebHook({
+      ID: propertyID,
+      ...propertyToSubmit
+    });
   }
   data.form.loading = false;
   await navigateTo('/admin/');
