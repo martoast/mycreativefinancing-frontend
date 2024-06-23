@@ -199,6 +199,11 @@
               <input v-model="property.transaction_document_url" type="text" id="transaction_document_url" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Url">
             </div>
 
+            <div class="col-span-3">
+              <label for="benefit_sheet_url" class="block text-sm font-medium leading-6">Benefit Sheet Url</label>
+              <input v-model="property.benefit_sheet_url" type="text" id="benefit_sheet_url" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Url">
+            </div>
+
             <!-- Escrow -->
             <div class="sm:col-span-3">
               <label for="escrow" class="block text-sm font-medium leading-6">Escrow</label>
@@ -309,6 +314,7 @@ const defaultProperty = {
   contact_recipients: [{"agent_reason":1,"zpro":null,"recent_sales":0,"review_count":0,"display_name":"Rahul Valecha","zuid":"X1-ZUtp0k7oy516o9_7rj5o","rating_average":0,"badge_type":"Premier Agent","phone":{"prefix":"","areacode":"682","number":"375-1867"},"image_url":"https://drscdn.500px.org/photo/1095517488/q%3D50_w%3D1000_of%3D1/v2?sig=846ed9856973e0fa1d074bd15553dd91fc55124257c6af4cbde5e44852f9c91c","email":"sales@mycreativesolutions.com"}],
   monthly_hoa_fee: null,
   transaction_document_url: null,
+  benefit_sheet_url: null,
   escrow: null,
   deal_holder: '',
   in_house_deal: false,
@@ -414,6 +420,7 @@ const fetchPropertyData = async () => {
         // property.value.contact_recipients = response._data.contact_recipients;
         property.value.monthly_hoa_fee = response._data.monthlyHoaFee;
         property.value.transaction_document_url = response._data.TransactionDocumentUrl;
+        property.value.benefit_sheet_url = response._data.BenefitSheetUrl;
         
         // Update other properties as needed
       } else {
