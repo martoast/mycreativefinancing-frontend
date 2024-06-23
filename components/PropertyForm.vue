@@ -162,9 +162,7 @@
                 <input v-model="recipient.phone.number" type="text" class="block w-1/2 border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Phone Number">
               </div>
               <input v-model="recipient.image_url" type="text" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Image URL">
-              <button @click.prevent="removeContactRecipient(index)" type="button" class="text-red-500 hover:text-red-700">Remove Recipient</button>
             </div>
-            <button @click.prevent="addContactRecipient" type="button" class="mt-2 text-indigo-500 hover:text-indigo-700">Add Contact Recipient</button>
           </div>
 
           <div class="sm:col-span-3">
@@ -308,7 +306,7 @@ const defaultProperty = {
   nearby_homes: [],
   price_history: [],
   tax_history: [],
-  contact_recipients: [],
+  contact_recipients: [{"agent_reason":1,"zpro":null,"recent_sales":0,"review_count":0,"display_name":"Rahul Valecha","zuid":"X1-ZUtp0k7oy516o9_7rj5o","rating_average":0,"badge_type":"Premier Agent","phone":{"prefix":"","areacode":"682","number":"375-1867"},"image_url":"https://drscdn.500px.org/photo/1095517488/q%3D50_w%3D1000_of%3D1/v2?sig=846ed9856973e0fa1d074bd15553dd91fc55124257c6af4cbde5e44852f9c91c","email":"sales@mycreativesolutions.com"}],
   monthly_hoa_fee: null,
   transaction_document_url: null,
   escrow: null,
@@ -413,7 +411,7 @@ const fetchPropertyData = async () => {
         property.value.nearby_homes = response._data.nearbyHomes;
         property.value.price_history = response._data.priceHistory;
         property.value.tax_history = response._data.taxHistory;
-        property.value.contact_recipients = response._data.contact_recipients;
+        // property.value.contact_recipients = response._data.contact_recipients;
         property.value.monthly_hoa_fee = response._data.monthlyHoaFee;
         property.value.transaction_document_url = response._data.TransactionDocumentUrl;
         
