@@ -48,70 +48,24 @@ exports.handler = async (event, context) => {
     const headers = Object.keys(property);
     const values = headers.map(header => property[header]);
 
-    // Get the current number of columns in the sheet
-    const sheetInfo = await sheets.spreadsheets.get({
-      spreadsheetId,
-      ranges: [],
-      includeGridData: false
-    });
-
-    const currentSheet = sheetInfo.data.sheets.find(sheet => sheet.properties.title === "main");
-    if (!currentSheet) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'Sheet "main" not found' })
-      };
-    }
-    const sheetId = currentSheet.properties.sheetId;
-    const currentColumnCount = currentSheet.properties.gridProperties.columnCount;
-
-    // Ensure the sheet has enough columns
-    if (headers.length > currentColumnCount) {
-      await sheets.spreadsheets.batchUpdate({
-        spreadsheetId,
-        requestBody: {
-          requests: [
-            {
-              appendDimension: {
-                sheetId,
-                dimension: 'COLUMNS',
-                length: headers.length - currentColumnCount
-              }
-            }
-          ]
-        }
-      });
-    }
-
-    // Get the current data from the sheet
+    // Get the current number of rows in the sheet
     const sheetData = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: 'main!A1:1' // Check the first row for headers
+      range: 'main!A:A' // Adjust the range to match your data layout
     });
 
-    const headerRow = sheetData.data.values ? sheetData.data.values[0] : [];
-
-    const requests = [];
+    const rowCount = sheetData.data.values ? sheetData.data.values.length : 0;
 
     // Write the data to the next available row
-    const rowCount = sheetData.data.values ? sheetData.data.values.length : 0;
-    requests.push({
-      updateCells: {
-        start: { sheetId, rowIndex: rowCount, columnIndex: 0 },
-        rows: [{
-          values: values.map(value => ({
-            userEnteredValue: { stringValue: typeof value === 'object' ? JSON.stringify(value) : String(value) }
-          }))
-        }],
-        fields: 'userEnteredValue'
-      }
-    });
+    const resource = {
+      values: [values]
+    };
 
-    await sheets.spreadsheets.batchUpdate({
+    sheets.spreadsheets.values.append({
       spreadsheetId,
-      requestBody: {
-        requests
-      }
+      range: 'main!A:A', // Adjust the range to match your data layout
+      valueInputOption: 'USER_ENTERED',
+      resource
     });
 
     return {
