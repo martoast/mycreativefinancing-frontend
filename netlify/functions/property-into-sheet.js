@@ -48,31 +48,28 @@ exports.handler = async (event, context) => {
     const headers = Object.keys(property);
     const values = headers.map(header => property[header]);
 
-    // Get the current number of rows in the sheet
-    const sheetData = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range: 'main!A:A' // Adjust the range to match your data layout
-    });
-
-    const rowCount = sheetData.data.values ? sheetData.data.values.length : 0;
+    console.log('Values to be appended:', values);
 
     // Write the data to the next available row
     const resource = {
       values: [values]
     };
 
-    sheets.spreadsheets.values.append({
+    const response = await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'main!A:A', // Adjust the range to match your data layout
+      range: 'main', // Appending to the main sheet
       valueInputOption: 'USER_ENTERED',
       resource
     });
+
+    console.log('Append response:', response.data);
 
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Data written to sheet successfully' })
     };
   } catch (error) {
+    console.error('Error:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Error writing to sheet', details: error.message })
