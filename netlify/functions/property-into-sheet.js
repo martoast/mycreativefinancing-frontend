@@ -48,16 +48,14 @@ exports.handler = async (event, context) => {
     const headers = Object.keys(property);
     const values = headers.map(header => property[header]);
 
-    console.log('Values to be appended:', values);
-
-    // Write the data to the next available row
+    // Write the data to the next available row starting from column A
     const resource = {
       values: [values]
     };
 
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'main', // Appending to the main sheet
+      range: 'main!A:A', // Appending to the first column of the main sheet
       valueInputOption: 'USER_ENTERED',
       resource
     });
