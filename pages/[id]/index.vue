@@ -79,7 +79,7 @@
             </p>
             <p v-if="property.sold !== null" class="font-medium text-white"><span>Status:</span> <span class="font-bold" :class="property.sold ? 'text-red-700' : 'text-green-300'"> {{ property.sold ? 'Sold' : 'Available' }} </span> </p>
             <div v-if="!property.sold" class="mt-4 sm:flex-none">
-              <a href="https://forms.reform.app/vb3xAL/ur-creative-solutions-buyers-review-form-copy/wk4xt6" target="_blank">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSf4GRCx5VjPD-afYQMMEdhuUzUYqe0rMPzfa0_AZMtMhLscvQ/viewform" target="_blank">
                 <button type="button" class="block rounded-md bg-primary px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">Get More Details</button>
               </a>
             </div>
