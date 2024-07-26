@@ -180,26 +180,11 @@ exports.handler = async (event, context) => {
           updateCells: {
             start: { sheetId: newSheetId, rowIndex: 19, columnIndex: 3 }, // D20
             rows: [{ 
-              values: [
-                { userEnteredValue: { stringValue: property.price_breakdown } },
-                { userEnteredValue: { stringValue: '' } },
-                { userEnteredValue: { stringValue: '' } },
-                { userEnteredValue: { stringValue: '' } }
-              ] 
+              values: [{ 
+                userEnteredValue: { stringValue: property.price_breakdown }
+              }]
             }],
             fields: 'userEnteredValue'
-          }
-        },
-        {
-          mergeCells: {
-            range: {
-              sheetId: newSheetId,
-              startRowIndex: 19,
-              endRowIndex: 20,
-              startColumnIndex: 3,
-              endColumnIndex: 7
-            },
-            mergeType: 'MERGE_ALL'
           }
         }
       );
