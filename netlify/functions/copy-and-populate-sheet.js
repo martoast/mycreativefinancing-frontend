@@ -6,6 +6,7 @@ exports.handler = async (event, context) => {
   try {
     credentials = JSON.parse(process.env.GOOGLE_SHEETS_API_CREDENTIALS);
   } catch (error) {
+    console.error('Error parsing credentials:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Error parsing GOOGLE_SHEETS_API_CREDENTIALS', details: error.message })
@@ -28,6 +29,7 @@ exports.handler = async (event, context) => {
     try {
       requestBody = JSON.parse(event.body);
     } catch (error) {
+      console.error('Error parsing request body:', error);
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Invalid JSON in request body', details: error.message })
@@ -43,23 +45,69 @@ exports.handler = async (event, context) => {
       };
     }
 
+    // Validate other required fields
+    const requiredFields = ['purchase_price', 'balance_to_close', 'monthly_holding_cost', 'interest_rate'];
+    for (const field of requiredFields) {
+      if (typeof property[field] === 'undefined') {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: `${field} is required` })
+        };
+      }
+    }
+
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];
 
-    const newSheetName = `NET SHEET: ${property.address} ${formattedDate}`;
+    // Function to truncate address
+    const truncateAddress = (address, maxLength) => {
+      if (address.length <= maxLength) return address;
+      return address.substring(0, maxLength - 3) + '...';
+    };
+
+    // Function to generate sheet name
+    const generateSheetName = (address, date, attempt = 0) => {
+      const truncatedAddress = truncateAddress(address, 70); // Leave room for date and potential number
+      let sheetName = `NET SHEET: ${truncatedAddress} ${date}`;
+      if (attempt > 0) {
+        sheetName += ` (${attempt})`;
+      }
+      return sheetName.substring(0, 100); // Ensure final name is not over 100 characters
+    };
+
+    // Function to check if sheet name exists
+    const sheetNameExists = async (name) => {
+      const response = await sheets.spreadsheets.get({
+        spreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc'
+      });
+      return response.data.sheets.some(sheet => sheet.properties.title === name);
+    };
+
+    // Generate unique sheet name
+    let newSheetName;
+    let attempt = 0;
+    do {
+      newSheetName = generateSheetName(property.address, formattedDate, attempt);
+      attempt++;
+    } while (await sheetNameExists(newSheetName));
+
+    console.log(`Generated unique sheet name: ${newSheetName}`);
 
     // Step 1: Copy the existing sheet
+    console.log('Copying sheet...');
     const copyResponse = await sheets.spreadsheets.sheets.copyTo({
-      spreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc', // Replace with your Google Sheet ID
-      sheetId: 0, // Assuming Sheet1 has ID 0, you might need to adjust this
+      spreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc',
+      sheetId: 0,
       requestBody: {
         destinationSpreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc'
       }
     });
 
     const newSheetId = copyResponse.data.sheetId;
+    console.log('Sheet copied successfully');
 
     // Step 2: Rename the new sheet
+    console.log('Renaming sheet...');
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc',
       requestBody: {
@@ -76,8 +124,10 @@ exports.handler = async (event, context) => {
         ]
       }
     });
+    console.log('Sheet renamed successfully');
 
     // Step 3: Populate the new sheet with the provided data
+    console.log('Populating sheet...');
     const requests = [
       {
         updateCells: {
@@ -96,21 +146,21 @@ exports.handler = async (event, context) => {
       {
         updateCells: {
           start: { sheetId: newSheetId, rowIndex: 10, columnIndex: 6 }, // G11
-          rows: [{ values: [{ userEnteredValue: { numberValue: property.purchase_price } }] }],
+          rows: [{ values: [{ userEnteredValue: { numberValue: parseFloat(property.purchase_price) } }] }],
           fields: 'userEnteredValue'
         }
       },
       {
         updateCells: {
           start: { sheetId: newSheetId, rowIndex: 11, columnIndex: 6 }, // G12
-          rows: [{ values: [{ userEnteredValue: { numberValue: property.balance_to_close } }] }],
+          rows: [{ values: [{ userEnteredValue: { numberValue: parseFloat(property.balance_to_close) } }] }],
           fields: 'userEnteredValue'
         }
       },
       {
         updateCells: {
           start: { sheetId: newSheetId, rowIndex: 12, columnIndex: 6 }, // G13
-          rows: [{ values: [{ userEnteredValue: { numberValue: property.monthly_holding_cost } }] }],
+          rows: [{ values: [{ userEnteredValue: { numberValue: parseFloat(property.monthly_holding_cost) } }] }],
           fields: 'userEnteredValue'
         }
       },
@@ -123,21 +173,48 @@ exports.handler = async (event, context) => {
       }
     ];
 
+    // Add monthly_hoa_fee if it exists
+    if (property.monthly_hoa_fee) {
+      requests.push({
+        updateCells: {
+          start: { sheetId: newSheetId, rowIndex: 13, columnIndex: 6 }, // G14
+          rows: [{ values: [{ userEnteredValue: { numberValue: parseFloat(property.monthly_hoa_fee) } }] }],
+          fields: 'userEnteredValue'
+        }
+      });
+    }
+
+    // Add escrow if it exists
+    if (property.escrow) {
+      requests.push({
+        updateCells: {
+          start: { sheetId: newSheetId, rowIndex: 14, columnIndex: 6 }, // G15
+          rows: [{ values: [{ userEnteredValue: { numberValue: parseFloat(property.escrow) } }] }],
+          fields: 'userEnteredValue'
+        }
+      });
+    }
+
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc',
       requestBody: {
         requests: requests
       }
     });
+    console.log('Sheet populated successfully');
 
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Sheet copied, renamed, and populated successfully', newSheetName })
     };
   } catch (error) {
+    console.error('Error details:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Error copying, renaming, and populating sheet', details: error.message })
+      body: JSON.stringify({ 
+        error: 'Error processing sheet', 
+        details: error.message 
+      })
     };
   }
 };
