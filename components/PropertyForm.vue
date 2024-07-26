@@ -228,6 +228,17 @@
               <label for="rental_restriction" class="block text-sm font-medium leading-6">Rental Restriction</label>
             </div>
 
+            <div class="col-span-3">
+              <label for="price_breakdown" class="block text-sm font-medium leading-6">Price Breakdown</label>
+              <textarea 
+                v-model="property.price_breakdown" 
+                id="price_breakdown" 
+                rows="4" 
+                class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" 
+                placeholder="Price breakdown"
+              ></textarea>
+            </div>
+
           
           </div>
 
@@ -319,6 +330,7 @@ const defaultProperty = {
   deal_holder: '',
   in_house_deal: false,
   rental_restriction: false,
+  price_breakdown: null
 
 };
 
@@ -418,9 +430,9 @@ const fetchPropertyData = async () => {
         property.value.price_history = response._data.priceHistory;
         property.value.tax_history = response._data.taxHistory;
         // property.value.contact_recipients = response._data.contact_recipients;
-        property.value.monthly_hoa_fee = response._data.monthlyHoaFee;
-        property.value.transaction_document_url = response._data.TransactionDocumentUrl;
-        property.value.benefit_sheet_url = response._data.BenefitSheetUrl;
+        property.value.monthly_hoa_fee = response._data.monthlyHoaFee ? response._data.monthlyHoaFee : null;
+        // property.value.transaction_document_url = response._data.TransactionDocumentUrl;
+        // property.value.benefit_sheet_url = response._data.BenefitSheetUrl;
         
         // Update other properties as needed
       } else {

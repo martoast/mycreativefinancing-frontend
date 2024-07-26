@@ -173,6 +173,38 @@ exports.handler = async (event, context) => {
       }
     ];
 
+    // Add price_breakdown if it exists
+    if (property.price_breakdown) {
+      requests.push(
+        {
+          updateCells: {
+            start: { sheetId: newSheetId, rowIndex: 19, columnIndex: 3 }, // D20
+            rows: [{ 
+              values: [
+                { userEnteredValue: { stringValue: property.price_breakdown } },
+                { userEnteredValue: { stringValue: '' } },
+                { userEnteredValue: { stringValue: '' } },
+                { userEnteredValue: { stringValue: '' } }
+              ] 
+            }],
+            fields: 'userEnteredValue'
+          }
+        },
+        {
+          mergeCells: {
+            range: {
+              sheetId: newSheetId,
+              startRowIndex: 19,
+              endRowIndex: 20,
+              startColumnIndex: 3,
+              endColumnIndex: 7
+            },
+            mergeType: 'MERGE_ALL'
+          }
+        }
+      );
+    }
+
     // Add monthly_hoa_fee if it exists
     if (property.monthly_hoa_fee) {
       requests.push({
