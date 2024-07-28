@@ -190,27 +190,8 @@ exports.handler = async (event, context) => {
       );
     }
 
-    // Add monthly_hoa_fee if it exists
-    if (property.monthly_hoa_fee) {
-      requests.push({
-        updateCells: {
-          start: { sheetId: newSheetId, rowIndex: 13, columnIndex: 6 }, // G14
-          rows: [{ values: [{ userEnteredValue: { numberValue: parseFloat(property.monthly_hoa_fee) } }] }],
-          fields: 'userEnteredValue'
-        }
-      });
-    }
 
-    // Add escrow if it exists
-    if (property.escrow) {
-      requests.push({
-        updateCells: {
-          start: { sheetId: newSheetId, rowIndex: 14, columnIndex: 6 }, // G15
-          rows: [{ values: [{ userEnteredValue: { numberValue: parseFloat(property.escrow) } }] }],
-          fields: 'userEnteredValue'
-        }
-      });
-    }
+    
 
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId: '1IP924Kd0ytytZ823PDr4K3IxpVBq1XmTkIxG5ySdTSc',
