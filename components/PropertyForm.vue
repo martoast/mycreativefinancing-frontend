@@ -1,14 +1,21 @@
 <template>
     <form @submit.prevent="handleSubmit">
-      <div class="space-y-12">
-        <div class="border-b border-white/10 pb-4" :class="property.address ? 'pb-8' : 'pb-0'">
-          <h2 class="text-base font-semibold leading-7">Property Details</h2>
-          <p class="mt-1 text-sm leading-6 text-gray-700">You can add or update the details of the property from here.</p>
-           <!-- Toggle for apartment -->
+    <div class="space-y-12">
+      <div class="border-b border-white/10 pb-4" :class="property.address ? 'pb-8' : 'pb-0'">
+        <h2 class="text-base font-semibold leading-7">Property Details</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-700">You can add or update the details of the property from here.</p>
+        
+        <!-- New checkbox for manual input -->
+        <div v-if="!props.property" class="mt-5 flex items-center">
+          <input v-model="manualInput" type="checkbox" id="manual-input" class="mr-2">
+          <label for="manual-input" class="block text-sm font-medium leading-6">Manual input (skip address search)</label>
+        </div>
+
+        <!-- Toggle for apartment -->
         <div v-if="!props.property">
           <div class="mt-5 flex items-center">
-          <input v-model="data.form.is_appartment" type="checkbox" id="is_appartment" class="mr-2">
-          <label for="is_appartment" class="block text-sm font-medium leading-6">Is it an apartment or condo?</label>
+            <input v-model="data.form.is_appartment" type="checkbox" id="is_appartment" class="mr-2">
+            <label for="is_appartment" class="block text-sm font-medium leading-6">Is it an apartment or condo?</label>
           </div>
 
           <!-- Unit Number and Property Type -->
@@ -29,28 +36,26 @@
             </div>
           </div>
 
-          <div class="mt-5">
+          <!-- Conditional rendering of mapbox-search-box -->
+          <div v-if="!manualInput" class="mt-5">
             <mapbox-search-box
-                :access-token="access_token"
-                placeholder="Search Address"
-                :options="{
-                  country: 'US',
-                  limit:6,
-                  bbox: [-171.791110603, 18.91619, -66.96466, 71.3577635769],
-                }"
-                types="address"
-                @retrieve="handleRetrieve"
-                proximity="ip"
-              >
+              :access-token="access_token"
+              placeholder="Search Address"
+              :options="{
+                country: 'US',
+                limit:6,
+                bbox: [-171.791110603, 18.91619, -66.96466, 71.3577635769],
+              }"
+              types="address"
+              @retrieve="handleRetrieve"
+              proximity="ip"
+            >
             </mapbox-search-box>
           </div>
-
-          <GoogleMap ref="mapRef" :api-key="googleMapsApiKey" class="map" :zoom="15">
-        </GoogleMap>
         </div>
 
           
-          <div v-if="!data.loading && data.form.address || props.property" class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-5">
+          <div v-if="!data.loading && data.form.address || props.property || manualInput" class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-5">
             <!-- Each input field below corresponds to a property attribute -->
             
             <div class="col-span-3">
@@ -268,13 +273,14 @@ const config = useRuntimeConfig()
 
 const access_token = config.public.MAPBOX_API_TOKEN;
 const zillowApiKey = config.public.ZILLOW_API_KEY;
-const googleMapsApiKey = config.public.GOOGLE_MAPS_API_KEY;
 
 const props = defineProps({
   property: Object
 });
 
 const mapRef = ref(null);
+
+const manualInput = ref(false);
 
 
 const data = reactive({
@@ -384,6 +390,14 @@ const updateAddress = async () => {
   }
 };
 
+watch(manualInput, (newValue) => {
+  if (newValue) {
+    data.form.address = ''
+    data.form.latitude = null;
+    data.form.longitude = null;
+  }
+});
+
 
 
 watch(
@@ -452,28 +466,21 @@ const handleSubmit = async (e) => {
   data.form.loading = true;
   const propertiesStore = usePropertiesStore();
   
-
-  if (props.property && props.property.ID) {
-    // update the existing property
-    let propertyToSubmit = {
+  let propertyToSubmit = {
     ...property.value,
     images: JSON.stringify(property.value.images),
     contact_recipients: JSON.stringify(property.value.contact_recipients)
   };
+
+  if (manualInput.value) {
+    // If manual input, combine address fields
+    propertyToSubmit.address = `${property.value.address}, ${property.value.city}, ${property.value.state} ${property.value.zip}`;
+  }
+
+  if (props.property && props.property.ID) {
     console.log('Updating property...', propertyToSubmit);
     await propertiesStore.store({ property: propertyToSubmit });
   } else {
-    // create a new property
-    let propertyToSubmit = {
-    ...property.value,
-    nearby_hospitals: JSON.stringify(property.value.nearby_hospitals),
-    nearby_schools: JSON.stringify(property.value.nearby_schools),
-    images: JSON.stringify(property.value.images),
-    nearby_homes: JSON.stringify(property.value.nearby_homes),
-    price_history: JSON.stringify(property.value.price_history),
-    tax_history: JSON.stringify(property.value.tax_history),
-    contact_recipients: JSON.stringify(property.value.contact_recipients)
-  };
     console.log('Creating new property...', propertyToSubmit);
     let response = await propertiesStore.store({ property: propertyToSubmit });
 
