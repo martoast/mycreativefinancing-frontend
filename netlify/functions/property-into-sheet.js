@@ -43,19 +43,25 @@ exports.handler = async (event, context) => {
       };
     }
 
-    const spreadsheetId = '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU'; // Replace with your Google Sheet ID
+    const spreadsheetId = '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU';
 
-    const headers = Object.keys(property);
-    const values = headers.map(header => property[header]);
+    // Function to safely convert values to strings
+    const safeToString = (value) => {
+      if (value === null || value === undefined) return '';
+      if (typeof value === 'object') return JSON.stringify(value);
+      return String(value);
+    };
 
-    // Write the data to the next available row starting from column A
+    const headers = Object.keys(property).slice(0, 26); // Limit to 26 columns
+    const values = headers.map(header => safeToString(property[header]));
+
     const resource = {
       values: [values]
     };
 
-    const response = await sheets.spreadsheets.values.append({
+    const response = sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'main!A:A', // Appending to the first column of the main sheet
+      range: 'main!A:Z', // Explicitly set range to A:Z
       valueInputOption: 'USER_ENTERED',
       resource
     });
