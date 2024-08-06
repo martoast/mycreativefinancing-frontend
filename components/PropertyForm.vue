@@ -244,6 +244,17 @@
               ></textarea>
             </div>
 
+            <div class="col-span-3">
+              <label for="additional_benefits" class="block text-sm font-medium leading-6">Additional Benefits</label>
+              <textarea 
+                v-model="property.additional_benefits" 
+                id="additional_benefits" 
+                rows="4" 
+                class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" 
+                placeholder="Additional benefits"
+              ></textarea>
+            </div>
+
           
           </div>
 
@@ -336,7 +347,8 @@ const defaultProperty = {
   deal_holder: '',
   in_house_deal: false,
   rental_restriction: false,
-  price_breakdown: null
+  price_breakdown: null,
+  additional_benefits: null
 
 };
 

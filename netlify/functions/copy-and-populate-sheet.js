@@ -190,6 +190,24 @@ exports.handler = async (event, context) => {
       );
     }
 
+    if (property.additional_benefits) {
+
+      requests.push(
+        {
+          updateCells: {
+            start: { sheetId: newSheetId, rowIndex: 21, columnIndex: 3 }, // D22
+            rows: [{ 
+              values: [{ 
+                userEnteredValue: { stringValue: property.additional_benefits }
+              }]
+            }],
+            fields: 'userEnteredValue'
+          }
+        }
+      );
+      
+    }
+
 
     
 
