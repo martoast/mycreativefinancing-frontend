@@ -544,7 +544,7 @@ const handleRetrieve = async (event) => {
     if (data.form.is_appartment && data.form.unit_number) {
       property.value.address += ` Unit ${data.form.unit_number}, ${data.form.type}`;
     }
-    await fetchNearbyPlaces(data.form.latitude, data.form.longitude, 'hospital');
+    // await fetchNearbyPlaces(data.form.latitude, data.form.longitude, 'hospital');
     // await fetchNearbyPlaces(coordinates.latitude, coordinates.longitude, 'school');
   } else {
     alert('You must search a location and select from the dropdown menu.');
