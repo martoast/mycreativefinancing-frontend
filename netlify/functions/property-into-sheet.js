@@ -59,14 +59,12 @@ exports.handler = async (event, context) => {
       values: [values]
     };
 
-    const response = sheets.spreadsheets.values.append({
+    sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'main!A:Z', // Explicitly set range to A:Z
+      range: 'main', // Explicitly set range to A:Z
       valueInputOption: 'USER_ENTERED',
       resource
     });
-
-    console.log('Append response:', response.data);
 
     return {
       statusCode: 200,
