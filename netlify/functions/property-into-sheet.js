@@ -2,8 +2,6 @@ const { google } = require('googleapis');
 const { JWT } = require('google-auth-library');
 
 exports.handler = async (event, context) => {
-  console.log('Function invoked with event:', JSON.stringify(event));
-
   let credentials;
   try {
     credentials = JSON.parse(process.env.GOOGLE_SHEETS_API_CREDENTIALS);
@@ -88,7 +86,7 @@ exports.handler = async (event, context) => {
       resource
     });
 
-    console.log('Append response:', JSON.stringify(response.data));
+    console.log('Success');
 
     return {
       statusCode: 200,
