@@ -461,6 +461,8 @@ const fetchPropertyData = async () => {
         // property.value.benefit_sheet_url = response._data.BenefitSheetUrl;
         
         // Update other properties as needed
+
+        
       } else {
         console.error('Response error:', response.status);
       }
@@ -477,10 +479,15 @@ const fetchPropertyData = async () => {
 const handleSubmit = async (e) => {
   data.form.loading = true;
   const propertiesStore = usePropertiesStore();
+
   
   let propertyToSubmit = {
     ...property.value,
     images: JSON.stringify(property.value.images),
+    nearby_homes: JSON.stringify(property.value.nearby_homes),
+    nearby_schools: JSON.stringify(property.value.nearby_schools),
+    price_history: JSON.stringify(property.value.price_history),
+    tax_history: JSON.stringify(property.value.tax_history),
     contact_recipients: JSON.stringify(property.value.contact_recipients)
   };
 

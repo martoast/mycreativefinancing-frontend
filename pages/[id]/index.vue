@@ -213,7 +213,7 @@
             </div>
           </section>
 
-          <section class="mt-6">
+          <!-- <section class="mt-6">
             <h3 class="text-xl font-semibold text-white">Nearby Hospitals</h3>
             <div class="overflow-x-auto mt-2">
               <table class="min-w-full bg-black text-white">
@@ -237,7 +237,7 @@
                 </tbody>
               </table>
             </div>
-          </section>
+          </section> -->
 
           
 
