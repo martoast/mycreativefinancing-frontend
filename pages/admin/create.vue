@@ -1,17 +1,18 @@
 <template>
-    <div class="container mx-auto pt-3">
-        <div class="py-3">
-            <a href="/admin">
-                <img src="/logo.png" alt="Logo" class="h-8 w-auto" />
-            </a>
+    <div class="bg-black min-h-screen w-full">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div class="flex justify-center mb-8">
+          <a href="https://urcreativesolutions.com/">
+            <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
+          </a>
         </div>
         <property-form></property-form>
+      </div>
     </div>
-    
-</template>
-
-<script setup>
-definePageMeta({
-  middleware: 'auth'
-})
-</script>
+  </template>
+  
+  <script setup>
+  definePageMeta({
+    middleware: 'auth'
+  })
+  </script>

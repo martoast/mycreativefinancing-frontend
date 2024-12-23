@@ -1,28 +1,37 @@
 <template>
-    <form @submit.prevent="handleSubmit">
+  <form @submit.prevent="handleSubmit">
     <div class="space-y-12">
-      <div class="border-b border-white/10 pb-4" :class="property.address ? 'pb-8' : 'pb-0'">
-        <h2 class="text-base font-semibold leading-7">Property Details</h2>
-        <p class="mt-1 text-sm leading-6 text-gray-700">You can add or update the details of the property from here.</p>
+      <div class="border-b border-gray-700 pb-4" :class="property.address ? 'pb-8' : 'pb-0'">
+        <div class="flex items-center mb-6">
+          <NuxtLink to="/admin" class="inline-flex items-center text-white hover:text-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Back to Admin
+          </NuxtLink>
+        </div>
         
-        <!-- New checkbox for manual input -->
+        <h2 class="text-base font-semibold leading-7 text-white">Property Details</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-300">You can add or update the details of the property from here.</p>
+        
+        <!-- Manual input checkbox -->
         <div v-if="!props.property" class="mt-5 flex items-center">
-          <input v-model="manualInput" type="checkbox" id="manual-input" class="mr-2">
-          <label for="manual-input" class="block text-sm font-medium leading-6">Manual input (skip address search)</label>
+          <input v-model="manualInput" type="checkbox" id="manual-input" class="mr-2 bg-gray-700 border-gray-600">
+          <label for="manual-input" class="block text-sm font-medium leading-6 text-white">Manual input (skip address search)</label>
         </div>
 
-        <!-- Toggle for apartment -->
+        <!-- Apartment toggle -->
         <div v-if="!props.property">
           <div class="mt-5 flex items-center">
-            <input v-model="data.form.is_appartment" type="checkbox" id="is_appartment" class="mr-2">
-            <label for="is_appartment" class="block text-sm font-medium leading-6">Is it an apartment or condo?</label>
+            <input v-model="data.form.is_appartment" type="checkbox" id="is_appartment" class="mr-2 bg-gray-700 border-gray-600">
+            <label for="is_appartment" class="block text-sm font-medium leading-6 text-white">Is it an apartment or condo?</label>
           </div>
 
           <!-- Unit Number and Property Type -->
           <div v-if="data.form.is_appartment" class="mt-3 flex space-x-4">
             <div class="flex-1">
-              <label for="type" class="block text-sm font-medium leading-6">Property Type</label>
-              <select v-model="data.form.type" id="type" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6">
+              <label for="type" class="block text-sm font-medium leading-6 text-white">Property Type</label>
+              <select v-model="data.form.type" id="type" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6">
                 <option value="">Select Property Type</option>
                 <option value="SUITE">Suite</option>
                 <option value="UNIT">Unit</option>
@@ -31,12 +40,12 @@
               </select>
             </div>
             <div class="flex-1">
-              <label for="unit-number" class="block text-sm font-medium leading-6">Unit Number</label>
-              <input v-model="data.form.unit_number" type="text" id="unit-number" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Unit Number">
+              <label for="unit-number" class="block text-sm font-medium leading-6 text-white">Unit Number</label>
+              <input v-model="data.form.unit_number" type="text" id="unit-number" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Unit Number">
             </div>
           </div>
 
-          <!-- Conditional rendering of mapbox-search-box -->
+          <!-- Mapbox Search -->
           <div v-if="!manualInput" class="mt-5">
             <mapbox-search-box
               :access-token="access_token"
@@ -49,229 +58,220 @@
               types="address"
               @retrieve="handleRetrieve"
               proximity="ip"
+              class="bg-gray-800 text-white"
             >
             </mapbox-search-box>
           </div>
         </div>
 
-          
-          <div v-if="!data.loading && data.form.address || props.property || manualInput" class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-5">
-            <!-- Each input field below corresponds to a property attribute -->
-            
-            <div class="col-span-3">
-              <label for="address" class="block text-sm font-medium leading-6">Full Address</label>
-              <input v-model="property.address" required type="text" id="address" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Property Address">
-            </div>
-
-            <!-- Sold Checkbox -->
-            <div class="sm:col-span-3 flex items-center">
-              <input v-model="property.sold" type="checkbox" id="sold" class="mr-2">
-              <label for="sold" class="block text-sm font-medium leading-6">Sold: {{property.sold}}</label>
-            </div>
-
-            <div class="sm:col-span-3">
-                <label for="property-type" class="block text-sm font-medium leading-6">Property Type</label>
-                <input v-model="property.property_type" type="text" id="property-type" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Type of Property">
-            </div>
-
-        
-            <div class="sm:col-span-3">
-                <label for="bedrooms" class="block text-sm font-medium leading-6">Bedrooms</label>
-                <input v-model="property.bedrooms" required type="number" id="bedrooms" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Number of Bedrooms">
-            </div>
-
-            <div class="sm:col-span-3">
-                <label for="bathrooms" class="block text-sm font-medium leading-6">Bathrooms</label>
-                <input v-model="property.bathrooms" required type="number" step="0.5" id="bathrooms" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Number of Bathrooms">
-            </div>
-
-            <div class="sm:col-span-3">
-              <label for="price" class="block text-sm font-medium leading-6">Price</label>
-              <input v-model="property.price" required type="number" id="price" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Price in USD">
-            </div>
-
-            <div class="sm:col-span-3">
-              <label for="monthly_hoa_fee" class="block text-sm font-medium leading-6">Monthly HOA Fee</label>
-              <input v-model="property.monthly_hoa_fee" type="number" id="monthly_hoa_fee" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="HOA Fee in USD">
-            </div>
-
-            
-
-            <!-- Description -->
-          <div class="col-span-full">
-            <label for="description" class="block text-sm font-medium leading-6">Description</label>
-            <textarea v-model="property.description" id="description" rows="3" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Description of the property"></textarea>
+        <!-- Property Form Fields -->
+        <div v-if="!data.loading && data.form.address || props.property || manualInput" class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-5">
+          <div class="col-span-3">
+            <label for="address" class="block text-sm font-medium leading-6 text-white">Full Address</label>
+            <input v-model="property.address" required type="text" id="address" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Property Address">
           </div>
 
-            <div class="sm:col-span-3">
-                <label for="rent-zestimate" class="block text-sm font-medium leading-6">Estimated Rent</label>
-                <input v-model="property.rent_zestimate" type="number" id="rent-zestimate" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Estimated Rent">
-            </div>
+          <div class="sm:col-span-3 flex items-center">
+            <input v-model="property.sold" type="checkbox" id="sold" class="mr-2 bg-gray-700 border-gray-600">
+            <label for="sold" class="block text-sm font-medium leading-6 text-white">Sold: {{property.sold}}</label>
+          </div>
 
-            <div class="sm:col-span-3">
-                <label for="zestimate" class="block text-sm font-medium leading-6">Estimated Value</label>
-                <input v-model="property.zestimate" type="number" id="zestimate" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Estimated Value">
-            </div>
+          <div class="sm:col-span-3">
+            <label for="property-type" class="block text-sm font-medium leading-6 text-white">Property Type</label>
+            <input v-model="property.property_type" type="text" id="property-type" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Type of Property">
+          </div>
 
-            <div class="sm:col-span-3">
-                <label for="price_per_square_foot" class="block text-sm font-medium leading-6">Price Per Square Foot</label>
-                <input v-model="property.price_per_square_foot" type="number" id="price_per_square_foot" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Price Per Square Foot">
-            </div>
+          <div class="sm:col-span-3">
+            <label for="bedrooms" class="block text-sm font-medium leading-6 text-white">Bedrooms</label>
+            <input v-model="property.bedrooms" required type="number" id="bedrooms" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Number of Bedrooms">
+          </div>
 
-            <!-- Year Built -->
-        <div class="sm:col-span-3">
-        <label for="year-built" class="block text-sm font-medium leading-6">Year Built</label>
-        <input v-model="property.year_built" type="number" id="year-built" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Year the Property Was Built">
-        </div>
+          <div class="sm:col-span-3">
+            <label for="bathrooms" class="block text-sm font-medium leading-6 text-white">Bathrooms</label>
+            <input v-model="property.bathrooms" required type="number" step="0.5" id="bathrooms" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Number of Bathrooms">
+          </div>
 
-        <!-- Lot Size -->
-        <div class="sm:col-span-3">
-        <label for="lot-size" class="block text-sm font-medium leading-6">Lot Size (sq ft)</label>
-        <input v-model="property.lot_size" type="number" id="lot-size" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Lot Size in Square Feet">
-        </div>
+          <div class="sm:col-span-3">
+            <label for="price" class="block text-sm font-medium leading-6 text-white">Price</label>
+            <input v-model="property.price" required type="number" id="price" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Price in USD">
+          </div>
 
-        <!-- Living Area -->
-        <div class="sm:col-span-3">
-        <label for="lot-size" class="block text-sm font-medium leading-6">Living Area (sq ft)</label>
-        <input v-model="property.living_area" type="number" id="living-area" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Living Area in Square Feet">
-        </div>
+          <div class="sm:col-span-3">
+            <label for="monthly_hoa_fee" class="block text-sm font-medium leading-6 text-white">Monthly HOA Fee</label>
+            <input v-model="property.monthly_hoa_fee" type="number" id="monthly_hoa_fee" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="HOA Fee in USD">
+          </div>
 
-        <div class="sm:col-span-3">
-        <label for="zoning" class="block text-sm font-medium leading-6">Zoning</label>
-        <input v-model="property.zoning" type="text" id="zoning" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Zoning">
-        </div>
+          <div class="col-span-full">
+            <label for="description" class="block text-sm font-medium leading-6 text-white">Description</label>
+            <textarea v-model="property.description" id="description" rows="3" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Description of the property"></textarea>
+          </div>
 
-        <!-- Dynamic Image URL Fields -->
-        <div class="col-span-full">
-            <label for="images" class="block text-sm font-medium leading-6">Images (URLs)</label>
+          <div class="sm:col-span-3">
+            <label for="rent-zestimate" class="block text-sm font-medium leading-6 text-white">Estimated Rent</label>
+            <input v-model="property.rent_zestimate" type="number" id="rent-zestimate" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Estimated Rent">
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="zestimate" class="block text-sm font-medium leading-6 text-white">Estimated Value</label>
+            <input v-model="property.zestimate" type="number" id="zestimate" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Estimated Value">
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="price_per_square_foot" class="block text-sm font-medium leading-6 text-white">Price Per Square Foot</label>
+            <input v-model="property.price_per_square_foot" type="number" id="price_per_square_foot" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Price Per Square Foot">
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="year-built" class="block text-sm font-medium leading-6 text-white">Year Built</label>
+            <input v-model="property.year_built" type="number" id="year-built" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Year the Property Was Built">
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="lot-size" class="block text-sm font-medium leading-6 text-white">Lot Size (sq ft)</label>
+            <input v-model="property.lot_size" type="number" id="lot-size" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Lot Size in Square Feet">
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="living-area" class="block text-sm font-medium leading-6 text-white">Living Area (sq ft)</label>
+            <input v-model="property.living_area" type="number" id="living-area" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Living Area in Square Feet">
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="zoning" class="block text-sm font-medium leading-6 text-white">Zoning</label>
+            <input v-model="property.zoning" type="text" id="zoning" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Zoning">
+          </div>
+
+          <!-- Dynamic Image URL Fields -->
+          <div class="col-span-full">
+            <label for="images" class="block text-sm font-medium leading-6 text-white">Images (URLs)</label>
             <div v-for="(image, index) in property.images" :key="index" class="flex space-x-2 mb-2">
-              <input v-model="property.images[index]" type="text" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Image URL">
-              <button @click.prevent="removeImage(index)" type="button" class="text-red-500 hover:text-red-700">Remove</button>
+              <input v-model="property.images[index]" type="text" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Image URL">
+              <button @click.prevent="removeImage(index)" type="button" class="text-red-400 hover:text-red-300">Remove</button>
             </div>
-            <button @click.prevent="addImage" type="button" class="mt-2 text-indigo-500 hover:text-indigo-700">Add Image URL</button>
+            <button @click.prevent="addImage" type="button" class="mt-2 text-primary hover:text-indigo-400">Add Image URL</button>
           </div>
 
-          <!-- Dynamic Contact Recipients Fields -->
+          <!-- Contact Recipients -->
           <div class="col-span-full">
-            <label for="contact_recipients" class="block text-sm font-medium leading-6">Contact Recipients</label>
+            <label for="contact_recipients" class="block text-sm font-medium leading-6 text-white">Contact Recipients</label>
             <div v-for="(recipient, index) in property.contact_recipients" :key="index" class="flex flex-col space-y-2 mb-4">
               <div class="flex space-x-2">
-                <input v-model="recipient.display_name" type="text" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Display Name">
+                <input v-model="recipient.display_name" type="text" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Display Name">
               </div>
               <div class="flex space-x-2">
-                <input v-model="recipient.email" type="email" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Email">
+                <input v-model="recipient.email" type="email" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Email">
               </div>
               <div class="flex space-x-2">
-                <input v-model="recipient.phone.prefix" type="text" class="block w-1/4 border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Phone Prefix">
-                <input v-model="recipient.phone.areacode" type="text" class="block w-1/4 border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Area Code">
-                <input v-model="recipient.phone.number" type="text" class="block w-1/2 border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Phone Number">
+                <input v-model="recipient.phone.prefix" type="text" class="block w-1/4 bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Phone Prefix">
+                <input v-model="recipient.phone.areacode" type="text" class="block w-1/4 bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Area Code">
+                <input v-model="recipient.phone.number" type="text" class="block w-1/2 bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Phone Number">
               </div>
-              <input v-model="recipient.image_url" type="text" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Image URL">
+              <input v-model="recipient.image_url" type="text" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Image URL">
             </div>
           </div>
 
           <div class="sm:col-span-3">
-              <label for="purchase_price" class="block text-sm font-medium leading-6">Purchase Price</label>
-              <input v-model="property.purchase_price" type="number" id="purchase_price" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Purchase Price">
-            </div>
-
-            <div class="sm:col-span-3">
-              <label for="balance_to_close" class="block text-sm font-medium leading-6">Balance to Close</label>
-              <input v-model="property.balance_to_close" type="number" id="balance_to_close" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Balance to Close">
-            </div>
-
-            <div class="sm:col-span-3">
-              <label for="monthly_holding_cost" class="block text-sm font-medium leading-6">Monthly Holding Cost</label>
-              <input v-model="property.monthly_holding_cost" type="number" id="monthly_holding_cost" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Monthly Holding Cost">
-            </div>
-
-            <div class="sm:col-span-3">
-              <label for="interest_rate" class="block text-sm font-medium leading-6">Interest Rate</label>
-              <input 
-                v-model="property.interest_rate" 
-                type="number" 
-                id="interest_rate" 
-                class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" 
-                placeholder="Interest Rate" 
-                step="0.01" 
-                min="0"
-                max="100"
-              >
-            </div>
-
-            <div class="col-span-3">
-              <label for="transaction_document_url" class="block text-sm font-medium leading-6">Transaction Document Url</label>
-              <input v-model="property.transaction_document_url" type="text" id="transaction_document_url" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Url">
-            </div>
-
-            <div class="col-span-3">
-              <label for="benefit_sheet_url" class="block text-sm font-medium leading-6">Benefit Sheet Url</label>
-              <input v-model="property.benefit_sheet_url" type="text" id="benefit_sheet_url" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Url">
-            </div>
-
-            <!-- Escrow -->
-            <div class="sm:col-span-3">
-              <label for="escrow" class="block text-sm font-medium leading-6">Escrow</label>
-              <input v-model="property.escrow" type="number" step="0.01" id="escrow" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Escrow in USD">
-            </div>
-
-            <!-- Deal Holder -->
-            <div class="sm:col-span-3">
-              <label for="deal_holder" class="block text-sm font-medium leading-6">Deal Holder</label>
-              <input v-model="property.deal_holder" type="text" id="deal_holder" class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" placeholder="Deal Holder">
-            </div>
-
-            <!-- In House Deal -->
-            <div class="sm:col-span-3 flex items-center">
-              <input v-model="property.in_house_deal" type="checkbox" id="in_house_deal" class="mr-2">
-              <label for="in_house_deal" class="block text-sm font-medium leading-6">In House Deal</label>
-            </div>
-
-            <!-- Rental Restriction -->
-            <div class="sm:col-span-3 flex items-center">
-              <input v-model="property.rental_restriction" type="checkbox" id="rental_restriction" class="mr-2">
-              <label for="rental_restriction" class="block text-sm font-medium leading-6">Rental Restriction</label>
-            </div>
-
-            <div class="col-span-3">
-              <label for="price_breakdown" class="block text-sm font-medium leading-6">Price Breakdown</label>
-              <textarea 
-                v-model="property.price_breakdown" 
-                id="price_breakdown" 
-                rows="4" 
-                class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" 
-                placeholder="Price breakdown"
-              ></textarea>
-            </div>
-
-            <div class="col-span-3">
-              <label for="additional_benefits" class="block text-sm font-medium leading-6">Additional Benefits</label>
-              <textarea 
-                v-model="property.additional_benefits" 
-                id="additional_benefits" 
-                rows="4" 
-                class="block w-full border-gray-400 rounded-md py-1.5 shadow-sm focus:ring-indigo-500 sm:text-sm sm:leading-6" 
-                placeholder="Additional benefits"
-              ></textarea>
-            </div>
-
-          
+            <label for="purchase_price" class="block text-sm font-medium leading-6 text-white">Purchase Price</label>
+            <input v-model="property.purchase_price" type="number" id="purchase_price" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Purchase Price">
           </div>
 
-          <div v-else-if="data.loading">
-            Loading
+          <div class="sm:col-span-3">
+            <label for="balance_to_close" class="block text-sm font-medium leading-6 text-white">Balance to Close</label>
+            <input v-model="property.balance_to_close" type="number" id="balance_to_close" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Balance to Close">
+          </div>
 
+          <div class="sm:col-span-3">
+            <label for="monthly_holding_cost" class="block text-sm font-medium leading-6 text-white">Monthly Holding Cost</label>
+            <input v-model="property.monthly_holding_cost" type="number" id="monthly_holding_cost" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Monthly Holding Cost">
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="interest_rate" class="block text-sm font-medium leading-6 text-white">Interest Rate</label>
+            <input 
+              v-model="property.interest_rate" 
+              type="number" 
+              id="interest_rate" 
+              class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" 
+              placeholder="Interest Rate" 
+              step="0.01" 
+              min="0"
+              max="100"
+            >
+          </div>
+
+          <div class="col-span-3">
+            <label for="transaction_document_url" class="block text-sm font-medium leading-6 text-white">Transaction Document Url</label>
+            <input v-model="property.transaction_document_url" type="text" id="transaction_document_url" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Url">
+          </div>
+
+          <div class="col-span-3">
+            <label for="benefit_sheet_url" class="block text-sm font-medium leading-6 text-white">Benefit Sheet Url</label>
+            <input v-model="property.benefit_sheet_url" type="text" id="benefit_sheet_url" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Url">
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="escrow" class="block text-sm font-medium leading-6 text-white">Escrow</label>
+            <input v-model="property.escrow" type="number" step="0.01" id="escrow" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Escrow in USD">
+          </div>
+
+          <div class="sm:col-span-3">
+            <label for="deal_holder" class="block text-sm font-medium leading-6 text-white">Deal Holder</label>
+            <input v-model="property.deal_holder" type="text" id="deal_holder" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Deal Holder">
+          </div>
+
+          <div class="sm:col-span-3 flex items-center">
+            <input v-model="property.in_house_deal" type="checkbox" id="in_house_deal" class="mr-2 bg-gray-700 border-gray-600">
+            <label for="in_house_deal" class="block text-sm font-medium leading-6 text-white">In House Deal</label>
+          </div>
+
+          <div class="sm:col-span-3 flex items-center">
+            <input v-model="property.rental_restriction" type="checkbox" id="rental_restriction" class="mr-2 bg-gray-700 border-gray-600">
+            <label for="rental_restriction" class="block text-sm font-medium leading-6 text-white">Rental Restriction</label>
+          </div>
+
+          <div class="col-span-3">
+            <label for="price_breakdown" class="block text-sm font-medium leading-6 text-white">Price Breakdown</label>
+            <textarea 
+              v-model="property.price_breakdown" 
+              id="price_breakdown" 
+              rows="4" 
+              class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" 
+              placeholder="Price breakdown"
+            ></textarea>
+          </div>
+
+          <div class="col-span-3">
+            <label for="additional_benefits" class="block text-sm font-medium leading-6 text-white">Additional Benefits</label>
+            <textarea 
+              v-model="property.additional_benefits" 
+              id="additional_benefits" 
+              rows="4" 
+              class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" 
+              placeholder="Additional benefits"
+            ></textarea>
           </div>
         </div>
-  
-        <div class="mt-6 pb-6 flex items-center justify-end gap-x-6">
-          <a href="/admin">
-            <button type="button" class="text-sm font-semibold leading-6">Cancel</button>
-          </a>
-          <button :disabled="data.form.loading || !property.price" type="submit" class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400">Save</button>
+
+        <div v-else-if="data.loading" class="text-white">
+          Loading
         </div>
       </div>
-    </form>
+
+      <!-- Form Actions -->
+      <div class="mt-6 pb-6 flex items-center justify-end gap-x-6">
+        <a href="/admin">
+          <button type="button" class="text-sm font-semibold leading-6 text-white hover:text-gray-300">Cancel</button>
+        </a>
+        <button 
+          :disabled="data.form.loading || !property.price" 
+          type="submit" 
+          class="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 disabled:opacity-50"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </form>
 </template>
 
 <script setup>

@@ -3,8 +3,8 @@
     <div class="container mx-auto">
       <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <div class="flex justify-center mb-8">
-        <a href="http://mycreativefinancing.com/" target="_blank">
-          <img src="/logo.png" alt="Logo" class="h-12 w-auto" />
+        <a href="https://urcreativesolutions.com/" target="_blank">
+          <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
         </a>
       </div>
         <div class="mb-4">
@@ -78,11 +78,11 @@
               {{ formatCurrency(property.price) }}
             </p>
             <p v-if="property.sold !== null" class="font-medium text-white"><span>Status:</span> <span class="font-bold" :class="property.sold ? 'text-red-700' : 'text-green-300'"> {{ property.sold ? 'Sold' : 'Available' }} </span> </p>
-            <div v-if="!property.sold" class="mt-4 sm:flex-none">
+            <!-- <div v-if="!property.sold" class="mt-4 sm:flex-none">
               <a href="https://docs.google.com/forms/d/e/1FAIpQLSf4GRCx5VjPD-afYQMMEdhuUzUYqe0rMPzfa0_AZMtMhLscvQ/viewform" target="_blank">
                 <button type="button" class="block rounded-md bg-primary px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">Get More Details</button>
               </a>
-            </div>
+            </div> -->
           </div>
 
           <!-- Info Sections -->
