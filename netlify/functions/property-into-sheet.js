@@ -62,7 +62,8 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const spreadsheetId = '1minoEorYBxEG78SfoEoGxIjCBO2g4rUGX5jr1ZK0wfU';
+  const spreadsheetId = '1-KORQc7eQHidXeZ5cVuA5VR73NfeRQ_IKVO8nkkWEWM';
+  
 
   const safeToString = (value) => {
     if (value === null || value === undefined) return '';

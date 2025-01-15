@@ -53,7 +53,6 @@
                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                       <a :href="'/admin/' + property.ID + '/edit'" class="text-indigo-400 hover:text-indigo-300 mr-6">Edit</a>
                       <button @click="openDeleteModal(property)" class="text-red-400 hover:text-red-300">Delete</button>
-                      <button @click="openNetSheetModal(property)" class="text-green-400 hover:text-green-300" style="margin-left: 1rem;">NetSheet</button>
                     </td>
                   </tr>
                 </tbody>
@@ -86,7 +85,6 @@
         </button>
       </div>
       <ConfirmationModal v-if="showModal" :property="propertySelected" :loading="data.loading" @confirm="deleteProperty" @cancel="hideModal"/>
-      <NetSheetModal v-if="showNetSheetModal" :property="propertySelected" :loading="data.loading" @confirmCreateNetSheet="createNetSheet" @cancel="hideNetSheetModal"/>
     </div>
   </div>
 </template>
@@ -114,7 +112,6 @@ const { _data, pending, error, refresh } = await useAsyncData(
 
 
 const showModal = ref(false);
-const showNetSheetModal = ref(false);
 const propertySelected = ref(null);
 
 const data = reactive({
@@ -127,10 +124,6 @@ function hideModal() {
   propertySelected.value = null;
 }
 
-function hideNetSheetModal() {
-  showNetSheetModal.value = false;
-  propertySelected.value = null;
-}
 
 
 
@@ -154,11 +147,6 @@ function openDeleteModal(property) {
   showModal.value = true;
 }
 
-function openNetSheetModal(property) {
-  console.log("setting selected property");
-  propertySelected.value = property;
-  showNetSheetModal.value = true;
-}
 
 const deleteProperty = async (property) => {
   // Perform the delete operation
@@ -171,45 +159,8 @@ const deleteProperty = async (property) => {
   propertySelected.value = null;
 };
 
-const createNetSheet = async (property) => {
-  data.loading = true;
-  let propertyToSubmit = {
-    ...propertySelected.value,
-  }
 
-  await sendWebHook(propertyToSubmit)
-  data.loading = false;
-  showNetSheetModal.value = false;
-  propertySelected.value = null;
 
-}
-
-const sendWebHook = async (propertyToSubmit) => {
-  const backendUrl = '/.netlify/functions/copy-and-populate-sheet';
-
-  const headers = {
-    'Content-Type': 'application/json'
-  };
-
-  const payload = {
-    property: {
-      ...propertyToSubmit
-    }
-  };
-
-  try {
-    const response = await fetch(backendUrl, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(payload)
-    });
-
-    console.log(response);
-
-  } catch (error) {
-    console.error('Error adding property via serverless function:', error);
-  }
-};
 
 function formatCurrency(value) {
   if (typeof value !== 'number') {

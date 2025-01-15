@@ -204,10 +204,10 @@
             <input v-model="property.transaction_document_url" type="text" id="transaction_document_url" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Url">
           </div>
 
-          <div class="col-span-3">
+          <!-- <div class="col-span-3">
             <label for="benefit_sheet_url" class="block text-sm font-medium leading-6 text-white">Benefit Sheet Url</label>
             <input v-model="property.benefit_sheet_url" type="text" id="benefit_sheet_url" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Url">
-          </div>
+          </div> -->
 
           <div class="sm:col-span-3">
             <label for="escrow" class="block text-sm font-medium leading-6 text-white">Escrow</label>
@@ -219,15 +219,7 @@
             <input v-model="property.deal_holder" type="text" id="deal_holder" class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" placeholder="Deal Holder">
           </div>
 
-          <div class="sm:col-span-3 flex items-center">
-            <input v-model="property.in_house_deal" type="checkbox" id="in_house_deal" class="mr-2 bg-gray-700 border-gray-600">
-            <label for="in_house_deal" class="block text-sm font-medium leading-6 text-white">In House Deal</label>
-          </div>
-
-          <div class="sm:col-span-3 flex items-center">
-            <input v-model="property.rental_restriction" type="checkbox" id="rental_restriction" class="mr-2 bg-gray-700 border-gray-600">
-            <label for="rental_restriction" class="block text-sm font-medium leading-6 text-white">Rental Restriction</label>
-          </div>
+          
 
           <div class="col-span-3">
             <label for="price_breakdown" class="block text-sm font-medium leading-6 text-white">Price Breakdown</label>
@@ -249,6 +241,16 @@
               class="block w-full bg-gray-800 border-gray-600 text-white rounded-md py-1.5 shadow-sm focus:ring-primary sm:text-sm sm:leading-6" 
               placeholder="Additional benefits"
             ></textarea>
+          </div>
+
+          <div class="sm:col-span-4 flex items-center">
+            <input v-model="property.in_house_deal" type="checkbox" id="in_house_deal" class="mr-2 bg-gray-700 border-gray-600">
+            <label for="in_house_deal" class="block text-sm font-medium leading-6 text-white">In House Deal</label>
+          </div>
+
+          <div class="sm:col-span-4 flex items-center">
+            <input v-model="property.rental_restriction" type="checkbox" id="rental_restriction" class="mr-2 bg-gray-700 border-gray-600">
+            <label for="rental_restriction" class="block text-sm font-medium leading-6 text-white">Rental Restriction</label>
           </div>
         </div>
 
@@ -339,10 +341,9 @@ const defaultProperty = {
   nearby_homes: [],
   price_history: [],
   tax_history: [],
-  contact_recipients: [{"agent_reason":1,"zpro":null,"recent_sales":0,"review_count":0,"display_name":"Rahul Valecha","zuid":"X1-ZUtp0k7oy516o9_7rj5o","rating_average":0,"badge_type":"Premier Agent","phone":{"prefix":"","areacode":"682","number":"375-1867"},"image_url":"https://drscdn.500px.org/photo/1095517488/q%3D50_w%3D1000_of%3D1/v2?sig=846ed9856973e0fa1d074bd15553dd91fc55124257c6af4cbde5e44852f9c91c","email":"sales@mycreativesolutions.com"}],
+  contact_recipients: [{"agent_reason":1,"zpro":null,"recent_sales":0,"review_count":0,"display_name":"Rahul Valecha","zuid":"X1-ZUtp0k7oy516o9_7rj5o","rating_average":0,"badge_type":"Premier Agent","phone":{"prefix":"","areacode":"682","number":"375-1867"},"image_url":"https://drscdn.500px.org/photo/1095517488/q%3D50_w%3D1000_of%3D1/v2?sig=846ed9856973e0fa1d074bd15553dd91fc55124257c6af4cbde5e44852f9c91c","email":"rahul@urcreativesolutions.com"}],
   monthly_hoa_fee: null,
   transaction_document_url: null,
-  benefit_sheet_url: null,
   escrow: null,
   deal_holder: '',
   in_house_deal: false,
@@ -455,12 +456,7 @@ const fetchPropertyData = async () => {
         property.value.nearby_homes = response._data.nearbyHomes;
         property.value.price_history = response._data.priceHistory;
         property.value.tax_history = response._data.taxHistory;
-        // property.value.contact_recipients = response._data.contact_recipients;
         property.value.monthly_hoa_fee = response._data.monthlyHoaFee ? response._data.monthlyHoaFee : null;
-        // property.value.transaction_document_url = response._data.TransactionDocumentUrl;
-        // property.value.benefit_sheet_url = response._data.BenefitSheetUrl;
-        
-        // Update other properties as needed
 
         
       } else {
@@ -551,8 +547,6 @@ const handleRetrieve = async (event) => {
     if (data.form.is_appartment && data.form.unit_number) {
       property.value.address += ` Unit ${data.form.unit_number}, ${data.form.type}`;
     }
-    // await fetchNearbyPlaces(data.form.latitude, data.form.longitude, 'hospital');
-    // await fetchNearbyPlaces(coordinates.latitude, coordinates.longitude, 'school');
   } else {
     alert('You must search a location and select from the dropdown menu.');
   }
@@ -587,38 +581,6 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   return R * c; // Distance in kilometers
 };
 
-const fetchNearbyPlaces = async (latitude, longitude, type) => {
-  const service = new google.maps.places.PlacesService(mapRef.value.map);
-  const request = {
-    location: new google.maps.LatLng(latitude, longitude),
-    radius: '5000',
-    type: [type],
-  };
-  service.nearbySearch(request, (results, status) => {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      const places = results.map((place) => ({
-        name: place.name,
-        address: place.vicinity,
-        rating: place.rating || 'No rating',
-        latitude: place.geometry.location.lat(),
-        longitude: place.geometry.location.lng(),
-        distance: calculateDistance(latitude, longitude, place.geometry.location.lat(), place.geometry.location.lng()).toFixed(2) // Distance in kilometers
-      }));
-
-      // Depending on the type, append to the appropriate property field
-      if (type === 'hospital') {
-        property.value.nearby_hospitals = [...(property.value.nearby_hospitals || []), ...places];
-      } else if (type === 'school') {
-        property.value.nearby_schools = [...(property.value.nearby_schools || []), ...places];
-      }
-    } else if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
-      console.log('No places found within the specified radius.');
-    } else {
-      console.error('Error with API status:', status);
-    }
-  });
-};
-
 const addImage = () => {
   property.value.images.push('');
 };
@@ -626,22 +588,6 @@ const addImage = () => {
 const removeImage = (index) => {
   property.value.images.splice(index, 1);
 };
-
-const addContactRecipient = () => {
-  property.value.contact_recipients.push({
-    display_name: '',
-    zuid: '',
-    badge_type: '',
-    phone: '',
-    email: '',
-    image_url: ''
-  });
-};
-
-const removeContactRecipient = (index) => {
-  property.value.contact_recipients.splice(index, 1);
-};
-
 
 
 </script>
