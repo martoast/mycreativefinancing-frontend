@@ -82,7 +82,7 @@ exports.handler = async (event, context) => {
     console.log('Appending data to Google Sheet');
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'main',
+      range: 'Sheet1',
       valueInputOption: 'USER_ENTERED',
       resource
     });
