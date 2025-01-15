@@ -1,122 +1,101 @@
 const { google } = require('googleapis');
 const { JWT } = require('google-auth-library');
 
+// Ordered fields to ensure data matches sheet headers
+const ORDERED_FIELDS = [
+ 'ID', 'CreatedAt', 'UpdatedAt', 'DeletedAt', 'address', 'price',
+ 'description', 'images', 'sold', 'bedrooms', 'bathrooms', 
+ 'rent_zestimate', 'zestimate', 'property_type', 'zoning', 
+ 'year_built', 'lot_size', 'price_per_square_foot', 'living_area',
+ 'purchase_price', 'balance_to_close', 'monthly_holding_cost',
+ 'interest_rate', 'nearby_hospitals', 'nearby_schools', 'nearby_homes',
+ 'price_history', 'tax_history', 'contact_recipients', 'monthly_hoa_fee',
+ 'transaction_document_url', 'benefit_sheet_url', 'escrow',
+ 'deal_holder', 'in_house_deal', 'rental_restriction',
+ 'price_breakdown', 'additional_benefits'
+];
+
+const safeToString = (value) => {
+ if (value === null || value === undefined) return '';
+ if (Array.isArray(value) || typeof value === 'object') {
+   try {
+     return JSON.stringify(value);
+   } catch (e) {
+     console.warn('Failed to stringify value:', e);
+     return '';
+   }
+ }
+ return String(value);
+};
+
 exports.handler = async (event, context) => {
-  let credentials;
-  try {
-    credentials = JSON.parse(process.env.GOOGLE_SHEETS_API_CREDENTIALS);
-  } catch (error) {
-    console.error('Error parsing GOOGLE_SHEETS_API_CREDENTIALS:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Error parsing credentials', details: error.message })
-    };
-  }
+ try {
+   // Parse credentials
+   const credentials = JSON.parse(process.env.GOOGLE_SHEETS_API_CREDENTIALS);
+   if (!credentials.client_email || !credentials.private_key) {
+     throw new Error('Invalid Google Sheets credentials structure');
+   }
 
-  if (!credentials.client_email || !credentials.private_key) {
-    console.error('Invalid credentials structure');
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Invalid credentials structure' })
-    };
-  }
+   // Setup JWT client
+   const jwtClient = new JWT(
+     credentials.client_email,
+     null,
+     credentials.private_key.replace(/\\n/g, '\n'),
+     ['https://www.googleapis.com/auth/spreadsheets']
+   );
 
-  const jwtClient = new JWT(
-    credentials.client_email,
-    null,
-    credentials.private_key.replace(/\\n/g, '\n'),
-    ['https://www.googleapis.com/auth/spreadsheets']
-  );
+   console.log('Authorizing JWT client...');
+   await jwtClient.authorize();
 
-  try {
-    console.log('Authorizing JWT client');
-    await jwtClient.authorize();
-  } catch (error) {
-    console.error('JWT authorization failed:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Authentication failed', details: error.message })
-    };
-  }
+   const sheets = google.sheets({ version: 'v4', auth: jwtClient });
 
-  const sheets = google.sheets({ version: 'v4', auth: jwtClient });
+   // Parse request body
+   const { property } = JSON.parse(event.body);
+   if (!property || !property.address) {
+     throw new Error('No property data or address provided');
+   }
 
-  let requestBody;
-  try {
-    requestBody = JSON.parse(event.body);
-  } catch (error) {
-    console.error('Error parsing request body:', error);
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: 'Invalid JSON in request body', details: error.message })
-    };
-  }
+   // Format data in correct order
+   const values = ORDERED_FIELDS.map(field => safeToString(property[field] || ''));
 
-  const property = requestBody.property;
+   console.log('Appending data to Google Sheet...');
+   const response = await sheets.spreadsheets.values.append({
+     spreadsheetId: '1-KORQc7eQHidXeZ5cVuA5VR73NfeRQ_IKVO8nkkWEWM',
+     range: 'Sheet1',
+     valueInputOption: 'USER_ENTERED',
+     resource: { values: [values] }
+   });
 
-  if (!property || !property.address) {
-    console.error('Missing property address');
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: 'Property address is required' })
-    };
-  }
+   console.log('Successfully wrote data to sheet');
+   return {
+     statusCode: 200,
+     body: JSON.stringify({
+       message: 'Data written to sheet successfully',
+       updatedRange: response.data.updates.updatedRange
+     })
+   };
 
-  const spreadsheetId = '1-KORQc7eQHidXeZ5cVuA5VR73NfeRQ_IKVO8nkkWEWM';
-  
+ } catch (error) {
+   console.error('Error in property-into-sheet function:', error);
+   console.error('Error details:', {
+     message: error.message,
+     code: error.code,
+     stack: error.stack
+   });
 
-  const safeToString = (value) => {
-    if (value === null || value === undefined) return '';
-    if (typeof value === 'object') return JSON.stringify(value);
-    return String(value);
-  };
+   const errorMessages = {
+     403: 'Permission denied. Check spreadsheet ID and credentials.',
+     404: 'Spreadsheet not found. Check spreadsheet ID.',
+     429: 'Too many requests. Please try again later.',
+   };
 
-  const headers = Object.keys(property);
-  const values = headers.map(header => safeToString(property[header]));
-
-  const resource = {
-    values: [values]
-  };
-
-  try {
-    console.log('Appending data to Google Sheet');
-    const response = await sheets.spreadsheets.values.append({
-      spreadsheetId,
-      range: 'Sheet1',
-      valueInputOption: 'USER_ENTERED',
-      resource
-    });
-
-    console.log('Success');
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ 
-        message: 'Data written to sheet successfully',
-        updatedRange: response.data.updates.updatedRange
-      })
-    };
-  } catch (error) {
-    console.error('Error appending to Google Sheet:', error);
-    let errorMessage = 'Error writing to sheet';
-    let statusCode = 500;
-
-    if (error.code === 403) {
-      errorMessage = 'Permission denied. Check the spreadsheet ID and credentials.';
-    } else if (error.code === 404) {
-      errorMessage = 'Spreadsheet not found. Check the spreadsheet ID.';
-    } else if (error.code === 429) {
-      errorMessage = 'Too many requests. Please try again later.';
-      statusCode = 429;
-    }
-
-    return {
-      statusCode: statusCode,
-      body: JSON.stringify({ 
-        error: errorMessage, 
-        details: error.message,
-        code: error.code
-      })
-    };
-  }
+   return {
+     statusCode: error.code || 500,
+     body: JSON.stringify({
+       error: errorMessages[error.code] || 'Internal server error',
+       details: error.message,
+       code: error.code
+     })
+   };
+ }
 };
