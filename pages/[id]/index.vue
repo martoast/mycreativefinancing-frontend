@@ -373,7 +373,7 @@
             </section>
 
             <!-- Tax History -->
-            <section class="mt-6">
+            <section v-if="filteredTaxHistory.length" class="mt-6">
               <h3 class="text-xl font-semibold text-white">Tax History</h3>
               <div class="overflow-x-auto mt-2">
                 <table class="min-w-full bg-black text-white">
@@ -451,9 +451,10 @@ function openModal(index) {
   isModalOpen.value = true;
 }
 
-const filteredTaxHistory = computed(() =>
-  property.value.tax_history.filter((tax) => tax.taxPaid)
-);
+const filteredTaxHistory = computed(() => {
+  const taxHistory = property.value?.tax_history;
+  return Array.isArray(taxHistory) ? taxHistory.filter((tax) => tax?.taxPaid) : [];
+});
 
 function formatCurrency(value) {
   if (typeof value !== "number") {
