@@ -212,6 +212,22 @@
               </section>
             </div>
 
+            <section class="mt-4 space-y-3">
+              <div v-if="property.price_breakdown" class="bg-black p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">
+                  Price Breakdown
+                </h3>
+                <p class="text-gray-300">{{ property.price_breakdown }}</p>
+              </div>
+
+              <div v-if="property.additional_benefits" class="bg-black p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">
+                  Additional Benefits
+                </h3>
+                <p class="text-gray-300">{{ property.additional_benefits }}</p>
+              </div>
+            </section>
+
             <!-- Description -->
             <section class="mt-6">
               <h3 class="text-xl font-semibold text-white">Description</h3>
@@ -240,7 +256,12 @@
                     <p class="font-medium">{{ recipient.display_name }}</p>
 
                     <p class="text-sm">
-                      Phone: ({{ recipient.phone.areacode }})
+                      Phone:
+                      {{
+                        recipient.phone?.areacode
+                          ? `(${recipient.phone.areacode}) ${recipient.phone.prefix}-${recipient.phone.number}`
+                          : "N/A"
+                      }}
                       {{ recipient.phone.prefix }}-{{ recipient.phone.number }}
                     </p>
                     <p v-if="recipient.email" class="text-sm">
@@ -251,23 +272,7 @@
               </div>
             </section>
 
-            <section class="mt-4 space-y-3">
-              <div v-if="property.price_breakdown" class="bg-black p-4">
-                <h3 class="text-lg font-semibold text-white mb-2">
-                  Price Breakdown
-                </h3>
-                <p class="text-gray-300">{{ property.price_breakdown }}</p>
-              </div>
-
-              <div v-if="property.additional_benefits" class="bg-black p-4">
-                <h3 class="text-lg font-semibold text-white mb-2">
-                  Additional Benefits
-                </h3>
-                <p class="text-gray-300">{{ property.additional_benefits }}</p>
-              </div>
-            </section>
-
-            <section class="mt-6">
+            <section v-if="filteredNearbyHomes.length" class="mt-6">
               <h3 class="text-xl font-semibold text-white">Nearby Homes</h3>
               <div class="overflow-x-auto mt-2">
                 <table class="min-w-full bg-black text-white">
@@ -284,7 +289,7 @@
                   </thead>
                   <tbody>
                     <tr
-                      v-for="home in property.nearby_homes"
+                      v-for="home in filteredNearbyHomes"
                       :key="home.address.streetAddress"
                     >
                       <td class="py-2 px-4 border-b border-gray-300">
@@ -294,8 +299,8 @@
                         {{ formatCurrency(home.price) }}
                       </td>
                       <td class="py-2 px-4 border-b border-gray-300">
-                        {{ home.lotSize ? home.lotSize.toLocaleString() : "N/A" }}
-                        {{ home.lotSize ? home.livingAreaUnits : "" }}
+                        {{ home.lotSize.toLocaleString() }}
+                        {{ home.livingAreaUnits }}
                       </td>
                     </tr>
                   </tbody>
@@ -321,7 +326,11 @@
                       :key="price.date"
                     >
                       <td class="py-2 px-4 border-b border-gray-300">
-                        {{ new Date(price.date).toLocaleDateString() }}
+                        {{
+                          price.date
+                            ? new Date(price.date).toLocaleDateString()
+                            : "N/A"
+                        }}
                       </td>
                       <td class="py-2 px-4 border-b border-gray-300">
                         {{ price.event }}
@@ -421,7 +430,7 @@ const store = usePropertiesStore();
 await useAsyncData("property", () => store.find(route.params.id));
 
 const property = computed(() => ({
-  ...store.property,
+  ...(store.property || {}),
   nearby_hospitals: store.property.nearby_hospitals
     ? JSON.parse(store.property.nearby_hospitals)
     : [],
@@ -431,7 +440,7 @@ const property = computed(() => ({
   nearby_homes: store.property.nearby_homes
     ? JSON.parse(store.property.nearby_homes)
     : [],
-  images: store.property.images.length ? JSON.parse(store.property.images) : [],
+  images: store.property?.images ? JSON.parse(store.property.images) : [],
   tax_history: store.property.tax_history
     ? JSON.parse(store.property.tax_history)
     : [],
@@ -453,7 +462,20 @@ function openModal(index) {
 
 const filteredTaxHistory = computed(() => {
   const taxHistory = property.value?.tax_history;
-  return Array.isArray(taxHistory) ? taxHistory.filter((tax) => tax?.taxPaid) : [];
+  return Array.isArray(taxHistory)
+    ? taxHistory.filter((tax) => tax?.taxPaid)
+    : [];
+});
+
+const filteredNearbyHomes = computed(() => {
+  const homes = property.value?.nearby_homes;
+  if (!Array.isArray(homes)) return [];
+  
+  return homes.filter(home => 
+    home?.address?.streetAddress && 
+    home?.price && 
+    home?.lotSize
+  );
 });
 
 function formatCurrency(value) {
