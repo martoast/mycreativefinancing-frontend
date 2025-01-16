@@ -213,20 +213,36 @@
             </div>
 
             <section class="mt-4 space-y-3">
-              <div v-if="property.price_breakdown" class="bg-black p-4">
-                <h3 class="text-lg font-semibold text-white mb-2">
-                  Price Breakdown
-                </h3>
-                <p class="text-gray-300">{{ property.price_breakdown }}</p>
-              </div>
+  <div v-if="formattedPriceBreakdown.length" class="bg-black p-4">
+    <h3 class="text-lg font-semibold text-white mb-2">
+      Price Breakdown
+    </h3>
+    <ul class="space-y-2">
+      <li 
+        v-for="(item, index) in formattedPriceBreakdown" 
+        :key="index"
+        class="text-gray-300"
+      >
+        - {{ item }}
+      </li>
+    </ul>
+  </div>
 
-              <div v-if="property.additional_benefits" class="bg-black p-4">
-                <h3 class="text-lg font-semibold text-white mb-2">
-                  Additional Benefits
-                </h3>
-                <p class="text-gray-300">{{ property.additional_benefits }}</p>
-              </div>
-            </section>
+  <div v-if="formattedBenefits.length" class="bg-black p-4">
+    <h3 class="text-lg font-semibold text-white mb-2">
+      Additional Benefits
+    </h3>
+    <ul class="space-y-2">
+      <li 
+        v-for="(item, index) in formattedBenefits" 
+        :key="index"
+        class="text-gray-300"
+      >
+        - {{ item }}
+      </li>
+    </ul>
+  </div>
+</section>
 
             <!-- Description -->
             <section class="mt-6">
@@ -477,6 +493,23 @@ const filteredNearbyHomes = computed(() => {
     home?.lotSize
   );
 });
+
+// Add these computed properties in your script setup
+const formattedPriceBreakdown = computed(() => {
+  if (!property.value?.price_breakdown) return []
+  return property.value.price_breakdown
+    .split('-')
+    .filter(item => item.trim())
+    .map(item => item.trim())
+})
+
+const formattedBenefits = computed(() => {
+  if (!property.value?.additional_benefits) return []
+  return property.value.additional_benefits
+    .split('-')
+    .filter(item => item.trim())
+    .map(item => item.trim())
+})
 
 function formatCurrency(value) {
   if (typeof value !== "number") {
