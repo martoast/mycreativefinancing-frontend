@@ -438,7 +438,7 @@ const fetchPropertyData = async () => {
     },
     onResponse({ request, response, options }) {
       // Process the response data
-      if (response.ok) {
+      if (response.ok && response._data?.zpid) {
         fetchPropertyImages(response._data.zpid);
         property.value.price = response._data.price;
         property.value.bedrooms = response._data.bedrooms;
@@ -447,7 +447,7 @@ const fetchPropertyData = async () => {
         property.value.rent_zestimate = response._data.rentZestimate;
         property.value.zestimate = response._data.zestimate;
         property.value.property_type = response._data.homeType;
-        property.value.zoning = response._data.zoning ? response._data.zoning : response._data.resoFacts.zoning;
+        property.value.zoning = response._data.zoning ? response._data.zoning : response._data.zoning;
         property.value.lot_size = response._data.lotSize ? response._data.lotSize : null;
         property.value.living_area = response._data.livingArea;
         property.value.year_built = response._data.yearBuilt;
@@ -489,7 +489,7 @@ const handleSubmit = async (e) => {
 
   if (manualInput.value) {
     // If manual input, combine address fields
-    propertyToSubmit.address = `${property.value.address}, ${property.value.city}, ${property.value.state} ${property.value.zip}`;
+    propertyToSubmit.address = property.value.address;
   }
 
   if (props.property && props.property.ID) {
