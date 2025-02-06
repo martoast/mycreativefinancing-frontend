@@ -2,7 +2,7 @@
   <div class="bg-black min-h-screen">
     <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
       <div class="flex justify-center mb-8">
-        <a href="https://urcreativesolutions.com/" target="_blank">
+        <a href="https://urcreativeservices.com/" target="_blank">
           <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
         </a>
       </div>

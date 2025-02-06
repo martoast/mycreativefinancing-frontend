@@ -13,7 +13,7 @@
       </div>
       
       <div class="flex justify-center mb-8">
-        <a href="https://urcreativesolutions.com/" target="_blank">
+        <a href="https://urcreativeservices.com/" target="_blank">
           <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
         </a>
       </div>
