@@ -9,7 +9,7 @@ export const usePropertiesStore = defineStore('properties', {
   }),
 
   actions: {
-    async get(page = 1, pageSize = 10, sold = null) {
+    async get(page = 1, pageSize = 100, sold = null) {
       console.log("Attempting to get properties");
       let url = `https://shark-app-gfe6f.ondigitalocean.app/properties/?page=${page}&pageSize=${pageSize}`;
       if (sold !== null) {
