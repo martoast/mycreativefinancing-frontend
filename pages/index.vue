@@ -1,11 +1,15 @@
+<!-- pages/index.vue -->
 <template>
   <div class="bg-black min-h-screen">
     <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+      <!-- Logo -->
       <div class="flex justify-center mb-8">
         <a href="https://urcreativeservices.com/" target="_blank">
           <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
         </a>
       </div>
+
+      <!-- Title -->
       <h2 class="sr-only">Properties</h2>
       <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-wide mb-8 text-center">
         <span class="text-primary">EXPLORE</span> <span class="text-white">OUR LISTINGS</span>
@@ -18,12 +22,17 @@
         </NuxtLink>
       </div>
 
+      <!-- Filter Component -->
+      <PropertyFilter @filter="handleFilter" />
+
+      <!-- Property Grid -->
       <div class="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">
         <div
-          v-for="property in properties"
+          v-for="property in displayProperties"
           :key="property.ID"
           class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-700 bg-gray-800"
         >
+          <!-- Property Image -->
           <div class="aspect-w-3 aspect-h-2 bg-gray-550 sm:aspect-none sm:h-64 group-hover:opacity-75">
             <img
               :src="property.images[0]"
@@ -31,6 +40,8 @@
               class="h-full w-full object-cover object-center sm:h-full sm:w-full"
             />
           </div>
+
+          <!-- Property Details -->
           <div class="flex flex-1 flex-col p-4">
             <h3 class="text-lg font-bold text-white">
               <a :href="`/${property.ID}`">
@@ -39,6 +50,8 @@
               </a>
             </h3>
             <p class="text-lg font-semibold text-white">{{ formatCurrency(property.price) }}</p>
+            
+            <!-- Property Features -->
             <div class="mt-2 flex flex-row items-center text-sm text-white">
               <span class="inline-block h-5 w-5 text-white mr-1" aria-hidden="true">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor">
@@ -63,8 +76,11 @@
                 {{ property.lot_size }} sqft
               </div>
             </div>
+
+            <!-- View Details Link -->
             <div class="mt-4 flex justify-end">
               <a
+              
                 :href="`/property/${property.ID}`"
                 class="text-primary font-semibold hover:text-indigo-300"
               >
@@ -74,7 +90,8 @@
           </div>
         </div>
       </div>
-      <!-- Pagination controls -->
+
+      <!-- Pagination -->
       <div class="mt-8 flex justify-between items-center">
         <button
           @click="prevPage"
@@ -100,28 +117,44 @@
 
 <script setup>
 import { usePropertiesStore } from '~/store/DataStore'
+import PropertyFilter from '~/components/PropertyFilter.vue'
 
 const store = usePropertiesStore()
-
 const currentPage = ref(1)
 const itemsPerPage = 10
+const filteredProperties = ref([])
 
 const { data, pending, error, refresh } = await useAsyncData(
   'properties',
-  () => store.get(currentPage.value, itemsPerPage, false) // Always fetch available properties
+  () => store.get(currentPage.value, itemsPerPage, false)
 )
 
 const totalPages = computed(() => Math.ceil(store.total / itemsPerPage))
 
 const properties = computed(() => {
   return store.properties
-    .filter(property => !property.sold) // Only show available properties
+    .filter(property => !property.sold)
     .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
     .map(property => ({
       ...property,
       images: property.images.length ? JSON.parse(property.images) : []
     }))
 })
+
+const displayProperties = computed(() => {
+  return filteredProperties.value.length > 0 ? filteredProperties.value : properties.value
+})
+
+const handleFilter = (filters) => {
+  filteredProperties.value = properties.value.filter(property => {
+    if (filters.search) {
+      const searchTerm = filters.search.toLowerCase()
+      const address = property.address.toLowerCase()
+      return address.includes(searchTerm)
+    }
+    return true
+  })
+}
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
@@ -139,8 +172,8 @@ const prevPage = () => {
 
 function formatCurrency(value) {
   if (typeof value !== 'number') {
-    return value;
+    return value
   }
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)
 }
 </script>
