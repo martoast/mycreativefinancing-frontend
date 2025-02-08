@@ -126,7 +126,7 @@ import PropertyFilter from '~/components/PropertyFilter.vue'
 
 const store = usePropertiesStore()
 const currentPage = ref(1)
-const itemsPerPage = 10
+const itemsPerPage = 100
 const filteredProperties = ref([])
 
 const { data, pending, error, refresh } = await useAsyncData(
