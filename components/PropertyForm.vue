@@ -288,7 +288,12 @@ const access_token = config.public.MAPBOX_API_TOKEN;
 const zillowApiKey = config.public.ZILLOW_API_KEY;
 
 const props = defineProps({
-  property: Object
+  property: Object,
+  created_by: {
+    type: String,
+    default: 'user',
+    validator: (value) => ['user', 'admin'].includes(value)
+  }
 });
 
 const mapRef = ref(null);
@@ -349,8 +354,8 @@ const defaultProperty = {
   in_house_deal: false,
   rental_restriction: false,
   price_breakdown: null,
-  additional_benefits: null
-
+  additional_benefits: null,
+  created_by: 'user' // Default value
 };
 
 
@@ -384,6 +389,9 @@ onMounted(() => {
       }
     }
   }
+  
+  // Set the created_by value from props
+  property.value.created_by = props.created_by;
 });
 
 const apiUrl = ref(`https://zillow-com1.p.rapidapi.com/property?address=`);
@@ -484,7 +492,8 @@ const handleSubmit = async (e) => {
     nearby_schools: JSON.stringify(property.value.nearby_schools),
     price_history: JSON.stringify(property.value.price_history),
     tax_history: JSON.stringify(property.value.tax_history),
-    contact_recipients: JSON.stringify(property.value.contact_recipients)
+    contact_recipients: JSON.stringify(property.value.contact_recipients),
+    created_by: props.created_by // Ensure we always send the created_by field
   };
 
   if (manualInput.value) {

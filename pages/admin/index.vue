@@ -17,10 +17,12 @@
           <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
         </a>
       </div>
+      
+      <!-- Admin Properties Section -->
       <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto">
           <h1 class="text-base font-semibold leading-6 text-white">Properties</h1>
-          <p class="mt-2 text-sm text-gray-300">A list of all the properties in your account including their address, price, and details.</p>
+          <p class="mt-2 text-sm text-gray-300">A list of all the admin properties in your account including their address, price, and details.</p>
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <a href="/admin/create">
@@ -43,8 +45,8 @@
                     <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6"> </th>
                   </tr>
                 </thead>
-                <tbody v-if="store.properties.length" class="divide-y divide-gray-700 bg-gray-900">
-                  <tr v-for="property in store.properties" :key="property.ID">
+                <tbody v-if="adminProperties.length" class="divide-y divide-gray-700 bg-gray-900">
+                  <tr v-for="property in adminProperties" :key="property.ID">
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-6">{{ property.address }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm" :class="property.sold ? 'text-red-400' : 'text-green-400'">{{ property.sold ? "Sold" : "Available" }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{{ formatCurrency(property.price) }}</td>
@@ -57,14 +59,15 @@
                   </tr>
                 </tbody>
                 <div v-else class="mt-4">
-                  <p class="text-white">No Properties</p>
+                  <p class="text-white">No Admin Properties</p>
                 </div>
               </table>
             </div>
           </div>
         </div>
       </div>
-      <!-- Pagination controls -->
+      
+      <!-- Pagination controls for admin properties -->
       <div class="my-8 flex justify-between items-center">
         <button
           @click="prevPage"
@@ -84,7 +87,71 @@
           Next
         </button>
       </div>
-      <ConfirmationModal v-if="showModal" :property="propertySelected" :loading="data.loading" @confirm="deleteProperty" @cancel="hideModal"/>
+      
+      <!-- User Submitted Properties Section -->
+      <div class="mt-16 sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+          <h1 class="text-base font-semibold leading-6 text-white">User Submitted Properties</h1>
+          <p class="mt-2 text-sm text-gray-300">Properties submitted by users that need review.</p>
+        </div>
+      </div>
+      <div class="mt-8 flow-root">
+        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div class="inline-block min-w-full py-2 align-middle">
+            <div class="overflow-hidden shadow ring-1 ring-gray-700 ring-opacity-5 sm:rounded-lg">
+              <table class="min-w-full divide-y divide-gray-700">
+                <thead class="bg-gray-800">
+                  <tr>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6">Address</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Status</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Price</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Bedrooms</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-white">Bathrooms</th>
+                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6"> </th>
+                  </tr>
+                </thead>
+                <tbody v-if="userProperties.length" class="divide-y divide-gray-700 bg-gray-900">
+                  <tr v-for="property in userProperties" :key="property.ID">
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-6">{{ property.address }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm" :class="property.sold ? 'text-red-400' : 'text-green-400'">{{ property.sold ? "Sold" : "Available" }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{{ formatCurrency(property.price) }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{{ property.bedrooms }}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-300">{{ property.bathrooms }}</td>
+                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                      <button @click="acceptProperty(property)" class="text-green-400 hover:text-green-300 mr-4">Accept</button>
+                      <button @click="openDeclineModal(property)" class="text-red-400 hover:text-red-300">Decline</button>
+                    </td>
+                  </tr>
+                </tbody>
+                <div v-else class="mt-4">
+                  <p class="text-white">No User Submitted Properties</p>
+                </div>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirmation Modals -->
+      <ConfirmationModal 
+        v-if="showDeleteModal" 
+        :property="propertySelected" 
+        :loading="data.loading" 
+        title="Delete Property"
+        message="Are you sure you want to delete this property? This action cannot be undone."
+        @confirm="deleteProperty" 
+        @cancel="hideDeleteModal"
+      />
+      
+      <ConfirmationModal 
+        v-if="showDeclineModal" 
+        :property="propertySelected" 
+        :loading="data.loading" 
+        title="Decline Property"
+        message="Are you sure you want to decline this user-submitted property? This action cannot be undone."
+        @confirm="declineProperty" 
+        @cancel="hideDeclineModal"
+      />
     </div>
   </div>
 </template>
@@ -102,7 +169,6 @@ const currentPage = ref(1)
 const itemsPerPage = 10 // Change this to the number of items you want per page
 const showSold = ref(null)
 
-
 const totalPages = computed(() => Math.ceil(store.total / itemsPerPage))
 
 const { _data, pending, error, refresh } = await useAsyncData(
@@ -110,8 +176,18 @@ const { _data, pending, error, refresh } = await useAsyncData(
   () => store.get(currentPage.value, itemsPerPage, showSold.value)
 )
 
+// Separate admin and user properties
+const adminProperties = computed(() => 
+  store.properties.filter(property => !property.created_by || property.created_by === 'admin')
+)
 
-const showModal = ref(false);
+const userProperties = computed(() => 
+  store.properties.filter(property => property.created_by === 'user')
+)
+
+// Modal states
+const showDeleteModal = ref(false);
+const showDeclineModal = ref(false);
 const propertySelected = ref(null);
 
 const data = reactive({
@@ -119,13 +195,15 @@ const data = reactive({
   errors: {}
 });
 
-function hideModal() {
-  showModal.value = false;
+function hideDeleteModal() {
+  showDeleteModal.value = false;
   propertySelected.value = null;
 }
 
-
-
+function hideDeclineModal() {
+  showDeclineModal.value = false;
+  propertySelected.value = null;
+}
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
@@ -142,25 +220,71 @@ const prevPage = () => {
 }
 
 function openDeleteModal(property) {
-  console.log("setting selected for deleted property");
   propertySelected.value = property;
-  showModal.value = true;
+  showDeleteModal.value = true;
 }
 
+function openDeclineModal(property) {
+  propertySelected.value = property;
+  showDeclineModal.value = true;
+}
 
 const deleteProperty = async (property) => {
-  // Perform the delete operation
   data.loading = true;
-  console.log("Property delete confirmed, delete it in the API!." + property.ID);
   await store.delete(property.ID);
-  refresh();
+  await refresh();
   data.loading = false;
-  showModal.value = false;
+  showDeleteModal.value = false;
   propertySelected.value = null;
 };
 
+const declineProperty = async (property) => {
+  // Declining a property is the same as deleting it
+  data.loading = true;
+  await store.delete(property.ID);
+  await refresh();
+  data.loading = false;
+  showDeclineModal.value = false;
+  propertySelected.value = null;
+};
 
-
+const acceptProperty = async (property) => {
+  data.loading = true;
+  
+  // Create a copy of the property and change created_by to "admin"
+  const updatedProperty = {
+    ...property,
+    created_by: 'admin'
+  };
+  
+  // If the property has JSON fields, ensure they're properly stringified
+  if (typeof updatedProperty.images === 'object') {
+    updatedProperty.images = JSON.stringify(updatedProperty.images);
+  }
+  if (typeof updatedProperty.nearby_homes === 'object') {
+    updatedProperty.nearby_homes = JSON.stringify(updatedProperty.nearby_homes);
+  }
+  if (typeof updatedProperty.nearby_schools === 'object') {
+    updatedProperty.nearby_schools = JSON.stringify(updatedProperty.nearby_schools);
+  }
+  if (typeof updatedProperty.price_history === 'object') {
+    updatedProperty.price_history = JSON.stringify(updatedProperty.price_history);
+  }
+  if (typeof updatedProperty.tax_history === 'object') {
+    updatedProperty.tax_history = JSON.stringify(updatedProperty.tax_history);
+  }
+  if (typeof updatedProperty.contact_recipients === 'object') {
+    updatedProperty.contact_recipients = JSON.stringify(updatedProperty.contact_recipients);
+  }
+  
+  // Update the property in the database
+  await store.store({ property: updatedProperty });
+  
+  // Refresh the properties list
+  await refresh();
+  
+  data.loading = false;
+};
 
 function formatCurrency(value) {
   if (typeof value !== 'number') {
@@ -168,5 +292,4 @@ function formatCurrency(value) {
   }
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 }
-
 </script>
