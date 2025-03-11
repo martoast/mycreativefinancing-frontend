@@ -320,7 +320,7 @@
 import { usePropertiesStore } from "~/store/DataStore";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "admin",
 });
 
 const store = usePropertiesStore();

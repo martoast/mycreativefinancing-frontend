@@ -1,8 +1,8 @@
-export default defineNuxtRouteMiddleware((to, from) => {
-    console.log("Here in middleware")
-    const authCookie = useCookie('auth')
-    if (!authCookie.value) {
-      return navigateTo('/login')
-    }
-  })
+// middleware/auth.js
+export default defineNuxtRouteMiddleware(() => {
+  const { $auth } = useNuxtApp();
   
+  if (!$auth.isAuthenticated()) {
+    return navigateTo('/login');
+  }
+});

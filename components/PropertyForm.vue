@@ -646,44 +646,7 @@
         </div>
       </div>
     </form>
-    <!-- Password Modal -->
-    <div
-      v-if="showPasswordModal"
-      class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
-    >
-      <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
-        <h3 class="text-xl font-semibold text-white mb-4">Password Required</h3>
-        <p class="text-gray-300 mb-4">
-          Please enter the password to submit this property.
-        </p>
-
-        <div class="mb-4">
-          <label for="password" class="sr-only">Password</label>
-          <input
-            v-model="password"
-            type="password"
-            id="password"
-            @keydown.enter="validatePassword"
-            class="block w-full bg-gray-700 border-gray-600 text-white rounded-md py-2 px-3 shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-            placeholder="Enter password"
-          />
-          <p v-if="passwordError" class="mt-2 text-sm text-red-400">
-            Incorrect password. Please try again.
-          </p>
-        </div>
-
-        <div class="flex justify-end space-x-3">
-         
-          <button
-            @click="validatePassword"
-            type="button"
-            class="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400"
-          >
-            Submit
-          </button>
-        </div>
-      </div>
-    </div>
+    
   </div>
 </template>
 
@@ -716,7 +679,6 @@ const mapRef = ref(null);
 const manualInput = ref(false);
 
 const route = useRoute();
-
 
 const data = reactive({
   loading: false,
@@ -826,13 +788,7 @@ onMounted(() => {
   // Set the created_by value from props
   property.value.created_by = props.created_by;
   
-  // Check if we're NOT in the admin section
-  const isAdminRoute = route.path.includes('/admin/');
   
-  // Show password modal immediately if user created and not in admin route
-  if (property.value.created_by === "user" && !isAdminRoute) {
-    showPasswordModal.value = true;
-  }
 });
 
 const apiUrl = ref(`https://zillow-com1.p.rapidapi.com/property?address=`);
@@ -924,28 +880,8 @@ const fetchPropertyData = async () => {
   });
 };
 
-// Add these new refs at the top with your other refs
-const showPasswordModal = ref(false);
-const password = ref("");
-const passwordError = ref(false);
-const passwordValidated = ref(false);
 
 const handleSubmit = async (e) => {
-  // Check if we're in the admin section
-  const isAdminRoute = route.path.includes('/admin/');
-  
-  // If it's a user submission and not in admin route and not yet validated
-  if (property.value.created_by === "user" && !isAdminRoute && !passwordValidated.value) {
-    showPasswordModal.value = true;
-    return; // Stop here and wait for password validation
-  }
-  
-  // This code will run if we're in admin section or if already validated
-  await submitForm();
-};
-
-// New function that contains your original handleSubmit logic
-const submitForm = async () => {
   data.form.loading = true;
   const propertiesStore = usePropertiesStore();
 
@@ -979,21 +915,8 @@ const submitForm = async () => {
   await navigateTo(props.redirect);
 };
 
-// Add a new function to validate password
-const validatePassword = () => {
-  const correctPassword = "Alexandrotheking";
-  
-  if (password.value === correctPassword) {
-    // Password correct
-    passwordError.value = false;
-    showPasswordModal.value = false;
-    password.value = ''; // Clear password field
-    passwordValidated.value = true; // Mark as validated
-  } else {
-    // Password incorrect
-    passwordError.value = true;
-  }
-};
+
+
 
 const sendWebHook = async (propertyToSubmit) => {
   const backendUrl = "/.netlify/functions/property-into-sheet";

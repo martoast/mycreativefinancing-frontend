@@ -12,5 +12,7 @@
 </template>
   
 <script setup>
-// Note: No auth middleware here since this is for regular users
+definePageMeta({
+    middleware: 'auth'
+  })
 </script> 

@@ -213,36 +213,36 @@
             </div>
 
             <section class="mt-4 space-y-3">
-  <div v-if="formattedPriceBreakdown.length" class="bg-black p-4">
-    <h3 class="text-lg font-semibold text-white mb-2">
-      Price Breakdown
-    </h3>
-    <ul class="space-y-2">
-      <li 
-        v-for="(item, index) in formattedPriceBreakdown" 
-        :key="index"
-        class="text-gray-300"
-      >
-        - {{ item }}
-      </li>
-    </ul>
-  </div>
+              <div v-if="formattedPriceBreakdown.length" class="bg-black p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">
+                  Price Breakdown
+                </h3>
+                <ul class="space-y-2">
+                  <li
+                    v-for="(item, index) in formattedPriceBreakdown"
+                    :key="index"
+                    class="text-gray-300"
+                  >
+                    - {{ item }}
+                  </li>
+                </ul>
+              </div>
 
-  <div v-if="formattedBenefits.length" class="bg-black p-4">
-    <h3 class="text-lg font-semibold text-white mb-2">
-      Additional Benefits
-    </h3>
-    <ul class="space-y-2">
-      <li 
-        v-for="(item, index) in formattedBenefits" 
-        :key="index"
-        class="text-gray-300"
-      >
-        - {{ item }}
-      </li>
-    </ul>
-  </div>
-</section>
+              <div v-if="formattedBenefits.length" class="bg-black p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">
+                  Additional Benefits
+                </h3>
+                <ul class="space-y-2">
+                  <li
+                    v-for="(item, index) in formattedBenefits"
+                    :key="index"
+                    class="text-gray-300"
+                  >
+                    - {{ item }}
+                  </li>
+                </ul>
+              </div>
+            </section>
 
             <!-- Description -->
             <section class="mt-6">
@@ -486,30 +486,28 @@ const filteredTaxHistory = computed(() => {
 const filteredNearbyHomes = computed(() => {
   const homes = property.value?.nearby_homes;
   if (!Array.isArray(homes)) return [];
-  
-  return homes.filter(home => 
-    home?.address?.streetAddress && 
-    home?.price && 
-    home?.lotSize
+
+  return homes.filter(
+    (home) => home?.address?.streetAddress && home?.price && home?.lotSize
   );
 });
 
 // Add these computed properties in your script setup
 const formattedPriceBreakdown = computed(() => {
-  if (!property.value?.price_breakdown) return []
+  if (!property.value?.price_breakdown) return [];
   return property.value.price_breakdown
-    .split('-')
-    .filter(item => item.trim())
-    .map(item => item.trim())
-})
+    .split("-")
+    .filter((item) => item.trim())
+    .map((item) => item.trim());
+});
 
 const formattedBenefits = computed(() => {
-  if (!property.value?.additional_benefits) return []
+  if (!property.value?.additional_benefits) return [];
   return property.value.additional_benefits
-    .split('-')
-    .filter(item => item.trim())
-    .map(item => item.trim())
-})
+    .split("-")
+    .filter((item) => item.trim())
+    .map((item) => item.trim());
+});
 
 function formatCurrency(value) {
   if (typeof value !== "number") {

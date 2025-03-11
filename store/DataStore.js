@@ -1,4 +1,4 @@
-// stores/properties.js
+// stores/DataStore.js
 import { defineStore } from 'pinia';
 
 export const usePropertiesStore = defineStore('properties', {
@@ -10,36 +10,55 @@ export const usePropertiesStore = defineStore('properties', {
 
   actions: {
     async get(page = 1, pageSize = 100, sold = null) {
+      const config = useRuntimeConfig();
       console.log("Attempting to get properties");
-      let url = `https://shark-app-gfe6f.ondigitalocean.app/properties/?page=${page}&pageSize=${pageSize}`;
+      
+      let url = `${config.public.apiBaseUrl}/properties?page=${page}&pageSize=${pageSize}`;
       if (sold !== null) {
         url += `&sold=${sold}`;
       }
+      
       const response = await $fetch(url);
       this.properties = response.properties;
       this.total = response.total;
     },
 
     async find(ID) {
-      const url = `https://shark-app-gfe6f.ondigitalocean.app/properties/${ID}`;
+      const config = useRuntimeConfig();
+      const url = `${config.public.apiBaseUrl}/properties/${ID}`;
       this.property = await $fetch(url);
     },
 
     async store(params) {
-      const url = params.property.ID
-        ? `https://shark-app-gfe6f.ondigitalocean.app/properties/${params.property.ID}`
-        : "https://shark-app-gfe6f.ondigitalocean.app/properties/";
-      const method = params.property.ID ? 'put' : 'post';
+      const config = useRuntimeConfig();
+      const { $auth } = useNuxtApp();
+      
+      // Determine if we're updating or creating
+      const isUpdate = !!params.property.ID;
+      
+      // Use the protected API endpoint with authentication
+      const url = isUpdate
+        ? `${config.public.apiBaseUrl}/api/properties/${params.property.ID}`
+        : `${config.public.apiBaseUrl}/api/properties`;
+      
+      const method = isUpdate ? 'put' : 'post';
 
-      return $fetch(url, {
+      // Use auth.fetch for protected endpoints
+      return $auth.fetch(url, {
         method: method,
         body: params.property
       });
     },
 
     async delete(ID) {
-      const url = `https://shark-app-gfe6f.ondigitalocean.app/properties/${ID}`;
-      return $fetch(url, {
+      const config = useRuntimeConfig();
+      const { $auth } = useNuxtApp();
+      
+      // Use the protected API endpoint with authentication
+      const url = `${config.public.apiBaseUrl}/api/properties/${ID}`;
+      
+      // Use auth.fetch for protected endpoints
+      return $auth.fetch(url, {
         method: 'delete'
       });
     }

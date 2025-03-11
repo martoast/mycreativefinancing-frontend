@@ -13,7 +13,7 @@
 
 <script setup>
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'admin'
 })
 
 import { usePropertiesStore } from '~/store/DataStore'
