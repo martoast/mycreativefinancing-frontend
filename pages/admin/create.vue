@@ -6,7 +6,7 @@
             <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
           </a>
         </div>
-        <property-form created_by="admin"></property-form>
+        <property-form created_by="admin" redirect="/admin/"></property-form>
       </div>
     </div>
   </template>

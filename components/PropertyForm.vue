@@ -3,11 +3,11 @@
     <div class="space-y-12">
       <div class="border-b border-gray-700 pb-4" :class="property.address ? 'pb-8' : 'pb-0'">
         <div class="flex items-center mb-6">
-          <NuxtLink to="/admin" class="inline-flex items-center text-white hover:text-gray-300">
+          <NuxtLink to="/" class="inline-flex items-center text-white hover:text-gray-300">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
             </svg>
-            Back to Admin
+            Back
           </NuxtLink>
         </div>
         
@@ -293,6 +293,10 @@ const props = defineProps({
     type: String,
     default: 'user',
     validator: (value) => ['user', 'admin'].includes(value)
+  },
+  redirect: {
+    type: String,
+    default: '/admin/'
   }
 });
 
@@ -483,7 +487,6 @@ const fetchPropertyData = async () => {
 const handleSubmit = async (e) => {
   data.form.loading = true;
   const propertiesStore = usePropertiesStore();
-
   
   let propertyToSubmit = {
     ...property.value,
@@ -495,29 +498,25 @@ const handleSubmit = async (e) => {
     contact_recipients: JSON.stringify(property.value.contact_recipients),
     created_by: props.created_by // Ensure we always send the created_by field
   };
-
   if (manualInput.value) {
     // If manual input, combine address fields
     propertyToSubmit.address = property.value.address;
   }
-
   if (props.property && props.property.ID) {
     console.log('Updating property...', propertyToSubmit);
     await propertiesStore.store({ property: propertyToSubmit });
   } else {
     console.log('Creating new property...', propertyToSubmit);
     let response = await propertiesStore.store({ property: propertyToSubmit });
-
     let parsedResponse = JSON.parse(response);
     let propertyID = parsedResponse.ID;
-
     await sendWebHook({
       ID: propertyID,
       ...propertyToSubmit
     });
   }
   data.form.loading = false;
-  await navigateTo('/admin/');
+  await navigateTo(props.redirect);
 };
 
 
