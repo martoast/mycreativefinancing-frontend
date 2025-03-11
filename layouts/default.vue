@@ -8,13 +8,13 @@
             <div></div>
             
             <!-- User menu -->
-            <div v-if="isAuthenticated" class="relative z-10">
+            <div v-if="authState.isAuthenticated" class="relative z-10">
               <Menu as="div" class="relative ml-3">
                 <div>
                   <MenuButton class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span class="sr-only">Open user menu</span>
                     <div class="flex items-center">
-                      <span v-if="isAdmin" class="text-primary font-medium mr-2">Admin</span>
+                      <span v-if="authState.isAdmin" class="text-primary font-medium mr-2">Admin</span>
                       <span v-else class="text-gray-300 mr-2">{{ userEmail }}</span>
                       <div class="w-8 h-8 rounded-full bg-primary/10 text-primary border border-primary/30 flex items-center justify-center">
                         <UserIcon class="h-5 w-5" />
@@ -67,13 +67,11 @@
   } from '@heroicons/vue/24/outline';
   
   const { $auth } = useNuxtApp();
-  const isAuthenticated = computed(() => $auth.isAuthenticated());
-  const isAdmin = computed(() => $auth.isAdmin());
+  const authState = $auth.getState();
   
   // Get user email
   const userEmail = computed(() => {
-    const user = $auth.getUser();
-    return user?.email?.split('@')[0] || 'User';
+    return authState.value.user?.email?.split('@')[0] || 'User';
   });
   
   // Logout function
