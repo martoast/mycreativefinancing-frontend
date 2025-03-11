@@ -2,7 +2,7 @@
     <div class="bg-black min-h-screen flex flex-col items-center justify-center px-4">
       <!-- Logo -->
       <div class="mb-8">
-        <a href="https://urcreativeservices.com/" target="_blank">
+        <a href="/" target="_blank">
           <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
         </a>
       </div>
