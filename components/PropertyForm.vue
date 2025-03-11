@@ -673,17 +673,7 @@
         </div>
 
         <div class="flex justify-end space-x-3">
-          <button
-            @click="
-              showPasswordModal = false;
-              password = '';
-              passwordError = false;
-            "
-            type="button"
-            class="rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500"
-          >
-            Cancel
-          </button>
+         
           <button
             @click="validatePassword"
             type="button"
@@ -835,6 +825,14 @@ onMounted(() => {
 
   // Set the created_by value from props
   property.value.created_by = props.created_by;
+  
+  // Check if we're NOT in the admin section
+  const isAdminRoute = route.path.includes('/admin/');
+  
+  // Show password modal immediately if user created and not in admin route
+  if (property.value.created_by === "user" && !isAdminRoute) {
+    showPasswordModal.value = true;
+  }
 });
 
 const apiUrl = ref(`https://zillow-com1.p.rapidapi.com/property?address=`);
@@ -930,18 +928,19 @@ const fetchPropertyData = async () => {
 const showPasswordModal = ref(false);
 const password = ref("");
 const passwordError = ref(false);
+const passwordValidated = ref(false);
 
 const handleSubmit = async (e) => {
-  // Check if we're in the admin section by examining the current route
+  // Check if we're in the admin section
   const isAdminRoute = route.path.includes('/admin/');
   
-  // Only show password modal if created_by is "user" AND we're not in the admin section
-  if (property.value.created_by === "user" && !isAdminRoute) {
+  // If it's a user submission and not in admin route and not yet validated
+  if (property.value.created_by === "user" && !isAdminRoute && !passwordValidated.value) {
     showPasswordModal.value = true;
     return; // Stop here and wait for password validation
   }
   
-  // This code will run if we're in admin section or if the property isn't created by a user
+  // This code will run if we're in admin section or if already validated
   await submitForm();
 };
 
@@ -983,13 +982,13 @@ const submitForm = async () => {
 // Add a new function to validate password
 const validatePassword = () => {
   const correctPassword = "Alexandrotheking";
-
+  
   if (password.value === correctPassword) {
     // Password correct
     passwordError.value = false;
     showPasswordModal.value = false;
-    password.value = ""; // Clear password field
-    submitForm(); // Continue with form submission
+    password.value = ''; // Clear password field
+    passwordValidated.value = true; // Mark as validated
   } else {
     // Password incorrect
     passwordError.value = true;
