@@ -54,6 +54,11 @@
             {{ loading ? 'Logging in...' : 'Login' }}
           </button>
           
+          <!-- Register link -->
+          <div class="text-center text-gray-300 text-sm">
+            Don't have an account? 
+            <NuxtLink to="/register" class="text-primary hover:text-indigo-400">Register</NuxtLink>
+          </div>
         </form>
       </div>
     </div>
