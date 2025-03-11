@@ -6,7 +6,7 @@
           <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
         </a>
       </div>
-      <property-form :property="property" created_by="admin" redirect="/admin/"></property-form>
+      <property-form :property="property" :created_by="property.created_by" redirect="/admin/"></property-form>
     </div>
   </div>
 </template>

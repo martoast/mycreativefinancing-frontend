@@ -191,7 +191,7 @@ const totalPages = computed(() => Math.ceil(store.total / itemsPerPage));
 
 const properties = computed(() => {
   return store.properties
-    .filter((property) => !property.sold)
+    .filter((property) => !property.sold && (!property.created_by || property.created_by === "admin"))
     .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt))
     .map((property) => ({
       ...property,
