@@ -6,7 +6,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   const authState = useState('auth', () => ({
     user: null,
     isAuthenticated: false,
-    isAdmin: false
+    isAdmin: false,
+    isEmployee: false
   }));
 
   // Function to parse JWT token
@@ -25,7 +26,8 @@ export default defineNuxtPlugin((nuxtApp) => {
       authState.value = {
         user: null,
         isAuthenticated: false,
-        isAdmin: false
+        isAdmin: false,
+        isEmployee: false
       };
       return;
     }
@@ -35,7 +37,8 @@ export default defineNuxtPlugin((nuxtApp) => {
       authState.value = {
         user: null,
         isAuthenticated: false,
-        isAdmin: false
+        isAdmin: false,
+        isEmployee: false
       };
       return;
     }
@@ -43,7 +46,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     authState.value = {
       user: userData,
       isAuthenticated: true,
-      isAdmin: userData.is_admin === true
+      isAdmin: userData.is_admin === true,
+      isEmployee: userData.is_employee === true
     };
   };
 
@@ -104,6 +108,11 @@ export default defineNuxtPlugin((nuxtApp) => {
           return authState.value.isAdmin;
         },
         
+        // Check if user is employee
+        isEmployee() {
+          return authState.value.isEmployee;
+        },
+        
         // Get current user data
         getUser() {
           return authState.value.user;
@@ -137,11 +146,11 @@ export default defineNuxtPlugin((nuxtApp) => {
         },
         
         // Register helper
-        async register(email, password) {
+        async register(email, password, isEmployee = false) {
           try {
             const response = await $fetch(`${runtimeConfig.public.apiBaseUrl}/auth/register`, {
               method: 'POST',
-              body: { email, password }
+              body: { email, password, is_employee: isEmployee }
             });
             
             if (response.token) {

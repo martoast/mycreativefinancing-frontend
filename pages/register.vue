@@ -81,6 +81,11 @@
           />
         </div>
         
+        <!-- Employee info notification -->
+        <div class="p-3 bg-indigo-900/50 border border-indigo-500 rounded text-indigo-200 text-sm">
+          New accounts will be registered with employee access.
+        </div>
+        
         <!-- Submit button -->
         <button 
           type="submit" 
@@ -115,7 +120,7 @@ const accessError = ref('');
 const accessLoading = ref(false);
 
 // Set your access password here
-const CORRECT_ACCESS_PASSWORD = 'Alexandrotheking ';
+const CORRECT_ACCESS_PASSWORD = 'Alexandrotheking';
 
 function checkAccessPassword() {
   accessLoading.value = true;
@@ -137,7 +142,8 @@ async function register() {
     error.value = '';
     loading.value = true;
     
-    await $auth.register(email.value, password.value);
+    // Set isEmployee to true to automatically register as an employee
+    await $auth.register(email.value, password.value, true);
     
     // Redirect to home page on success
     router.push('/');

@@ -41,7 +41,14 @@
             address, price, and details.
           </p>
         </div>
-        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+        <div class="mt-4 sm:ml-4 sm:mt-0 sm:flex space-x-3">
+          <button
+            @click="openEmailModal"
+            type="button"
+            class="block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            Send Marketing Email
+          </button>
           <a href="/admin/create">
             <button
               type="button"
@@ -312,17 +319,28 @@
         @confirm="declineProperty"
         @cancel="hideDeclineModal"
       />
+
+      <!-- Marketing Email Modal -->
+      <MarketingEmailModal
+        v-if="showEmailModal"
+        :properties="adminProperties"
+        :loading="emailLoading"
+        @close="hideEmailModal"
+        @send="sendMarketingEmail"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
 import { usePropertiesStore } from "~/store/DataStore";
+import MarketingEmailModal from "~/components/MarketingEmailModal.vue";
 
 definePageMeta({
-  middleware: "admin",
+  middleware: "admin-or-employee",
 });
 
+const config = useRuntimeConfig();
 const store = usePropertiesStore();
 
 const currentPage = ref(1);
@@ -350,7 +368,9 @@ const userProperties = computed(() =>
 // Modal states
 const showDeleteModal = ref(false);
 const showDeclineModal = ref(false);
+const showEmailModal = ref(false);
 const propertySelected = ref(null);
+const emailLoading = ref(false);
 
 const data = reactive({
   loading: false,
@@ -365,6 +385,14 @@ function hideDeleteModal() {
 function hideDeclineModal() {
   showDeclineModal.value = false;
   propertySelected.value = null;
+}
+
+function openEmailModal() {
+  showEmailModal.value = true;
+}
+
+function hideEmailModal() {
+  showEmailModal.value = false;
 }
 
 const nextPage = () => {
@@ -453,6 +481,36 @@ const acceptProperty = async (property) => {
 
   data.loading = false;
 };
+
+const sendMarketingEmail = async (formData) => {
+  emailLoading.value = true
+  
+  try {
+    // Call the local API endpoint (on your Nuxt server)
+    const response = await fetch('/api/email/send-email', {
+      method: 'POST',
+      body: formData // This is already FormData from the modal
+    })
+    
+    const result = await response.json()
+    
+    if (result.success) {
+      // Show success message
+      alert(`Success: ${result.message}`)
+    } else {
+      // Show error message
+      alert(`Error: ${result.message}`)
+    }
+    
+    // Close the modal
+    hideEmailModal()
+  } catch (error) {
+    console.error('Error sending marketing emails:', error)
+    alert(`Error sending emails: ${error.message || 'Unknown error'}`)
+  } finally {
+    emailLoading.value = false
+  }
+}
 
 function formatCurrency(value) {
   if (typeof value !== "number") {

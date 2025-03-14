@@ -18,6 +18,7 @@ export default defineNuxtConfig({
         ZILLOW_API_KEY: process.env.ZILLOW_API_KEY,
         GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
         GOOGLE_SHEETS_API_CREDENTIALS: process.env.GOOGLE_SHEETS_API_CREDENTIALS,
+        SEND_GRID_API_KEY: process.env.SEND_GRID_API_KEY,
         apiBaseUrl: process.env.API_BASE_URL || 'https://shark-app-gfe6f.ondigitalocean.app',
     }
 }
