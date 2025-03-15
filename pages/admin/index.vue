@@ -337,7 +337,7 @@ import { usePropertiesStore } from "~/store/DataStore";
 import MarketingEmailModal from "~/components/MarketingEmailModal.vue";
 
 definePageMeta({
-  middleware: "admin-or-employee",
+  middleware: "admin",
 });
 
 const config = useRuntimeConfig();

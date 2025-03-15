@@ -5,10 +5,28 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <!-- Logo or site name -->
-          <div></div>
+          <div class="flex items-center">
+            <NuxtLink to="/" class="flex items-center">
+              <img src="/logo.svg" alt="Logo" class="h-8 w-auto" />
+            </NuxtLink>
+          </div>
 
-          <!-- User menu -->
-          <div v-if="authState.isAuthenticated" class="relative z-10">
+          <!-- Auth buttons (when not logged in) -->
+          <div v-if="!authState.isAuthenticated" class="flex items-center space-x-4">
+            <NuxtLink to="/login">
+              <button class="px-4 py-2 text-sm font-medium text-white hover:text-primary transition-colors">
+                Log in
+              </button>
+            </NuxtLink>
+            <NuxtLink to="/register">
+              <button class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-indigo-600 transition-colors">
+                Register
+              </button>
+            </NuxtLink>
+          </div>
+
+          <!-- User menu (when logged in) -->
+          <div v-else class="relative z-10">
             <Menu as="div" class="relative ml-3">
               <div>
                 <MenuButton
@@ -20,6 +38,11 @@
                       v-if="authState.isAdmin"
                       class="text-primary font-medium mr-2"
                       >Admin</span
+                    >
+                    <span
+                      v-else-if="authState.isEmployee"
+                      class="text-blue-400 font-medium mr-2"
+                      >Employee</span
                     >
                     <span v-else class="text-gray-300 mr-2">{{
                       userEmail
@@ -54,6 +77,18 @@
                     >
                       <HomeIcon class="h-5 w-5 mr-2 text-gray-500" />
                       Admin Panel
+                    </NuxtLink>
+                  </MenuItem>
+                  <MenuItem v-if="authState.isEmployee" v-slot="{ active }">
+                    <NuxtLink
+                      to="/employee/"
+                      :class="[
+                        active ? 'bg-gray-100' : '',
+                        'flex w-full items-center px-4 py-2 text-sm text-gray-700',
+                      ]"
+                    >
+                      <HomeIcon class="h-5 w-5 mr-2 text-gray-500" />
+                      Employee Panel
                     </NuxtLink>
                   </MenuItem>
                   <MenuItem v-slot="{ active }">

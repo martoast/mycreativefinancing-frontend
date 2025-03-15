@@ -29,6 +29,7 @@
           View Sold Properties
         </NuxtLink>
         <NuxtLink
+          v-if="authState.isAuthenticated"
           to="/create"
           class="text-primary hover:text-indigo-300 font-semibold flex items-center"
         >
@@ -177,6 +178,9 @@
 <script setup>
 import { usePropertiesStore } from "~/store/DataStore";
 import PropertyFilter from "~/components/PropertyFilter.vue";
+
+const { $auth } = useNuxtApp();
+const authState = $auth.getState();
 
 const store = usePropertiesStore();
 const currentPage = ref(1);

@@ -2,7 +2,7 @@
   <div class="bg-black min-h-screen flex flex-col items-center justify-center px-4">
     <!-- Logo -->
     <div class="mb-8">
-      <a href="/" target="_blank">
+      <a href="/">
         <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
       </a>
     </div>
@@ -81,9 +81,42 @@
           />
         </div>
         
-        <!-- Employee info notification -->
-        <div class="p-3 bg-indigo-900/50 border border-indigo-500 rounded text-indigo-200 text-sm">
-          New accounts will be registered with employee access.
+        <!-- Account Type Selection -->
+        <div>
+          <label class="block text-sm font-medium text-white mb-2">Account Type</label>
+          <div class="grid grid-cols-2 gap-4">
+            <div 
+              @click="selectAccountType('user')" 
+              class="border rounded-md p-4 cursor-pointer transition-colors"
+              :class="accountType === 'user' ? 'bg-gray-700 border-primary' : 'bg-gray-800 border-gray-600 hover:border-gray-500'"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-white font-medium">User</span>
+                <div class="h-5 w-5 rounded-full border-2 flex items-center justify-center"
+                     :class="accountType === 'user' ? 'border-primary' : 'border-gray-500'"
+                >
+                  <div v-if="accountType === 'user'" class="h-3 w-3 rounded-full bg-primary"></div>
+                </div>
+              </div>
+              <p class="text-xs text-gray-400">Submit properties for review and browse available listings.</p>
+            </div>
+            
+            <div 
+              @click="selectAccountType('employee')" 
+              class="border rounded-md p-4 cursor-pointer transition-colors"
+              :class="accountType === 'employee' ? 'bg-gray-700 border-primary' : 'bg-gray-800 border-gray-600 hover:border-gray-500'"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-white font-medium">Employee</span>
+                <div class="h-5 w-5 rounded-full border-2 flex items-center justify-center"
+                     :class="accountType === 'employee' ? 'border-primary' : 'border-gray-500'"
+                >
+                  <div v-if="accountType === 'employee'" class="h-3 w-3 rounded-full bg-primary"></div>
+                </div>
+              </div>
+              <p class="text-xs text-gray-400">View properties and send marketing emails to clients.</p>
+            </div>
+          </div>
         </div>
         
         <!-- Submit button -->
@@ -112,6 +145,13 @@ const error = ref('');
 const loading = ref(false);
 const router = useRouter();
 const { $auth } = useNuxtApp();
+
+// Account type selection
+const accountType = ref('user'); // Default to regular user
+
+function selectAccountType(type) {
+  accountType.value = type;
+}
 
 // Access password functionality
 const accessGranted = ref(false);
@@ -142,8 +182,9 @@ async function register() {
     error.value = '';
     loading.value = true;
     
-    // Set isEmployee to true to automatically register as an employee
-    await $auth.register(email.value, password.value, true);
+    // Register with the selected account type
+    const isEmployee = accountType.value === 'employee';
+    await $auth.register(email.value, password.value, isEmployee);
     
     // Redirect to home page on success
     router.push('/');
