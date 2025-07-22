@@ -422,211 +422,248 @@
               </button>
             </div>
 
-            <!-- Contact Recipients (Simplified for Brevity, expand as needed) -->
+            <!-- Contact Recipients (Read-only) -->
             <div class="col-span-full border-t border-gray-700 pt-4">
-               <label
-                class="block text-sm font-medium leading-6 text-white mb-2"
-                >Contact Recipient(s)</label
-              >
-              <!-- Add logic for multiple recipients if needed -->
-               <div v-if="property.contact_recipients && property.contact_recipients.length > 0" class="space-y-4">
-                 <div v-for="(recipient, index) in property.contact_recipients" :key="`contact-${index}`" class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 p-3 bg-gray-800/50 rounded">
-                    <div class="sm:col-span-3">
-                       <label :for="`contact-name-${index}`" class="block text-xs font-medium text-gray-400">Display Name</label>
-                       <input v-model="recipient.display_name" type="text" :id="`contact-name-${index}`" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" placeholder="Name">
-                    </div>
-                     <div class="sm:col-span-3">
-                       <label :for="`contact-email-${index}`" class="block text-xs font-medium text-gray-400">Email</label>
-                       <input v-model="recipient.email" type="email" :id="`contact-email-${index}`" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" placeholder="Email Address">
-                    </div>
-                    <!-- Simplified Phone -->
-                     <div class="sm:col-span-3">
-                       <label :for="`contact-phone-${index}`" class="block text-xs font-medium text-gray-400">Phone</label>
-                       <input v-model="recipient.phone.number" type="tel" :id="`contact-phone-${index}`" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" placeholder="(xxx) xxx-xxxx">
-                       <!-- Note: You might want separate fields for areacode etc. or use a mask -->
-                    </div>
-                      <div class="sm:col-span-3">
-                       <label :for="`contact-image-${index}`" class="block text-xs font-medium text-gray-400">Image URL</label>
-                       <input v-model="recipient.image_url" type="url" :id="`contact-image-${index}`" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" placeholder="Image URL (Optional)">
-                    </div>
-                 </div>
-               </div>
-               <!-- Add button for adding more contacts if needed -->
+              <label class="block text-sm font-medium leading-6 text-white mb-2">
+                Contact Recipient(s)
+              </label>
+              <div v-if="property.contact_recipients && property.contact_recipients.length > 0" class="space-y-4">
+                <div v-for="(recipient, index) in property.contact_recipients" :key="`contact-${index}`" class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 p-3 bg-gray-800/50 rounded">
+                  <div class="sm:col-span-3">
+                    <label :for="`contact-name-${index}`" class="block text-xs font-medium text-gray-400">Display Name</label>
+                    <input 
+                      v-model="recipient.display_name" 
+                      type="text" 
+                      :id="`contact-name-${index}`" 
+                      readonly
+                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 sm:text-sm sm:leading-6 read-only:opacity-70 cursor-not-allowed" 
+                      placeholder="Name"
+                    >
+                  </div>
+                  <div class="sm:col-span-3">
+                    <label :for="`contact-email-${index}`" class="block text-xs font-medium text-gray-400">Email</label>
+                    <input 
+                      v-model="recipient.email" 
+                      type="email" 
+                      :id="`contact-email-${index}`" 
+                      readonly
+                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 sm:text-sm sm:leading-6 read-only:opacity-70 cursor-not-allowed" 
+                      placeholder="Email Address"
+                    >
+                  </div>
+                  <div class="sm:col-span-3">
+                    <label :for="`contact-phone-${index}`" class="block text-xs font-medium text-gray-400">Phone</label>
+                    <input 
+                      v-model="recipient.phone.number" 
+                      type="tel" 
+                      :id="`contact-phone-${index}`" 
+                      readonly
+                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 sm:text-sm sm:leading-6 read-only:opacity-70 cursor-not-allowed" 
+                      placeholder="(xxx) xxx-xxxx"
+                    >
+                  </div>
+                  <!-- <div class="sm:col-span-3">
+                    <label :for="`contact-image-${index}`" class="block text-xs font-medium text-gray-400">Image URL</label>
+                    <input 
+                      v-model="recipient.image_url" 
+                      type="url" 
+                      :id="`contact-image-${index}`" 
+                      readonly
+                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 sm:text-sm sm:leading-6 read-only:opacity-70 cursor-not-allowed" 
+                      placeholder="Image URL (Optional)"
+                    >
+                  </div> -->
+                </div>
+              </div>
             </div>
 
             <!-- Internal / Deal Specific Fields (Collapsible) -->
-             <details class="col-span-full mt-4 border-t border-gray-700 pt-4">
+            <details class="col-span-full mt-4 border-t border-gray-700 pt-4" open>
               <summary class="text-sm font-medium leading-6 text-white cursor-pointer hover:text-gray-300">
-                Internal Deal Information
+                Internal Deal Information (Required)
               </summary>
               <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-5">
-                  <div class="sm:col-span-3">
-                    <label
-                      for="purchase_price"
-                      class="block text-sm font-medium leading-6 text-white"
-                      >Purchase Price ($)</label
-                    >
-                    <input
-                      v-model.number="property.purchase_price"
-                      type="number" step="0.01" min="0"
-                      id="purchase_price"
-                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                      placeholder="Purchase Price"
-                    />
-                  </div>
+                <div class="sm:col-span-3">
+                  <label
+                    for="purchase_price"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Purchase Price ($) <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    v-model.number="property.purchase_price"
+                    type="number" 
+                    step="0.01" 
+                    min="0"
+                    id="purchase_price"
+                    required
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="Purchase Price"
+                  />
+                </div>
 
-                  <div class="sm:col-span-3">
-                    <label
-                      for="balance_to_close"
-                      class="block text-sm font-medium leading-6 text-white"
-                      >Balance to Close ($)</label
-                    >
-                    <input
-                      v-model.number="property.balance_to_close"
-                      type="number" step="0.01" min="0"
-                      id="balance_to_close"
-                       class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                      placeholder="Balance to Close"
-                    />
-                  </div>
+                <div class="sm:col-span-3">
+                  <label
+                    for="balance_to_close"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Balance to Close ($) <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    v-model.number="property.balance_to_close"
+                    type="number" 
+                    step="0.01" 
+                    min="0"
+                    id="balance_to_close"
+                    required
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="Balance to Close"
+                  />
+                </div>
 
-                  <div class="sm:col-span-3">
-                    <label
-                      for="monthly_holding_cost"
-                      class="block text-sm font-medium leading-6 text-white"
-                      >Monthly Holding Cost ($)</label
-                    >
-                    <input
-                      v-model.number="property.monthly_holding_cost"
-                      type="number" step="0.01" min="0"
-                      id="monthly_holding_cost"
-                       class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                      placeholder="Monthly Holding Cost"
-                    />
-                  </div>
+                <div class="sm:col-span-3">
+                  <label
+                    for="monthly_holding_cost"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Monthly Holding Cost ($) <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    v-model.number="property.monthly_holding_cost"
+                    type="number" 
+                    step="0.01" 
+                    min="0"
+                    id="monthly_holding_cost"
+                    required
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="Monthly Holding Cost"
+                  />
+                </div>
 
-                  <div class="sm:col-span-3">
-                    <label
-                      for="interest_rate"
-                      class="block text-sm font-medium leading-6 text-white"
-                      >Interest Rate (%)</label
-                    >
-                    <input
-                      v-model.number="property.interest_rate"
-                      type="number"
-                      id="interest_rate"
-                       class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                      placeholder="Interest Rate"
-                      step="0.01"
-                      min="0"
-                      max="100"
-                    />
-                  </div>
+                <div class="sm:col-span-3">
+                  <label
+                    for="interest_rate"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Interest Rate (%) <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    v-model.number="property.interest_rate"
+                    type="number"
+                    id="interest_rate"
+                    required
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="Interest Rate"
+                    step="0.01"
+                    min="0"
+                    max="100"
+                  />
+                </div>
 
-                  <div class="sm:col-span-3">
-                    <label
-                      for="transaction_document_url"
-                      class="block text-sm font-medium leading-6 text-white"
-                      >Transaction Doc URL</label
-                    >
-                    <input
-                      v-model="property.transaction_document_url"
-                      type="url"
-                      id="transaction_document_url"
-                       class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                      placeholder="Link to Doc"
-                    />
-                  </div>
+                <div class="sm:col-span-3">
+                  <label
+                    for="transaction_document_url"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Transaction Doc URL <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    v-model="property.transaction_document_url"
+                    type="url"
+                    id="transaction_document_url"
+                    required
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="https://example.com/document"
+                  />
+                </div>
 
-                  <div class="sm:col-span-3">
-                    <label
-                      for="escrow"
-                      class="block text-sm font-medium leading-6 text-white"
-                      >Escrow ($)</label
-                    >
-                    <input
-                      v-model.number="property.escrow"
-                      type="number"
-                      step="0.01" min="0"
-                      id="escrow"
-                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                      placeholder="Escrow Amount"
-                    />
-                  </div>
+                <div class="sm:col-span-3">
+                  <label
+                    for="escrow"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Escrow ($) <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    v-model.number="property.escrow"
+                    type="number"
+                    step="0.01" 
+                    min="0"
+                    id="escrow"
+                    required
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="Escrow Amount"
+                  />
+                </div>
 
-                  <div class="sm:col-span-3">
-                    <label
-                      for="deal_holder"
-                      class="block text-sm font-medium leading-6 text-white"
-                      >Deal Holder</label
-                    >
-                    <input
-                      v-model="property.deal_holder"
-                      type="text"
-                      id="deal_holder"
-                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                      placeholder="Deal Holder Name"
-                    />
-                  </div>
+                <div class="sm:col-span-3">
+                  <label
+                    for="deal_holder"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Deal Holder <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    v-model="property.deal_holder"
+                    type="text"
+                    id="deal_holder"
+                    required
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="Deal Holder Name"
+                  />
+                </div>
 
-                   <div class="sm:col-span-3 sm:col-start-1">
-                     <label
-                       for="price_breakdown"
-                       class="block text-sm font-medium leading-6 text-white"
-                       >Price Breakdown Notes</label
-                     >
-                     <textarea
-                       v-model="property.price_breakdown"
-                       id="price_breakdown"
-                       rows="3"
-                        class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                       placeholder="Notes on price breakdown"
-                     ></textarea>
-                   </div>
+                <div class="sm:col-span-3 sm:col-start-1">
+                  <label
+                    for="price_breakdown"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Price Breakdown Notes <span class="text-red-500">*</span></label
+                  >
+                  <textarea
+                    v-model="property.price_breakdown"
+                    id="price_breakdown"
+                    rows="3"
+                    required
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="Notes on price breakdown (required)"
+                  ></textarea>
+                </div>
 
-                   <div class="sm:col-span-3">
-                     <label
-                       for="additional_benefits"
-                       class="block text-sm font-medium leading-6 text-white"
-                       >Additional Benefits Notes</label
-                     >
-                     <textarea
-                       v-model="property.additional_benefits"
-                       id="additional_benefits"
-                       rows="3"
-                       class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                       placeholder="Notes on additional benefits"
-                     ></textarea>
-                   </div>
+                <div class="sm:col-span-3">
+                  <label
+                    for="additional_benefits"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Additional Benefits Notes</label
+                  >
+                  <textarea
+                    v-model="property.additional_benefits"
+                    id="additional_benefits"
+                    rows="3"
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="Notes on additional benefits"
+                  ></textarea>
+                </div>
 
+                <div class="sm:col-span-3 flex items-center">
+                  <input
+                    v-model="property.in_house_deal"
+                    type="checkbox"
+                    id="in_house_deal"
+                    class="mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
+                  />
+                  <label
+                    for="in_house_deal"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >In House Deal</label
+                  >
+                </div>
 
-                  <div class="sm:col-span-3 flex items-center">
-                    <input
-                      v-model="property.in_house_deal"
-                      type="checkbox"
-                      id="in_house_deal"
-                      class="mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
-                    />
-                    <label
-                      for="in_house_deal"
-                      class="block text-sm font-medium leading-6 text-white"
-                      >In House Deal</label
-                    >
-                  </div>
-
-                  <div class="sm:col-span-3 flex items-center">
-                    <input
-                      v-model="property.rental_restriction"
-                      type="checkbox"
-                      id="rental_restriction"
-                       class="mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
-                    />
-                    <label
-                      for="rental_restriction"
-                      class="block text-sm font-medium leading-6 text-white"
-                      >Rental Restriction</label
-                    >
-                  </div>
+                <div class="sm:col-span-3 flex items-center">
+                  <input
+                    v-model="property.rental_restriction"
+                    type="checkbox"
+                    id="rental_restriction"
+                    class="mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
+                  />
+                  <label
+                    for="rental_restriction"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Rental Restriction</label
+                  >
+                </div>
               </div>
             </details>
             <!-- End Internal Fields -->
@@ -760,9 +797,9 @@ const defaultProperty = {
   tax_history: [],
   contact_recipients: [ // Ensure at least one default contact structure
     {
-      display_name: "",
-      email: "",
-      phone: { prefix: "", areacode: "", number: "" },
+      display_name: "Sahil Valecha",
+      email: "deals@urcreativesolutions.com",
+      phone: { prefix: "", areacode: "786", number: "969-9945" },
       image_url: "",
       // Remove Zillow-specific fields if not always available/needed
       // agent_reason: 1, zpro: null, recent_sales: 0, review_count: 0, zuid: "", rating_average: 0, badge_type: "",
@@ -799,7 +836,6 @@ const showForm = computed(() => {
 });
 
 // --- Lifecycle Hooks ---
-
 onMounted(() => {
   if (props.property) {
     // Editing existing property: Merge prop data with defaults, parse JSON fields
@@ -811,37 +847,29 @@ onMounted(() => {
       if (typeof property.value[fieldName] === 'string') {
         try {
           const parsed = JSON.parse(property.value[fieldName]);
-          // Ensure it's an array, or the expected structure for contacts
-           if (fieldName === 'contact_recipients') {
-             property.value[fieldName] = Array.isArray(parsed) && parsed.length > 0 ? parsed : [{ ...defaultProperty.contact_recipients[0] }];
-           } else {
-             property.value[fieldName] = Array.isArray(parsed) ? parsed : defaultVal;
-           }
+          property.value[fieldName] = Array.isArray(parsed) ? parsed : defaultVal;
         } catch (error) {
           console.error(`Error parsing ${fieldName}:`, error);
-          property.value[fieldName] = fieldName === 'contact_recipients' ? [{ ...defaultProperty.contact_recipients[0] }] : defaultVal;
+          property.value[fieldName] = defaultVal;
         }
       } else if (!property.value[fieldName] || (Array.isArray(defaultVal) && !Array.isArray(property.value[fieldName]))) {
-         // Ensure it's the correct type even if not a string initially
-         property.value[fieldName] = fieldName === 'contact_recipients' ? [{ ...defaultProperty.contact_recipients[0] }] : defaultVal;
+         property.value[fieldName] = defaultVal;
       }
     };
 
     parseJsonField('images', []);
-    parseJsonField('contact_recipients', [{ ...defaultProperty.contact_recipients[0] }]); // Ensure structure
     parseJsonField('nearby_homes', []);
     parseJsonField('nearby_schools', []);
     parseJsonField('price_history', []);
     parseJsonField('tax_history', []);
 
-     // Ensure basic contact recipient structure exists if array is empty after parsing
-     if (!property.value.contact_recipients || property.value.contact_recipients.length === 0) {
-       property.value.contact_recipients = [{ ...defaultProperty.contact_recipients[0] }];
-     }
-      // Ensure images is always an array
-     if (!Array.isArray(property.value.images)) {
-       property.value.images = [];
-     }
+    // ALWAYS use hardcoded contact recipients - don't parse from property
+    property.value.contact_recipients = [{ ...defaultProperty.contact_recipients[0] }];
+
+    // Ensure images is always an array
+    if (!Array.isArray(property.value.images)) {
+      property.value.images = [];
+    }
 
     fetchComplete.value = true; // Assume fetch is "complete" when editing existing data
     propertyNotFound.value = false;
