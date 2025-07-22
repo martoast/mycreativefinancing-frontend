@@ -421,62 +421,7 @@
                 Add Image URL
               </button>
             </div>
-
-            <!-- Contact Recipients (Read-only) -->
-            <div class="col-span-full border-t border-gray-700 pt-4">
-              <label class="block text-sm font-medium leading-6 text-white mb-2">
-                Contact Recipient(s)
-              </label>
-              <div v-if="property.contact_recipients && property.contact_recipients.length > 0" class="space-y-4">
-                <div v-for="(recipient, index) in property.contact_recipients" :key="`contact-${index}`" class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 p-3 bg-gray-800/50 rounded">
-                  <div class="sm:col-span-3">
-                    <label :for="`contact-name-${index}`" class="block text-xs font-medium text-gray-400">Display Name</label>
-                    <input 
-                      v-model="recipient.display_name" 
-                      type="text" 
-                      :id="`contact-name-${index}`" 
-                      readonly
-                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 sm:text-sm sm:leading-6 read-only:opacity-70 cursor-not-allowed" 
-                      placeholder="Name"
-                    >
-                  </div>
-                  <div class="sm:col-span-3">
-                    <label :for="`contact-email-${index}`" class="block text-xs font-medium text-gray-400">Email</label>
-                    <input 
-                      v-model="recipient.email" 
-                      type="email" 
-                      :id="`contact-email-${index}`" 
-                      readonly
-                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 sm:text-sm sm:leading-6 read-only:opacity-70 cursor-not-allowed" 
-                      placeholder="Email Address"
-                    >
-                  </div>
-                  <div class="sm:col-span-3">
-                    <label :for="`contact-phone-${index}`" class="block text-xs font-medium text-gray-400">Phone</label>
-                    <input 
-                      v-model="recipient.phone.number" 
-                      type="tel" 
-                      :id="`contact-phone-${index}`" 
-                      readonly
-                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 sm:text-sm sm:leading-6 read-only:opacity-70 cursor-not-allowed" 
-                      placeholder="(xxx) xxx-xxxx"
-                    >
-                  </div>
-                  <!-- <div class="sm:col-span-3">
-                    <label :for="`contact-image-${index}`" class="block text-xs font-medium text-gray-400">Image URL</label>
-                    <input 
-                      v-model="recipient.image_url" 
-                      type="url" 
-                      :id="`contact-image-${index}`" 
-                      readonly
-                      class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 sm:text-sm sm:leading-6 read-only:opacity-70 cursor-not-allowed" 
-                      placeholder="Image URL (Optional)"
-                    >
-                  </div> -->
-                </div>
-              </div>
-            </div>
-
+            
             <!-- Internal / Deal Specific Fields (Collapsible) -->
             <details class="col-span-full mt-4 border-t border-gray-700 pt-4" open>
               <summary class="text-sm font-medium leading-6 text-white cursor-pointer hover:text-gray-300">
