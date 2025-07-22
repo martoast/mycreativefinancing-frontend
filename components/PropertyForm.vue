@@ -215,7 +215,7 @@
               <label
                 for="price"
                 class="block text-sm font-medium leading-6 text-white"
-                >Price ($)</label
+                >Price ($)(auto-filled from Balance to Close)</label
               >
               <input
                 v-model.number="property.price"
@@ -968,6 +968,12 @@ watch(() => data.form.address, prepareAndFetchAddress);
 watch(() => data.form.unit_number, prepareAndFetchAddress);
 watch(() => data.form.type, prepareAndFetchAddress);
 watch(() => data.form.is_appartment, prepareAndFetchAddress);
+
+watch(() => property.value.balance_to_close, (newBalance) => {
+  if (newBalance !== null && newBalance !== undefined) {
+    property.value.price = newBalance;
+  }
+});
 
 // The actual Zillow API fetch logic
 const fetchPropertyData = async (url) => {
