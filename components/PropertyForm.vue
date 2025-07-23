@@ -519,23 +519,6 @@
 
                 <div class="sm:col-span-3">
                   <label
-                    for="escrow"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Escrow ($)</label
-                  >
-                  <input
-                    v-model.number="property.escrow"
-                    type="number"
-                    step="0.01" 
-                    min="0"
-                    id="escrow"
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Escrow Amount"
-                  />
-                </div>
-
-                <div class="sm:col-span-3">
-                  <label
                     for="deal_holder"
                     class="block text-sm font-medium leading-6 text-white"
                     >Deal Holder <span class="text-red-500">*</span></label
@@ -547,6 +530,53 @@
                     required
                     class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
                     placeholder="Deal Holder Name"
+                  />
+                </div>
+
+                <div class="sm:col-span-3">
+                  <label
+                    for="deal_holder_phone"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Deal Holder Phone</label
+                  >
+                  <input
+                    v-model="property.deal_holder_phone"
+                    type="tel"
+                    id="deal_holder_phone"
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="(123) 456-7890"
+                  />
+                </div>
+
+                <div class="sm:col-span-3">
+                  <label
+                    for="deal_holder_email"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Deal Holder Email</label
+                  >
+                  <input
+                    v-model="property.deal_holder_email"
+                    type="email"
+                    id="deal_holder_email"
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="email@example.com"
+                  />
+                </div>
+
+                <div class="sm:col-span-3">
+                  <label
+                    for="assignment_fee"
+                    class="block text-sm font-medium leading-6 text-white"
+                    >Assignment Fee ($)</label
+                  >
+                  <input
+                    v-model.number="property.assignment_fee"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    id="assignment_fee"
+                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                    placeholder="Assignment Fee"
                   />
                 </div>
 
@@ -756,6 +786,9 @@ const defaultProperty = {
   transaction_document_url: null,
   escrow: null,
   deal_holder: "",
+  deal_holder_phone: "",
+  deal_holder_email: "",
+  assignment_fee: null,
   in_house_deal: false,
   rental_restriction: false,
   price_breakdown: null,
