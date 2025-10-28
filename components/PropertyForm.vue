@@ -1,15 +1,13 @@
 <template>
-  <div>
-    <form @submit.prevent="handleSubmit">
-      <div class="space-y-12">
-        <div
-          class="border-b border-gray-700 pb-4"
-          :class="property.address || showForm ? 'pb-8' : 'pb-0'"
-        >
-          <div class="flex items-center mb-6">
+  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-4 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+      <form @submit.prevent="handleSubmit" class="space-y-6">
+        <!-- Header Section -->
+        <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-4 sm:p-6 shadow-xl">
+          <div class="flex items-center mb-4">
             <NuxtLink
-              :to="props.created_by === 'user' ? '/' : '/admin/'">
-              class="inline-flex items-center text-white hover:text-gray-300"
+              :to="props.created_by === 'user' ? '/' : '/admin/'"
+              class="inline-flex items-center text-white hover:text-indigo-400 transition-colors duration-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -27,86 +25,94 @@
             </NuxtLink>
           </div>
 
-          <h2 class="text-base font-semibold leading-7 text-white">
-            Property Details
-          </h2>
-          <p class="mt-1 text-sm leading-6 text-gray-300">
-            You can add or update the details of the property from here.
-          </p>
-
-          <!-- Manual input checkbox -->
-          <div v-if="!props.property" class="mt-5 flex items-center">
-            <input
-              v-model="manualInput"
-              type="checkbox"
-              id="manual-input"
-              class="mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
-            />
-            <label
-              for="manual-input"
-              class="block text-sm font-medium leading-6 text-white"
-              >Manual input (skip address search)</label
-            >
+          <div class="space-y-2">
+            <h2 class="text-2xl sm:text-3xl font-bold text-white">
+              {{ props.property ? 'Edit Property' : 'Add New Property' }}
+            </h2>
+            <p class="text-sm sm:text-base text-gray-300">
+              {{ props.property ? 'Update property details below' : 'Search for an address or enter details manually' }}
+            </p>
           </div>
 
-          <!-- Apartment toggle -->
-          <div v-if="!props.property && !manualInput"> <!-- Hide if manual input -->
-            <div class="mt-5 flex items-center">
-              <input
-                v-model="data.form.is_appartment"
-                type="checkbox"
-                id="is_appartment"
-                class="mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
-              />
-              <label
-                for="is_appartment"
-                class="block text-sm font-medium leading-6 text-white"
-                >Is it an apartment or condo?</label
-              >
-            </div>
+          <!-- Manual Input Toggle -->
+          <div v-if="!props.property" class="mt-6">
+            <label class="flex items-start sm:items-center space-x-3 cursor-pointer group">
+              <div class="relative flex items-center">
+                <input
+                  v-model="manualInput"
+                  type="checkbox"
+                  class="sr-only peer"
+                  id="manual-input"
+                />
+                <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-indigo-600 transition-colors duration-200"></div>
+                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-5"></div>
+              </div>
+              <span class="text-sm sm:text-base font-medium text-white group-hover:text-indigo-400 transition-colors duration-200">
+                Manual input (skip address search)
+              </span>
+            </label>
+          </div>
 
-            <!-- Unit Number and Property Type -->
-            <div v-if="data.form.is_appartment" class="mt-3 flex space-x-4">
-              <div class="flex-1">
-                <label
-                  for="type"
-                  class="block text-sm font-medium leading-6 text-white"
-                  >Unit Type</label
-                >
+          <!-- Address Search Section -->
+          <div v-if="!props.property && !manualInput" class="mt-6 space-y-4">
+            <!-- Apartment Toggle -->
+            <label class="flex items-start sm:items-center space-x-3 cursor-pointer group">
+              <div class="relative flex items-center">
+                <input
+                  v-model="data.form.is_appartment"
+                  type="checkbox"
+                  class="sr-only peer"
+                  id="is_appartment"
+                />
+                <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-indigo-600 transition-colors duration-200"></div>
+                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-5"></div>
+              </div>
+              <span class="text-sm sm:text-base font-medium text-white group-hover:text-indigo-400 transition-colors duration-200">
+                Apartment or condo?
+              </span>
+            </label>
+
+            <!-- Unit Details -->
+            <div v-if="data.form.is_appartment" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="type" class="block text-sm font-medium text-gray-300 mb-2">
+                  Unit Type
+                </label>
                 <select
                   v-model="data.form.type"
                   id="type"
-                  class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 [&_*]:text-black"
+                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                 >
                   <option value="">Select Type</option>
                   <option value="SUITE">Suite</option>
                   <option value="UNIT">Unit</option>
-                  <option value="APT">Apartment</option> <!-- Common abbreviation -->
+                  <option value="APT">Apartment</option>
                   <option value="RM">Room</option>
-                  <option value="# ">#</option> <!-- Allow just '#' -->
+                  <option value="#">#</option>
                 </select>
               </div>
-              <div class="flex-1">
-                <label
-                  for="unit-number"
-                  class="block text-sm font-medium leading-6 text-white"
-                  >Unit Number</label
-                >
+              <div>
+                <label for="unit-number" class="block text-sm font-medium text-gray-300 mb-2">
+                  Unit Number
+                </label>
                 <input
                   v-model.trim="data.form.unit_number"
                   type="text"
                   id="unit-number"
-                  class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                   placeholder="e.g., 10B, 203"
                 />
               </div>
             </div>
 
             <!-- Mapbox Search -->
-            <div v-if="!manualInput" class="mt-5">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">
+                Search Address
+              </label>
               <mapbox-search-box
                 :access-token="access_token"
-                placeholder="Search Address (Street, City, State, Zip)"
+                placeholder="Enter street address, city, state..."
                 :options="{
                   country: 'US',
                   limit: 6,
@@ -116,299 +122,332 @@
                 @retrieve="handleRetrieve"
                 proximity="ip"
                 theme="dark"
-              >
-              </mapbox-search-box>
-               <!-- Add custom styling via CSS if theme='dark' isn't enough -->
+              />
             </div>
           </div>
 
-          <!-- Property Form Fields Block -->
-          <!-- MODIFIED v-if using computed property -->
-          <div
-            v-if="showForm"
-            class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-5"
-          >
-            <!-- Address (now potentially read-only if not manual/editing?) -->
-            <div class="col-span-full sm:col-span-4">
-              <label
-                for="address"
-                class="block text-sm font-medium leading-6 text-white"
-                >Full Address</label
-              >
-              <input
-                v-model="property.address"
-                required
-                :readonly="!manualInput && !props.property"
-                type="text"
-                id="address"
-                class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 disabled:opacity-50 read-only:opacity-70"
-                placeholder="Property Address"
-              />
+          <!-- Loading State -->
+          <div v-if="data.loading" class="mt-6 flex flex-col items-center justify-center py-8 space-y-4">
+            <div class="relative">
+              <div class="w-16 h-16 border-4 border-gray-700 border-t-indigo-500 rounded-full animate-spin"></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-8 h-8 bg-indigo-500/20 rounded-full"></div>
+              </div>
             </div>
-
-             <div class="sm:col-span-2 flex items-end pb-1"> <!-- Adjusted alignment -->
-              <input
-                v-model="property.sold"
-                type="checkbox"
-                id="sold"
-                class="mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
-              />
-              <label
-                for="sold"
-                class="block text-sm font-medium leading-6 text-white"
-                >Sold</label
-              >
+            <div class="text-center space-y-1">
+              <p class="text-white font-medium">{{ data.loadingMessage }}</p>
+              <p class="text-gray-400 text-sm">This may take a moment...</p>
             </div>
+          </div>
 
-            <div class="sm:col-span-3">
-              <label
-                for="property-type"
-                class="block text-sm font-medium leading-6 text-white"
-                >Property Type</label
-              >
-              <input
-                v-model="property.property_type"
-                type="text"
-                id="property-type"
-                 class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                placeholder="e.g., Single Family"
-              />
+          <!-- Not Found Message -->
+          <div v-else-if="fetchComplete && propertyNotFound" class="mt-6 bg-red-900/20 border border-red-500/30 rounded-lg p-4 sm:p-6 text-center space-y-3">
+            <svg class="w-12 h-12 text-red-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div class="space-y-2">
+              <p class="font-semibold text-red-400">Property Not Found</p>
+              <p class="text-sm text-gray-300">Unable to retrieve details for this address.</p>
+              <p class="text-sm text-gray-400">
+                Try <label for="manual-input" class="underline cursor-pointer hover:text-white">manual input</label> instead.
+              </p>
             </div>
+          </div>
 
-            <div class="sm:col-span-3">
-              <label
-                for="bedrooms"
-                class="block text-sm font-medium leading-6 text-white"
-                >Bedrooms</label
-              >
-              <input
-                v-model.number="property.bedrooms"
-                required
-                type="number"
-                step="1"
-                min="0"
-                id="bedrooms"
-                 class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                placeholder="Beds"
-              />
+          <!-- Initial State -->
+          <div v-else-if="!data.loading && !fetchComplete && !manualInput && !props.property && !data.form.address" class="mt-6 bg-gray-700/30 border border-gray-600 rounded-lg p-6 sm:p-8 text-center space-y-3">
+            <svg class="w-12 h-12 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <p class="text-gray-300 text-sm sm:text-base">
+              Search for an address above or 
+              <label for="manual-input" class="underline cursor-pointer hover:text-white font-medium">enable manual input</label>
+            </p>
+          </div>
+        </div>
+
+        <!-- Property Form Fields -->
+        <div v-if="showForm" class="space-y-6">
+          <!-- Basic Information -->
+          <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-4 sm:p-6 shadow-xl">
+            <h3 class="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center">
+              <svg class="w-5 h-5 mr-2 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+              </svg>
+              Basic Information
+            </h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div class="sm:col-span-2 lg:col-span-3">
+                <label for="address" class="block text-sm font-medium text-gray-300 mb-2">
+                  Full Address <span class="text-red-400">*</span>
+                </label>
+                <input
+                  v-model="property.address"
+                  required
+                  :readonly="!manualInput && !props.property"
+                  type="text"
+                  id="address"
+                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 read-only:opacity-70 read-only:cursor-not-allowed"
+                  placeholder="123 Main St, City, State 12345"
+                />
+              </div>
+
+              <div>
+                <label for="property-type" class="block text-sm font-medium text-gray-300 mb-2">
+                  Property Type
+                </label>
+                <input
+                  v-model="property.property_type"
+                  type="text"
+                  id="property-type"
+                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  placeholder="Single Family"
+                />
+              </div>
+
+              <div>
+                <label for="bedrooms" class="block text-sm font-medium text-gray-300 mb-2">
+                  Bedrooms <span class="text-red-400">*</span>
+                </label>
+                <input
+                  v-model.number="property.bedrooms"
+                  required
+                  type="number"
+                  step="1"
+                  min="0"
+                  id="bedrooms"
+                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  placeholder="3"
+                />
+              </div>
+
+              <div>
+                <label for="bathrooms" class="block text-sm font-medium text-gray-300 mb-2">
+                  Bathrooms <span class="text-red-400">*</span>
+                </label>
+                <input
+                  v-model.number="property.bathrooms"
+                  required
+                  type="number"
+                  step="0.5"
+                  min="0"
+                  id="bathrooms"
+                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  placeholder="2.5"
+                />
+              </div>
+
+              <div>
+                <label for="price" class="block text-sm font-medium text-gray-300 mb-2">
+                  Price ($) <span class="text-red-400">*</span>
+                </label>
+                <input
+                  v-model.number="property.price"
+                  required
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  id="price"
+                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  placeholder="250000"
+                />
+              </div>
+
+              <div>
+                <label for="living-area" class="block text-sm font-medium text-gray-300 mb-2">
+                  Living Area (sq ft)
+                </label>
+                <input
+                  v-model.number="property.living_area"
+                  type="number"
+                  min="0"
+                  id="living-area"
+                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  placeholder="2000"
+                />
+              </div>
+
+              <div>
+                <label for="monthly_hoa_fee" class="block text-sm font-medium text-gray-300 mb-2">
+                  Monthly HOA Fee ($)
+                </label>
+                <input
+                  v-model.number="property.monthly_hoa_fee"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  id="monthly_hoa_fee"
+                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  placeholder="150"
+                />
+              </div>
+
+              <div class="flex items-center pt-6">
+                <label class="flex items-center space-x-3 cursor-pointer group">
+                  <div class="relative flex items-center">
+                    <input
+                      v-model="property.sold"
+                      type="checkbox"
+                      id="sold"
+                      class="sr-only peer"
+                    />
+                    <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-green-600 transition-colors duration-200"></div>
+                    <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-5"></div>
+                  </div>
+                  <span class="text-sm font-medium text-white group-hover:text-green-400 transition-colors duration-200">
+                    Mark as Sold
+                  </span>
+                </label>
+              </div>
+
+              <div class="sm:col-span-2 lg:col-span-3">
+                <label for="description" class="block text-sm font-medium text-gray-300 mb-2">
+                  Description
+                </label>
+                <textarea
+                  v-model="property.description"
+                  id="description"
+                  rows="4"
+                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none"
+                  placeholder="Beautiful property with modern amenities..."
+                ></textarea>
+              </div>
             </div>
+          </div>
 
-            <div class="sm:col-span-3">
-              <label
-                for="bathrooms"
-                class="block text-sm font-medium leading-6 text-white"
-                >Bathrooms</label
-              >
-              <input
-                v-model.number="property.bathrooms"
-                required
-                type="number"
-                step="0.5"
-                 min="0"
-                id="bathrooms"
-                class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                placeholder="Baths"
-              />
-            </div>
-
-            <div class="sm:col-span-3">
-              <label
-                for="price"
-                class="block text-sm font-medium leading-6 text-white"
-                >Price ($)(auto-filled from Balance to Close)</label
-              >
-              <input
-                v-model.number="property.price"
-                required
-                type="number"
-                step="0.01"
-                 min="0"
-                id="price"
-                class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                placeholder="Price in USD"
-              />
-            </div>
-
-            <div class="sm:col-span-3">
-              <label
-                for="monthly_hoa_fee"
-                class="block text-sm font-medium leading-6 text-white"
-                >Monthly HOA Fee ($)</label
-              >
-              <input
-                v-model.number="property.monthly_hoa_fee"
-                type="number"
-                 step="0.01"
-                 min="0"
-                id="monthly_hoa_fee"
-                class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                placeholder="HOA Fee (Optional)"
-              />
-            </div>
-
-             <div class="sm:col-span-3">
-              <label
-                for="living-area"
-                class="block text-sm font-medium leading-6 text-white"
-                >Living Area (sq ft)</label
-              >
-              <input
-                v-model.number="property.living_area"
-                type="number"
-                 min="0"
-                id="living-area"
-                class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                placeholder="Living Area"
-              />
-            </div>
-
-
-            <div class="col-span-full">
-              <label
-                for="description"
-                class="block text-sm font-medium leading-6 text-white"
-                >Description</label
-              >
-              <textarea
-                v-model="property.description"
-                id="description"
-                rows="3"
-                 class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                placeholder="Description of the property"
-              ></textarea>
-            </div>
-
-            <!-- Collapsible Section for Less Common Fields -->
-            <details class="col-span-full mt-4 border-t border-gray-700 pt-4">
-              <summary class="text-sm font-medium leading-6 text-white cursor-pointer hover:text-gray-300">
-                Additional Details (Zillow Estimates, Lot, Year Built, etc.)
-              </summary>
-              <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-5">
-
-                <div class="sm:col-span-3">
-                  <label
-                    for="rent-zestimate"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Est. Rent (Zillow, $)</label
-                  >
+          <!-- Additional Details (Collapsible) -->
+          <details class="group bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 shadow-xl overflow-hidden">
+            <summary class="cursor-pointer p-4 sm:p-6 hover:bg-gray-700/30 transition-colors duration-200 flex items-center justify-between">
+              <h3 class="text-lg sm:text-xl font-semibold text-white flex items-center">
+                <svg class="w-5 h-5 mr-2 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+                Additional Details
+              </h3>
+              <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </summary>
+            
+            <div class="p-4 sm:p-6 pt-0 border-t border-gray-700">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label for="rent-zestimate" class="block text-sm font-medium text-gray-300 mb-2">
+                    Est. Rent (Zillow)
+                  </label>
                   <input
                     v-model.number="property.rent_zestimate"
                     type="number"
                     step="1"
                     min="0"
                     id="rent-zestimate"
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Zillow Rent Est."
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="2500"
                   />
                 </div>
 
-                <div class="sm:col-span-3">
-                  <label
-                    for="zestimate"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Est. Value (Zillow, $)</label
-                  >
+                <div>
+                  <label for="zestimate" class="block text-sm font-medium text-gray-300 mb-2">
+                    Est. Value (Zillow)
+                  </label>
                   <input
                     v-model.number="property.zestimate"
                     type="number"
                     step="1"
                     min="0"
                     id="zestimate"
-                     class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Zillow Value Est."
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="300000"
                   />
                 </div>
 
-                 <div class="sm:col-span-3">
-                  <label
-                    for="price_per_square_foot"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Price Per Sq Ft ($)</label
-                  >
+                <div>
+                  <label for="price_per_square_foot" class="block text-sm font-medium text-gray-300 mb-2">
+                    Price Per Sq Ft
+                  </label>
                   <input
                     v-model.number="property.price_per_square_foot"
                     type="number"
-                     step="0.01"
-                     min="0"
+                    step="0.01"
+                    min="0"
                     id="price_per_square_foot"
-                     class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Price / Sq Ft"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="150"
                   />
                 </div>
 
-                <div class="sm:col-span-3">
-                  <label
-                    for="year-built"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Year Built</label
-                  >
+                <div>
+                  <label for="year-built" class="block text-sm font-medium text-gray-300 mb-2">
+                    Year Built
+                  </label>
                   <input
                     v-model.number="property.year_built"
                     type="number"
-                     step="1"
-                     min="1000"
-                     max="2100"
+                    step="1"
+                    min="1000"
+                    max="2100"
                     id="year-built"
-                     class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Year Built"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="1990"
                   />
                 </div>
 
-                <div class="sm:col-span-3">
-                  <label
-                    for="lot-size"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Lot Size (sq ft)</label
-                  >
+                <div>
+                  <label for="lot-size" class="block text-sm font-medium text-gray-300 mb-2">
+                    Lot Size (sq ft)
+                  </label>
                   <input
                     v-model.number="property.lot_size"
                     type="number"
-                     min="0"
+                    min="0"
                     id="lot-size"
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Lot Size"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="5000"
                   />
                 </div>
 
-                <div class="sm:col-span-3">
-                  <label
-                    for="zoning"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Zoning</label
-                  >
+                <div>
+                  <label for="zoning" class="block text-sm font-medium text-gray-300 mb-2">
+                    Zoning
+                  </label>
                   <input
                     v-model="property.zoning"
                     type="text"
                     id="zoning"
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Zoning Code"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="R-1"
                   />
                 </div>
-             </div>
-            </details>
+              </div>
+            </div>
+          </details>
 
-            <!-- Dynamic Image URL Fields -->
-            <div class="col-span-full border-t border-gray-700 pt-4">
-              <label
-                for="images"
-                class="block text-sm font-medium leading-6 text-white"
-                >Images (URLs)</label
-              >
+          <!-- Images Section -->
+          <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-4 sm:p-6 shadow-xl">
+            <h3 class="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center">
+              <svg class="w-5 h-5 mr-2 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+              </svg>
+              Property Images
+            </h3>
+            
+            <div class="space-y-3">
               <div
                 v-for="(image, index) in property.images"
                 :key="`image-${index}`"
-                class="flex space-x-2 mb-2 items-center"
+                class="flex flex-col sm:flex-row gap-2"
               >
                 <input
                   v-model.trim="property.images[index]"
                   type="url"
-                  class="block flex-grow rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                  class="flex-1 rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                   placeholder="https://example.com/image.jpg"
                 />
                 <button
                   @click.prevent="removeImage(index)"
                   type="button"
-                  class="rounded bg-red-700/50 px-2 py-1 text-xs font-semibold text-red-300 hover:bg-red-600/50"
+                  class="sm:w-auto w-full rounded-lg bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 transition-all duration-200"
                 >
                   Remove
                 </button>
@@ -416,297 +455,288 @@
               <button
                 @click.prevent="addImage"
                 type="button"
-                class="mt-2 rounded bg-indigo-700/50 px-2 py-1 text-sm font-semibold text-indigo-300 hover:bg-indigo-600/50"
+                class="w-full sm:w-auto rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 px-4 py-2.5 text-sm font-medium text-indigo-400 transition-all duration-200"
               >
-                Add Image URL
+                + Add Image URL
               </button>
             </div>
+          </div>
+
+          <!-- Deal Information -->
+          <details class="group bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 shadow-xl overflow-hidden" open>
+            <summary class="cursor-pointer p-4 sm:p-6 hover:bg-gray-700/30 transition-colors duration-200 flex items-center justify-between">
+              <h3 class="text-lg sm:text-xl font-semibold text-white flex items-center">
+                <svg class="w-5 h-5 mr-2 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+                </svg>
+                Deal Information
+                <span class="ml-2 text-xs text-red-400">* Required</span>
+              </h3>
+              <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </summary>
             
-            <!-- Internal / Deal Specific Fields (Collapsible) -->
-            <details class="col-span-full mt-4 border-t border-gray-700 pt-4" open>
-              <summary class="text-sm font-medium leading-6 text-white cursor-pointer hover:text-gray-300">
-                Internal Deal Information (Required)
-              </summary>
-              <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mt-5">
-                <div class="sm:col-span-3">
-                  <label
-                    for="purchase_price"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Purchase Price ($) <span class="text-red-500">*</span></label
-                  >
+            <div class="p-4 sm:p-6 pt-0 border-t border-gray-700">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label for="purchase_price" class="block text-sm font-medium text-gray-300 mb-2">
+                    Purchase Price <span class="text-red-400">*</span>
+                  </label>
                   <input
                     v-model.number="property.purchase_price"
-                    type="number" 
-                    step="0.01" 
+                    type="number"
+                    step="0.01"
                     min="0"
                     id="purchase_price"
                     required
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Purchase Price"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="250000"
                   />
                 </div>
 
-                <div class="sm:col-span-3">
-                  <label
-                    for="balance_to_close"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Balance to Close ($) <span class="text-red-500">*</span></label
-                  >
+                <div>
+                  <label for="balance_to_close" class="block text-sm font-medium text-gray-300 mb-2">
+                    Balance to Close <span class="text-red-400">*</span>
+                  </label>
                   <input
                     v-model.number="property.balance_to_close"
-                    type="number" 
-                    step="0.01" 
+                    type="number"
+                    step="0.01"
                     min="0"
                     id="balance_to_close"
                     required
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Balance to Close"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="10000"
                   />
                 </div>
 
-                <div class="sm:col-span-3">
-                  <label
-                    for="monthly_holding_cost"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Monthly Holding Cost ($) <span class="text-red-500">*</span></label
-                  >
+                <div>
+                  <label for="monthly_holding_cost" class="block text-sm font-medium text-gray-300 mb-2">
+                    Monthly Holding Cost <span class="text-red-400">*</span>
+                  </label>
                   <input
                     v-model.number="property.monthly_holding_cost"
-                    type="number" 
-                    step="0.01" 
+                    type="number"
+                    step="0.01"
                     min="0"
                     id="monthly_holding_cost"
                     required
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Monthly Holding Cost"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="1500"
                   />
                 </div>
 
-                <div class="sm:col-span-3">
-                  <label
-                    for="interest_rate"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Interest Rate (%) <span class="text-red-500">*</span></label
-                  >
+                <div>
+                  <label for="interest_rate" class="block text-sm font-medium text-gray-300 mb-2">
+                    Interest Rate (%) <span class="text-red-400">*</span>
+                  </label>
                   <input
                     v-model.number="property.interest_rate"
                     type="number"
-                    id="interest_rate"
-                    required
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Interest Rate"
                     step="0.01"
                     min="0"
                     max="100"
-                  />
-                </div>
-
-                <div class="sm:col-span-3">
-                  <label
-                    for="transaction_document_url"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Transaction Doc URL <span class="text-red-500">*</span></label
-                  >
-                  <input
-                    v-model="property.transaction_document_url"
-                    type="url"
-                    id="transaction_document_url"
+                    id="interest_rate"
                     required
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="https://example.com/document"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="5.5"
                   />
                 </div>
 
-                <div class="sm:col-span-3">
-                  <label
-                    for="deal_holder"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Deal Holder <span class="text-red-500">*</span></label
-                  >
-                  <input
-                    v-model="property.deal_holder"
-                    type="text"
-                    id="deal_holder"
-                    required
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Deal Holder Name"
-                  />
-                </div>
-
-                <div class="sm:col-span-3">
-                  <label
-                    for="deal_holder_phone"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Deal Holder Phone</label
-                  >
-                  <input
-                    v-model="property.deal_holder_phone"
-                    type="tel"
-                    id="deal_holder_phone"
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="(123) 456-7890"
-                  />
-                </div>
-
-                <div class="sm:col-span-3">
-                  <label
-                    for="deal_holder_email"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Deal Holder Email</label
-                  >
-                  <input
-                    v-model="property.deal_holder_email"
-                    type="email"
-                    id="deal_holder_email"
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="email@example.com"
-                  />
-                </div>
-
-                <div class="sm:col-span-3">
-                  <label
-                    for="assignment_fee"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Assignment Fee ($)</label
-                  >
+                <div>
+                  <label for="assignment_fee" class="block text-sm font-medium text-gray-300 mb-2">
+                    Assignment Fee
+                  </label>
                   <input
                     v-model.number="property.assignment_fee"
                     type="number"
                     step="0.01"
                     min="0"
                     id="assignment_fee"
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Assignment Fee"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="5000"
                   />
                 </div>
 
-                <div class="sm:col-span-3 sm:col-start-1">
-                  <label
-                    for="price_breakdown"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Price Breakdown Notes <span class="text-red-500">*</span></label
-                  >
+                <div>
+                  <label for="escrow" class="block text-sm font-medium text-gray-300 mb-2">
+                    Escrow
+                  </label>
+                  <input
+                    v-model.number="property.escrow"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    id="escrow"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="2000"
+                  />
+                </div>
+
+                <div>
+                  <label for="deal_holder" class="block text-sm font-medium text-gray-300 mb-2">
+                    Deal Holder <span class="text-red-400">*</span>
+                  </label>
+                  <input
+                    v-model="property.deal_holder"
+                    type="text"
+                    id="deal_holder"
+                    required
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                <div>
+                  <label for="deal_holder_phone" class="block text-sm font-medium text-gray-300 mb-2">
+                    Deal Holder Phone
+                  </label>
+                  <input
+                    v-model="property.deal_holder_phone"
+                    type="tel"
+                    id="deal_holder_phone"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="(123) 456-7890"
+                  />
+                </div>
+
+                <div>
+                  <label for="deal_holder_email" class="block text-sm font-medium text-gray-300 mb-2">
+                    Deal Holder Email
+                  </label>
+                  <input
+                    v-model="property.deal_holder_email"
+                    type="email"
+                    id="deal_holder_email"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="email@example.com"
+                  />
+                </div>
+
+                <div class="sm:col-span-2 lg:col-span-3">
+                  <label for="transaction_document_url" class="block text-sm font-medium text-gray-300 mb-2">
+                    Transaction Document URL <span class="text-red-400">*</span>
+                  </label>
+                  <input
+                    v-model="property.transaction_document_url"
+                    type="url"
+                    id="transaction_document_url"
+                    required
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="https://docs.google.com/..."
+                  />
+                </div>
+
+                <div class="sm:col-span-2 lg:col-span-3">
+                  <label for="price_breakdown" class="block text-sm font-medium text-gray-300 mb-2">
+                    Price Breakdown Notes <span class="text-red-400">*</span>
+                  </label>
                   <textarea
                     v-model="property.price_breakdown"
                     id="price_breakdown"
                     rows="3"
                     required
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Notes on price breakdown (required)"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none"
+                    placeholder="Breakdown of pricing details..."
                   ></textarea>
                 </div>
 
-                <div class="sm:col-span-3">
-                  <label
-                    for="additional_benefits"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Additional Benefits Notes</label
-                  >
+                <div class="sm:col-span-2 lg:col-span-3">
+                  <label for="additional_benefits" class="block text-sm font-medium text-gray-300 mb-2">
+                    Additional Benefits
+                  </label>
                   <textarea
                     v-model="property.additional_benefits"
                     id="additional_benefits"
                     rows="3"
-                    class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
-                    placeholder="Notes on additional benefits"
+                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none"
+                    placeholder="Additional benefits and notes..."
                   ></textarea>
                 </div>
 
-                <div class="sm:col-span-3 flex items-center">
-                  <input
-                    v-model="property.in_house_deal"
-                    type="checkbox"
-                    id="in_house_deal"
-                    class="mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
-                  />
-                  <label
-                    for="in_house_deal"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >In House Deal</label
-                  >
+                <div class="flex items-center">
+                  <label class="flex items-center space-x-3 cursor-pointer group">
+                    <div class="relative flex items-center">
+                      <input
+                        v-model="property.in_house_deal"
+                        type="checkbox"
+                        id="in_house_deal"
+                        class="sr-only peer"
+                      />
+                      <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-indigo-600 transition-colors duration-200"></div>
+                      <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-5"></div>
+                    </div>
+                    <span class="text-sm font-medium text-white group-hover:text-indigo-400 transition-colors duration-200">
+                      In House Deal
+                    </span>
+                  </label>
                 </div>
 
-                <div class="sm:col-span-3 flex items-center">
-                  <input
-                    v-model="property.rental_restriction"
-                    type="checkbox"
-                    id="rental_restriction"
-                    class="mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
-                  />
-                  <label
-                    for="rental_restriction"
-                    class="block text-sm font-medium leading-6 text-white"
-                    >Rental Restriction</label
-                  >
+                <div class="flex items-center">
+                  <label class="flex items-center space-x-3 cursor-pointer group">
+                    <div class="relative flex items-center">
+                      <input
+                        v-model="property.rental_restriction"
+                        type="checkbox"
+                        id="rental_restriction"
+                        class="sr-only peer"
+                      />
+                      <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-red-600 transition-colors duration-200"></div>
+                      <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-5"></div>
+                    </div>
+                    <span class="text-sm font-medium text-white group-hover:text-red-400 transition-colors duration-200">
+                      Rental Restriction
+                    </span>
+                  </label>
                 </div>
               </div>
-            </details>
-            <!-- End Internal Fields -->
-
-          </div>
-          <!-- End Property Form Fields Block -->
-
-          <!-- Loading Indicator -->
-          <div v-else-if="data.loading" class="mt-5 flex justify-center items-center text-white py-4">
-             <!-- Add a spinner or better loading visual -->
-             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-             </svg>
-             <span>Loading property data...</span>
-          </div>
-
-          <!-- Not Found Message -->
-          <div v-else-if="fetchComplete && propertyNotFound" class="mt-5 text-center text-red-400 border border-red-400/30 bg-red-900/20 p-4 rounded">
-            <p class="font-semibold mb-1">No Property Data Found</p>
-            <p class="text-sm">Could not automatically retrieve details for the entered address.</p>
-             <p class="text-sm mt-2">Please <span v-if="!manualInput">verify the address and unit number (if applicable) or </span><label for="manual-input" class="underline cursor-pointer hover:text-red-300">check 'Manual input'</label> to enter details yourself.</p>
-          </div>
-
-          <!-- Initial/Idle State -->
-           <div v-else-if="!data.loading && !fetchComplete && !manualInput && !props.property && !data.form.address" class="mt-5 text-center text-gray-400 border border-gray-700 p-4 rounded bg-gray-800/30">
-             Enter an address using the search box above
-             <span v-if="!props.property"> or <label for="manual-input" class="underline cursor-pointer hover:text-gray-200">check 'Manual input'</label></span>
-              to begin.
-           </div>
-
+            </div>
+          </details>
         </div>
 
         <!-- Form Actions -->
-        <div class="mt-6 pb-6 flex items-center justify-end gap-x-6 border-t border-gray-700 pt-6">
-          <NuxtLink :to="props.redirect"> <!-- Use NuxtLink for client-side nav -->
+        <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-4 sm:p-6 shadow-xl">
+          <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
+            <NuxtLink :to="props.redirect" class="w-full sm:w-auto">
+              <button
+                type="button"
+                class="w-full sm:w-auto rounded-lg bg-gray-700 hover:bg-gray-600 border border-gray-600 px-6 py-2.5 text-sm font-medium text-white transition-all duration-200"
+              >
+                Cancel
+              </button>
+            </NuxtLink>
             <button
-              type="button"
-              class="text-sm font-semibold leading-6 text-gray-300 hover:text-white"
+              :disabled="data.form.loading || data.loading || (!showForm && !manualInput && !props.property)"
+              type="submit"
+              class="w-full sm:w-auto rounded-lg bg-indigo-600 hover:bg-indigo-500 px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-indigo-500/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-indigo-600"
             >
-              Cancel
+              <span v-if="data.form.loading" class="flex items-center justify-center">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Saving...
+              </span>
+              <span v-else>Save Property</span>
             </button>
-          </NuxtLink>
-          <button
-            :disabled="data.form.loading || data.loading || (!showForm && !manualInput && !props.property)"
-            type="submit"
-            class="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {{ data.form.loading ? 'Saving...' : 'Save Property' }}
-          </button>
+          </div>
         </div>
-      </div>
-    </form>
-
+      </form>
+    </div>
   </div>
 </template>
-
 <script setup>
 import { ref, reactive, onMounted, watch, computed } from "vue";
 import { usePropertiesStore } from "~/store/DataStore";
-// import { GoogleMap, Marker } from "vue3-google-map"; // Not used in template
 import debounce from "lodash.debounce";
-import { useRoute, useRouter, navigateTo } from '#app'; // Use Nuxt 3 imports
+import { useRoute, useRouter, navigateTo } from '#app';
 
-// Use defineProps for props definition in <script setup>
 const props = defineProps({
   property: {
     type: Object,
-    default: null // Use null as default for objects that might not exist
+    default: null
   },
   created_by: {
     type: String,
@@ -715,40 +745,39 @@ const props = defineProps({
   },
   redirect: {
     type: String,
-    default: "/admin/", // Consider context-aware default (e.g., based on created_by)
+    default: "/admin/",
   },
 });
 
 const config = useRuntimeConfig();
-const router = useRouter(); // If needed for programmatic navigation beyond navigateTo
-const route = useRoute(); // If needed to access route params/query
+const router = useRouter();
+const route = useRoute();
 
 const access_token = config.public.MAPBOX_API_TOKEN;
 const zillowApiKey = config.public.ZILLOW_API_KEY;
+const reApiKey = config.public.REAL_ESTATE_API_KEY;
 
-// Component State
 const manualInput = ref(false);
 const propertyNotFound = ref(false);
-const fetchComplete = ref(false); // Tracks completion of the fetch cycle
+const fetchComplete = ref(false);
 
 const data = reactive({
-  loading: false, // For overall Zillow fetch loading state
+  loading: false,
+  loadingMessage: 'Fetching property data...',
   errors: {},
   form: {
-    // Holds user input before applying to property.value or fetching
     latitude: null,
     longitude: null,
-    address: null, // Address selected from Mapbox
+    address: null,
     unit_number: null,
-    is_appartment: false, // Default to false
+    is_appartment: false,
     type: null,
-    loading: false, // For form submission loading state
+    loading: false,
   },
 });
 
-// Default structure for a property object
 const defaultProperty = {
-  address: "", // Final formatted address
+  address: "",
   price: null,
   bedrooms: null,
   bathrooms: null,
@@ -764,19 +793,17 @@ const defaultProperty = {
   year_built: null,
   price_per_square_foot: null,
   monthly_hoa_fee: null,
-  nearby_hospitals: [], // Keep if used, ensure parsing
+  nearby_hospitals: [],
   nearby_schools: [],
   nearby_homes: [],
   price_history: [],
   tax_history: [],
-  contact_recipients: [ // Ensure at least one default contact structure
+  contact_recipients: [
     {
       display_name: "Sahil Valecha",
       email: "deals@urcreativesolutions.com",
       phone: { prefix: "", areacode: "786", number: "969-9945" },
       image_url: "",
-      // Remove Zillow-specific fields if not always available/needed
-      // agent_reason: 1, zpro: null, recent_sales: 0, review_count: 0, zuid: "", rating_average: 0, badge_type: "",
     },
   ],
   purchase_price: null,
@@ -794,32 +821,23 @@ const defaultProperty = {
   price_breakdown: null,
   additional_benefits: null,
   created_by: "user",
-  // Remove fields not strictly part of property data model if appropriate
-  // down_payment: null, total_price: null, interest: null, monthly_payment: null, arv: null, benefits: "",
+  re_api_id: null,
 };
 
-// The main reactive property object being edited/created
-const property = ref({ ...JSON.parse(JSON.stringify(defaultProperty)) }); // Deep clone default
+const property = ref({ ...JSON.parse(JSON.stringify(defaultProperty)) });
 
-// --- Computed Properties ---
-
-// Determines if the main property form should be displayed
 const showForm = computed(() => {
-  if (props.property) return true; // Always show if editing existing property
-  if (manualInput.value) return true; // Show if manual input is checked
-  // Show if a fetch was completed successfully for a searched address
+  if (props.property) return true;
+  if (manualInput.value) return true;
   if (fetchComplete.value && !propertyNotFound.value && data.form.address) return true;
   return false;
 });
 
-// --- Lifecycle Hooks ---
 onMounted(() => {
   if (props.property) {
-    // Editing existing property: Merge prop data with defaults, parse JSON fields
-    const propData = JSON.parse(JSON.stringify(props.property)); // Deep clone prop
-    property.value = { ...JSON.parse(JSON.stringify(defaultProperty)), ...propData }; // Merge, ensure all keys exist
+    const propData = JSON.parse(JSON.stringify(props.property));
+    property.value = { ...JSON.parse(JSON.stringify(defaultProperty)), ...propData };
 
-    // Safely parse JSON string fields into arrays/objects
     const parseJsonField = (fieldName, defaultVal = []) => {
       if (typeof property.value[fieldName] === 'string') {
         try {
@@ -840,107 +858,143 @@ onMounted(() => {
     parseJsonField('price_history', []);
     parseJsonField('tax_history', []);
 
-    // ALWAYS use hardcoded contact recipients - don't parse from property
     property.value.contact_recipients = [{ ...defaultProperty.contact_recipients[0] }];
 
-    // Ensure images is always an array
     if (!Array.isArray(property.value.images)) {
       property.value.images = [];
     }
 
-    fetchComplete.value = true; // Assume fetch is "complete" when editing existing data
+    fetchComplete.value = true;
     propertyNotFound.value = false;
 
   } else {
-     // Creating new property: Start with default values
      property.value = { ...JSON.parse(JSON.stringify(defaultProperty)) };
-     fetchComplete.value = false; // No fetch yet
+     fetchComplete.value = false;
      propertyNotFound.value = false;
   }
 
-  // Always set created_by from props
   property.value.created_by = props.created_by;
 });
 
-// --- Watchers ---
-
-// Reset state when switching manual input mode
 watch(manualInput, (newValue) => {
   fetchComplete.value = false;
   propertyNotFound.value = false;
   data.loading = false;
   if (newValue) {
-    // Clear auto-search related fields if switching TO manual
     data.form.address = null;
     data.form.latitude = null;
     data.form.longitude = null;
-    // Reset property fields to default EXCEPT created_by
-     const creator = property.value.created_by; // Preserve creator
-     property.value = { ...JSON.parse(JSON.stringify(defaultProperty)), created_by: creator };
-  } else {
-    // Optionally clear manual fields if switching FROM manual (if any exist)
+    const creator = property.value.created_by;
+    property.value = { ...JSON.parse(JSON.stringify(defaultProperty)), created_by: creator };
   }
 });
 
-// Reset state if address search is cleared
 watch(() => data.form.address, (newAddress) => {
   if (!newAddress && !manualInput.value && !props.property) {
      fetchComplete.value = false;
      propertyNotFound.value = false;
      data.loading = false;
-     // Reset property fields as well
-     const creator = property.value.created_by; // Preserve creator
+     const creator = property.value.created_by;
      property.value = { ...JSON.parse(JSON.stringify(defaultProperty)), created_by: creator };
   }
-  // Debounced fetch is handled separately
 });
 
-
-// --- Methods ---
-
-// Constructs the full address and triggers the debounced fetch
 const prepareAndFetchAddress = () => {
   if (manualInput.value || !data.form.address) {
     data.loading = false;
     fetchComplete.value = false;
-    return; // Don't fetch if manual or no base address
+    return;
   }
 
   let fullAddress = data.form.address;
   if (data.form.is_appartment && data.form.unit_number && data.form.type) {
     fullAddress += `, ${data.form.type} ${data.form.unit_number}`;
-  } else if (data.form.is_appartment && data.form.unit_number) { // Fallback if type missing
-    fullAddress += ` #${data.form.unit_number}`; // Use # as common default
+  } else if (data.form.is_appartment && data.form.unit_number) {
+    fullAddress += ` #${data.form.unit_number}`;
   }
-  property.value.address = fullAddress; // Update display address immediately
+  property.value.address = fullAddress;
 
-  // Start loading states and reset flags before debounced call
   data.loading = true;
   fetchComplete.value = false;
   propertyNotFound.value = false;
 
-  // Reset property fields that will be fetched
-   const creator = property.value.created_by; // Preserve creator
-   const currentAddress = property.value.address; // Preserve formatted address
-   property.value = { ...JSON.parse(JSON.stringify(defaultProperty)), created_by: creator, address: currentAddress };
-   property.value.description = ""; // Clear description specifically
+  const creator = property.value.created_by;
+  const currentAddress = property.value.address;
+  property.value = { ...JSON.parse(JSON.stringify(defaultProperty)), created_by: creator, address: currentAddress };
+  property.value.description = "";
 
-  debouncedFetchPropertyData(fullAddress); // Call the debounced fetch function
+  debouncedFetchPropertyData(fullAddress);
 };
 
-// Debounced function for fetching Zillow data
 const debouncedFetchPropertyData = debounce(async (addressToFetch) => {
   if (!addressToFetch) {
       data.loading = false;
-      fetchComplete.value = true; // Considered complete (as nothing to fetch)
-      propertyNotFound.value = true; // No address, so not found
+      fetchComplete.value = true;
+      propertyNotFound.value = true;
       return;
   }
+  
+  // First, get Real Estate API ID
+  await fetchRealEstateApiId(addressToFetch);
+  
+  // Then fetch Zillow data
   const apiUrl = `https://zillow-com1.p.rapidapi.com/property?address=${encodeURIComponent(addressToFetch)}`;
   await fetchPropertyData(apiUrl);
-}, 800); // Adjust debounce time as needed (e.g., 800ms)
+}, 800);
 
-// Watch relevant form fields to trigger address preparation and fetch
+// New function to fetch Real Estate API ID
+const fetchRealEstateApiId = async (address) => {
+  try {
+    data.loadingMessage = 'Looking up property ID...';
+    
+    // Parse address to get just street address and city (not full zip/state)
+    // Extract the core address parts before the comma separations
+    const addressParts = address.split(',');
+    let searchAddress = address;
+    
+    // If we have multiple parts, take street + city (first 2 parts typically)
+    if (addressParts.length >= 2) {
+      searchAddress = `${addressParts[0].trim()}, ${addressParts[1].trim()}`;
+    }
+    
+    console.log('Searching Real Estate API with:', searchAddress);
+    
+    // Call YOUR server API route instead of the external API directly
+    const response = await $fetch('/api/real-estate-search', {
+      method: 'POST',
+      body: {
+        search: searchAddress,
+        search_types: ['A'] // Only look for full addresses
+      }
+    });
+
+    console.log('Real Estate API Response:', response);
+
+    if (response?.data && response.data.length > 0) {
+      // Find the best match - prioritize exact address matches (searchType: 'A')
+      const exactMatch = response.data.find(item => item.searchType === 'A');
+      
+      if (exactMatch && exactMatch.id) {
+        property.value.re_api_id = exactMatch.id;
+        console.log('Found Real Estate API ID:', exactMatch.id);
+      } else if (response.data[0].id) {
+        // Fallback to first result if no exact match
+        property.value.re_api_id = response.data[0].id;
+        console.log('Using first result ID:', response.data[0].id);
+      } else {
+        console.log('No ID found in Real Estate API results');
+        property.value.re_api_id = null;
+      }
+    } else {
+      console.log('No results from Real Estate API');
+      property.value.re_api_id = null;
+    }
+  } catch (error) {
+    console.error('Error fetching Real Estate API ID:', error);
+    property.value.re_api_id = null;
+  }
+};
+
 watch(() => data.form.address, prepareAndFetchAddress);
 watch(() => data.form.unit_number, prepareAndFetchAddress);
 watch(() => data.form.type, prepareAndFetchAddress);
@@ -952,20 +1006,19 @@ watch(() => property.value.balance_to_close, (newBalance) => {
   }
 });
 
-// The actual Zillow API fetch logic
 const fetchPropertyData = async (url) => {
   try {
+    data.loadingMessage = 'Fetching property details...';
+    
     const responseData = await $fetch(url, {
       headers: {
         "X-RapidAPI-Key": zillowApiKey,
         "X-RapidAPI-Host": "zillow-com1.p.rapidapi.com",
       },
-      // Consider adding timeout?
     });
 
     if (responseData && responseData.zpid) {
       propertyNotFound.value = false;
-      // Map response data to property.value fields (use nullish coalescing)
       property.value.price = responseData.price ?? null;
       property.value.bedrooms = responseData.bedrooms ?? null;
       property.value.bathrooms = responseData.bathrooms ?? null;
@@ -979,33 +1032,31 @@ const fetchPropertyData = async (url) => {
       property.value.year_built = responseData.yearBuilt ?? null;
       property.value.price_per_square_foot = responseData.resoFacts?.pricePerSquareFoot ?? null;
       property.value.monthly_hoa_fee = responseData.monthlyHoaFee ?? null;
-      // Map other relevant fields: schools, nearbyHomes, priceHistory, taxHistory
       property.value.nearby_schools = responseData.schools ?? [];
       property.value.nearby_homes = responseData.nearbyHomes ?? [];
       property.value.price_history = responseData.priceHistory ?? [];
       property.value.tax_history = responseData.taxHistory ?? [];
 
-      // IMPORTANT: Now fetch images, which will handle final loading/complete state
       await fetchPropertyImages(responseData.zpid);
-
     } else {
-      console.log("No property data found or invalid response from Zillow API.");
+      console.log("No property data found from Zillow API.");
       propertyNotFound.value = true;
-      data.loading = false; // Stop loading here if no zpid found
-      fetchComplete.value = true; // Fetch cycle is complete (unsuccessfully)
+      data.loading = false;
+      fetchComplete.value = true;
     }
   } catch (error) {
     console.error("Error fetching property data:", error);
-    propertyNotFound.value = true; // Treat fetch errors as "not found"
+    propertyNotFound.value = true;
     data.loading = false;
-    fetchComplete.value = true; // Fetch cycle is complete (on error)
+    fetchComplete.value = true;
   }
 };
 
-// Fetches images based on ZPID
 const fetchPropertyImages = async (zpid) => {
   const apiUrl = `https://zillow-com1.p.rapidapi.com/images?zpid=${zpid}`;
   try {
+    data.loadingMessage = 'Loading property images...';
+    
     const response = await $fetch(apiUrl, {
       headers: {
         "X-RapidAPI-Key": zillowApiKey,
@@ -1013,7 +1064,7 @@ const fetchPropertyImages = async (zpid) => {
       },
     });
     if (response && Array.isArray(response.images) && response.images.length) {
-      property.value.images = response.images.slice(0, 12); // Limit images
+      property.value.images = response.images.slice(0, 12);
     } else {
       console.log("No images found for zpid:", zpid);
       property.value.images = [];
@@ -1022,29 +1073,24 @@ const fetchPropertyImages = async (zpid) => {
     console.error("Error fetching images:", error);
     property.value.images = [];
   } finally {
-    // THIS IS THE FINAL STEP of the fetch process
-    data.loading = false; // Turn off main loading indicator
-    fetchComplete.value = true; // Mark the entire fetch cycle as complete
+    data.loading = false;
+    fetchComplete.value = true;
   }
 };
 
-// Handles selection from Mapbox search
 const handleRetrieve = async (event) => {
   if (event.detail.features && event.detail.features.length > 0) {
     const feature = event.detail.features[0];
-    // Update form data, which will trigger the watcher -> prepareAndFetchAddress
     data.form.latitude = feature.properties.coordinates?.latitude;
     data.form.longitude = feature.properties.coordinates?.longitude;
-    data.form.address = feature.properties.address_line1 // Use address_line1 for cleaner street address
-                         ? `${feature.properties.address_line1}, ${feature.properties.place}, ${feature.properties.region_code} ${feature.properties.postcode}` // Construct address
-                         : feature.properties.full_address; // Fallback to full_address
-
+    data.form.address = feature.properties.address_line1
+                         ? `${feature.properties.address_line1}, ${feature.properties.place}, ${feature.properties.region_code} ${feature.properties.postcode}`
+                         : feature.properties.full_address;
   } else {
     console.warn("No location selected from the dropdown.");
   }
 };
 
-// Adds an empty string for a new image URL input
 const addImage = () => {
   if (!Array.isArray(property.value.images)) {
     property.value.images = [];
@@ -1052,33 +1098,25 @@ const addImage = () => {
   property.value.images.push("");
 };
 
-// Removes an image URL input by index
 const removeImage = (index) => {
   if (Array.isArray(property.value.images)) {
     property.value.images.splice(index, 1);
   }
 };
 
-// Handles form submission (Create or Update)
 const handleSubmit = async () => {
-  data.form.loading = true; // Start submission loading
-  data.errors = {}; // Clear previous errors
+  data.form.loading = true;
+  data.errors = {};
   const propertiesStore = usePropertiesStore();
 
-  // Prepare data for submission: deep clone and stringify arrays/objects
   let propertyToSubmit = JSON.parse(JSON.stringify(property.value));
 
-  // Ensure fields expected as JSON strings are stringified
   const stringifyField = (fieldName) => {
      if (Array.isArray(propertyToSubmit[fieldName]) || typeof propertyToSubmit[fieldName] === 'object') {
         propertyToSubmit[fieldName] = JSON.stringify(propertyToSubmit[fieldName]);
      } else if (propertyToSubmit[fieldName] === null || propertyToSubmit[fieldName] === undefined) {
-         // Decide how to handle nulls - send empty array string '[]' or null?
-         // Assuming empty array string for consistency with parsed fields
          propertyToSubmit[fieldName] = '[]';
      }
-     // If it's already a string (potentially malformed), leave it? Or try to re-stringify?
-     // For safety, let's assume it should be stringified if it came from an array/object
   };
 
   stringifyField('images');
@@ -1087,65 +1125,53 @@ const handleSubmit = async () => {
   stringifyField('price_history');
   stringifyField('tax_history');
   stringifyField('contact_recipients');
-   // Stringify other array/object fields if your backend expects them as strings
 
-  // Ensure created_by is correctly set
   propertyToSubmit.created_by = props.created_by;
 
   try {
     let response;
     if (props.property && props.property.ID) {
-      // Update existing property
        console.log("Updating property ID:", props.property.ID);
-       propertyToSubmit.ID = props.property.ID; // Ensure ID is part of the payload for update
+       propertyToSubmit.ID = props.property.ID;
        response = await propertiesStore.store({ property: propertyToSubmit });
     } else {
-      // Create new property
        console.log("Creating new property...");
        response = await propertiesStore.store({ property: propertyToSubmit });
     }
 
     console.log("Store response:", response);
 
-     // Handle potential string response from store
      let createdOrUpdatedProperty = response;
      if (typeof response === 'string') {
         try {
            createdOrUpdatedProperty = JSON.parse(response);
         } catch (parseError) {
            console.error("Failed to parse store response:", parseError);
-           // Handle situation where response is an unexpected string (e.g., simple success message)
-           createdOrUpdatedProperty = { ID: null }; // Assume failure to get ID if parse fails
+           createdOrUpdatedProperty = { ID: null };
         }
      }
 
-    // Send webhook only on successful creation with an ID
     if (!(props.property && props.property.ID) && createdOrUpdatedProperty && createdOrUpdatedProperty.ID) {
        console.log("Sending webhook for new property ID:", createdOrUpdatedProperty.ID);
-       // Pass the *original* object structure (before stringifying arrays) + the new ID to the webhook?
-       // Or pass the stringified version? Depends on the webhook receiver. Assuming original structure + ID:
        await sendWebHook({ ...property.value, ID: createdOrUpdatedProperty.ID });
     } else if (!(props.property && props.property.ID)) {
         console.warn("Could not send webhook: Missing ID in creation response.");
     }
 
-    // Navigate on success
     await navigateTo(props.redirect);
 
   } catch (error) {
     console.error("Error saving property:", error);
     data.errors = { submit: `Failed to save property: ${error.message || 'Unknown error'}. Please try again.` };
-    // Optionally display data.errors.submit to the user
   } finally {
-    data.form.loading = false; // Stop submission loading
+    data.form.loading = false;
   }
 };
 
-// Sends data to the Netlify function (webhook)
 const sendWebHook = async (propertyData) => {
   const backendUrl = "/.netlify/functions/property-into-sheet";
   const headers = { "Content-Type": "application/json" };
-  const payload = { property: propertyData }; // Send the property data
+  const payload = { property: propertyData };
 
   try {
     const response = await fetch(backendUrl, {
@@ -1158,100 +1184,221 @@ const sendWebHook = async (propertyData) => {
       const errorBody = await response.text();
       console.error(`Webhook failed (${response.status}): ${errorBody}`);
     } else {
-      const result = await response.json(); // Assuming function returns JSON
+      const result = await response.json();
       console.log("Webhook successful:", result);
     }
   } catch (error) {
     console.error("Error sending webhook:", error);
   }
 };
-
 </script>
 
-<style>
-/* Enhance Mapbox dark theme or provide overrides */
+<style scoped>
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Mapbox styling */
 .mapboxgl-ctrl-geocoder {
-    box-shadow: none !important;
-    border: 1px solid #4b5563; /* gray-600 */
-    border-radius: 0.375rem; /* rounded-md */
+  box-shadow: none !important;
+  border: 1px solid #4b5563;
+  border-radius: 0.5rem;
+  background: rgba(55, 65, 81, 0.5) !important;
 }
+
 .mapboxgl-ctrl-geocoder--input {
-    height: calc(1.5em + 0.75rem + 2px); /* Match form input height */
-    padding: 0.375rem 0.75rem !important; /* py-1.5 px-3 */
-    background-color: rgba(255, 255, 255, 0.05) !important; /* bg-white/5 */
-    color: white !important;
-    border: none !important;
-    border-radius: 0.375rem; /* rounded-md */
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.625rem 1rem !important;
+  background-color: rgba(55, 65, 81, 0.5) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 0.5rem;
 }
- .mapboxgl-ctrl-geocoder--input:focus {
-     outline: 2px solid transparent;
-     outline-offset: 2px;
-     box-shadow: 0 0 0 2px #1f2937, 0 0 0 4px #4f46e5; /* focus:ring-primary based on indigo-600 */
- }
+
+.mapboxgl-ctrl-geocoder--input:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #1f2937, 0 0 0 4px #6366f1;
+}
 
 .mapboxgl-ctrl-geocoder--suggestion-list {
-     background-color: #1f2937 !important; /* bg-gray-800 */
-     border: 1px solid #4b5563 !important; /* border-gray-600 */
-     border-radius: 0.375rem; /* rounded-md */
-     overflow: hidden;
+  background-color: #1f2937 !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin-top: 0.25rem;
 }
+
 .mapboxgl-ctrl-geocoder--suggestion {
-    color: #d1d5db !important; /* gray-300 */
-    padding: 0.5rem 0.75rem !important;
-    cursor: pointer;
+  color: #d1d5db !important;
+  padding: 0.75rem 1rem !important;
+  cursor: pointer;
+  border-bottom: 1px solid #374151;
 }
+
+.mapboxgl-ctrl-geocoder--suggestion:last-child {
+  border-bottom: none;
+}
+
 .mapboxgl-ctrl-geocoder--suggestion:hover,
 .mapboxgl-ctrl-geocoder--suggestion.active {
-     background-color: #374151 !important; /* bg-gray-700 */
-     color: white !important;
+  background-color: #374151 !important;
+  color: white !important;
 }
-/* Adjust icon color if needed */
+
 .mapboxgl-ctrl-geocoder--icon-search {
-  fill: #9ca3af; /* gray-400 */
+  fill: #9ca3af;
 }
+
 .mapboxgl-ctrl-geocoder--icon-loading {
-    fill: #6366f1 !important; /* primary */
+  fill: #6366f1 !important;
 }
 
-/* Style for details/summary */
+.mapboxgl-ctrl-geocoder--button {
+  background-color: transparent !important;
+}
+
+/* Details/Summary styling */
 details > summary {
-  list-style: none; /* Remove default marker */
+  list-style: none;
 }
+
 details > summary::-webkit-details-marker {
-  display: none; /* Remove default marker for Chrome */
-}
-details > summary::before {
-  content: '+'; /* Add custom marker */
-  margin-right: 0.5em;
-  display: inline-block;
-  transition: transform 0.2s;
-}
-details[open] > summary::before {
-  transform: rotate(45deg);
+  display: none;
 }
 
-/* Read-only input style */
+/* Read-only input styling */
 input:read-only {
-    background-color: rgba(55, 65, 81, 0.5); /* bg-gray-700 with opacity */
-    cursor: default;
+  background-color: rgba(55, 65, 81, 0.5);
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
-
-/* Tailwind Forms base styles might affect select text color, ensure options are visible */
+/* Select dropdown styling */
 select option {
-    color: #111827; /* Or your desired option text color */
-    background-color: white; /* Or your desired option background */
-}
-/* Style for the select itself when using bg-white/5 */
-select.bg-white\/5 {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 1.5em 1.5em;
-    padding-right: 2.5rem;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    appearance: none;
+  color: #111827;
+  background-color: white;
 }
 
+/* Custom toggle switch animations */
+.peer:checked ~ div:last-child {
+  transform: translateX(1.25rem);
+}
+
+/* Focus states for better accessibility */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  .mapboxgl-ctrl-geocoder {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .mapboxgl-ctrl-geocoder--input {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+}
+
+/* Smooth transitions for all interactive elements */
+button,
+input,
+textarea,
+select,
+label {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Gradient background animation */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Backdrop blur support */
+@supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
+  .backdrop-blur-sm {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+/* Better focus indicators for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Disabled state styling */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Error message styling */
+.error-message {
+  color: #f87171;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Success message styling */
+.success-message {
+  color: #4ade80;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Card hover effects */
+.bg-gray-800\/50:hover {
+  background-color: rgba(31, 41, 55, 0.6);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
 </style>
