@@ -16,7 +16,7 @@
       <h1
         class="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-wide mb-8 text-center"
       >
-        <span class="text-primary">EXPLORE</span>
+        <span class="text-gold">EXPLORE</span>
         <span class="text-white">OUR LISTINGS</span>
       </h1>
 
@@ -24,14 +24,14 @@
       <div class="mb-4 flex justify-end space-x-6 flex-wrap gap-y-2">
         <NuxtLink
           to="/sold"
-          class="text-primary hover:text-indigo-300 font-semibold"
+          class="text-gold hover:text-gold-light font-semibold transition-colors"
         >
           View Sold Properties
         </NuxtLink>
         <NuxtLink
           v-if="authState.isAuthenticated"
           to="/create"
-          class="text-primary hover:text-indigo-300 font-semibold flex items-center"
+          class="text-gold hover:text-gold-light font-semibold flex items-center transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -49,8 +49,6 @@
         </NuxtLink>
       </div>
 
-
-
       <!-- Filter Component -->
       <PropertyFilter @filter="handleFilter" />
 
@@ -61,11 +59,11 @@
         <div
           v-for="property in displayProperties"
           :key="property.ID"
-          class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-700 bg-gray-800"
+          class="group relative flex flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/50 hover:border-gold/50 transition-all"
         >
           <!-- Property Image -->
           <div
-            class="aspect-w-3 aspect-h-2 bg-gray-550 sm:aspect-none sm:h-64 group-hover:opacity-75"
+            class="aspect-w-3 aspect-h-2 bg-zinc-800 sm:aspect-none sm:h-64 group-hover:opacity-90 transition-opacity"
           >
             <img
               :src="property.images[0]"
@@ -82,14 +80,14 @@
                 {{ property.address }}
               </a>
             </h3>
-            <p class="text-lg font-semibold text-white">
+            <p class="text-lg font-semibold text-gold">
               {{ formatCurrency(property.price) }}
             </p>
 
             <!-- Property Features -->
-            <div class="mt-2 flex flex-row items-center text-sm text-white">
+            <div class="mt-2 flex flex-row items-center text-sm text-zinc-300">
               <span
-                class="inline-block h-5 w-5 text-white mr-1"
+                class="inline-block h-5 w-5 text-zinc-400 mr-1"
                 aria-hidden="true"
               >
                 <svg
@@ -103,9 +101,9 @@
                 </svg>
               </span>
               {{ property.bedrooms }} bed
-              <span class="mx-1">•</span>
+              <span class="mx-1 text-zinc-600">•</span>
               <span
-                class="inline-block h-5 w-5 text-white mr-1"
+                class="inline-block h-5 w-5 text-zinc-400 mr-1"
                 aria-hidden="true"
               >
                 <svg
@@ -120,9 +118,9 @@
               </span>
               {{ property.bathrooms }} bath
               <div v-if="property.lot_size">
-                <span class="mx-1">•</span>
+                <span class="mx-1 text-zinc-600">•</span>
                 <span
-                  class="inline-block h-5 w-5 text-white mr-1"
+                  class="inline-block h-5 w-5 text-zinc-400 mr-1"
                   aria-hidden="true"
                 >
                   <svg
@@ -144,7 +142,7 @@
             <div class="mt-4 flex justify-end">
               <a
                 :href="`/property/${property.ID}`"
-                class="text-primary font-semibold hover:text-indigo-300"
+                class="text-gold font-semibold hover:text-gold-light transition-colors"
               >
                 View Details
               </a>
@@ -158,15 +156,15 @@
         <button
           @click="prevPage"
           :disabled="currentPage === 1"
-          class="px-4 py-2 text-white bg-primary rounded disabled:opacity-50"
+          class="px-4 py-2 text-black bg-gold hover:bg-gold-light rounded disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all"
         >
           Previous
         </button>
-        <p class="text-white">Page {{ currentPage }} of {{ totalPages }}</p>
+        <p class="text-zinc-300">Page {{ currentPage }} of {{ totalPages }}</p>
         <button
           @click="nextPage"
           :disabled="currentPage === totalPages"
-          class="px-4 py-2 text-white bg-primary rounded disabled:opacity-50"
+          class="px-4 py-2 text-black bg-gold hover:bg-gold-light rounded disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all"
         >
           Next
         </button>

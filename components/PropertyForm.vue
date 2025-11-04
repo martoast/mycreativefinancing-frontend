@@ -1,13 +1,13 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-4 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 py-4 px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">
       <form @submit.prevent="handleSubmit" class="space-y-6">
         <!-- Header Section -->
-        <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-4 sm:p-6 shadow-xl">
+        <div class="bg-zinc-900/50 backdrop-blur-sm rounded-xl border border-zinc-800 p-4 sm:p-6 shadow-xl">
           <div class="flex items-center mb-4">
             <NuxtLink
               :to="props.created_by === 'user' ? '/' : '/admin/'"
-              class="inline-flex items-center text-white hover:text-indigo-400 transition-colors duration-200"
+              class="inline-flex items-center text-white hover:text-gold transition-colors duration-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +29,7 @@
             <h2 class="text-2xl sm:text-3xl font-bold text-white">
               {{ props.property ? 'Edit Property' : 'Add New Property' }}
             </h2>
-            <p class="text-sm sm:text-base text-gray-300">
+            <p class="text-sm sm:text-base text-zinc-400">
               {{ props.property ? 'Update property details below' : 'Search for an address or enter details manually' }}
             </p>
           </div>
@@ -44,10 +44,10 @@
                   class="sr-only peer"
                   id="manual-input"
                 />
-                <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-indigo-600 transition-colors duration-200"></div>
+                <div class="w-11 h-6 bg-zinc-800 rounded-full peer peer-checked:bg-gold transition-colors duration-200"></div>
                 <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-5"></div>
               </div>
-              <span class="text-sm sm:text-base font-medium text-white group-hover:text-indigo-400 transition-colors duration-200">
+              <span class="text-sm sm:text-base font-medium text-white group-hover:text-gold transition-colors duration-200">
                 Manual input (skip address search)
               </span>
             </label>
@@ -64,10 +64,10 @@
                   class="sr-only peer"
                   id="is_appartment"
                 />
-                <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-indigo-600 transition-colors duration-200"></div>
+                <div class="w-11 h-6 bg-zinc-800 rounded-full peer peer-checked:bg-gold transition-colors duration-200"></div>
                 <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-5"></div>
               </div>
-              <span class="text-sm sm:text-base font-medium text-white group-hover:text-indigo-400 transition-colors duration-200">
+              <span class="text-sm sm:text-base font-medium text-white group-hover:text-gold transition-colors duration-200">
                 Apartment or condo?
               </span>
             </label>
@@ -75,13 +75,13 @@
             <!-- Unit Details -->
             <div v-if="data.form.is_appartment" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label for="type" class="block text-sm font-medium text-gray-300 mb-2">
+                <label for="type" class="block text-sm font-medium text-zinc-400 mb-2">
                   Unit Type
                 </label>
                 <select
                   v-model="data.form.type"
                   id="type"
-                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                 >
                   <option value="">Select Type</option>
                   <option value="SUITE">Suite</option>
@@ -92,14 +92,14 @@
                 </select>
               </div>
               <div>
-                <label for="unit-number" class="block text-sm font-medium text-gray-300 mb-2">
+                <label for="unit-number" class="block text-sm font-medium text-zinc-400 mb-2">
                   Unit Number
                 </label>
                 <input
                   v-model.trim="data.form.unit_number"
                   type="text"
                   id="unit-number"
-                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                   placeholder="e.g., 10B, 203"
                 />
               </div>
@@ -107,7 +107,7 @@
 
             <!-- Mapbox Search -->
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">
+              <label class="block text-sm font-medium text-zinc-400 mb-2">
                 Search Address
               </label>
               <mapbox-search-box
@@ -129,37 +129,37 @@
           <!-- Loading State -->
           <div v-if="data.loading" class="mt-6 flex flex-col items-center justify-center py-8 space-y-4">
             <div class="relative">
-              <div class="w-16 h-16 border-4 border-gray-700 border-t-indigo-500 rounded-full animate-spin"></div>
+              <div class="w-16 h-16 border-4 border-zinc-800 border-t-gold rounded-full animate-spin"></div>
               <div class="absolute inset-0 flex items-center justify-center">
-                <div class="w-8 h-8 bg-indigo-500/20 rounded-full"></div>
+                <div class="w-8 h-8 bg-gold/20 rounded-full"></div>
               </div>
             </div>
             <div class="text-center space-y-1">
               <p class="text-white font-medium">{{ data.loadingMessage }}</p>
-              <p class="text-gray-400 text-sm">This may take a moment...</p>
+              <p class="text-zinc-500 text-sm">This may take a moment...</p>
             </div>
           </div>
 
           <!-- Not Found Message -->
-          <div v-else-if="fetchComplete && propertyNotFound" class="mt-6 bg-red-900/20 border border-red-500/30 rounded-lg p-4 sm:p-6 text-center space-y-3">
-            <svg class="w-12 h-12 text-red-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div v-else-if="fetchComplete && propertyNotFound" class="mt-6 bg-accent-red/10 border border-accent-red/30 rounded-lg p-4 sm:p-6 text-center space-y-3">
+            <svg class="w-12 h-12 text-accent-red mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <div class="space-y-2">
-              <p class="font-semibold text-red-400">Property Not Found</p>
-              <p class="text-sm text-gray-300">Unable to retrieve details for this address.</p>
-              <p class="text-sm text-gray-400">
+              <p class="font-semibold text-accent-red">Property Not Found</p>
+              <p class="text-sm text-zinc-400">Unable to retrieve details for this address.</p>
+              <p class="text-sm text-zinc-500">
                 Try <label for="manual-input" class="underline cursor-pointer hover:text-white">manual input</label> instead.
               </p>
             </div>
           </div>
 
           <!-- Initial State -->
-          <div v-else-if="!data.loading && !fetchComplete && !manualInput && !props.property && !data.form.address" class="mt-6 bg-gray-700/30 border border-gray-600 rounded-lg p-6 sm:p-8 text-center space-y-3">
-            <svg class="w-12 h-12 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div v-else-if="!data.loading && !fetchComplete && !manualInput && !props.property && !data.form.address" class="mt-6 bg-zinc-800/30 border border-zinc-700 rounded-lg p-6 sm:p-8 text-center space-y-3">
+            <svg class="w-12 h-12 text-zinc-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <p class="text-gray-300 text-sm sm:text-base">
+            <p class="text-zinc-400 text-sm sm:text-base">
               Search for an address above or 
               <label for="manual-input" class="underline cursor-pointer hover:text-white font-medium">enable manual input</label>
             </p>
@@ -169,9 +169,9 @@
         <!-- Property Form Fields -->
         <div v-if="showForm" class="space-y-6">
           <!-- Basic Information -->
-          <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-4 sm:p-6 shadow-xl">
+          <div class="bg-zinc-900/50 backdrop-blur-sm rounded-xl border border-zinc-800 p-4 sm:p-6 shadow-xl">
             <h3 class="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center">
-              <svg class="w-5 h-5 mr-2 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-5 h-5 mr-2 text-gold" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
               </svg>
               Basic Information
@@ -179,8 +179,8 @@
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div class="sm:col-span-2 lg:col-span-3">
-                <label for="address" class="block text-sm font-medium text-gray-300 mb-2">
-                  Full Address <span class="text-red-400">*</span>
+                <label for="address" class="block text-sm font-medium text-zinc-400 mb-2">
+                  Full Address <span class="text-accent-red">*</span>
                 </label>
                 <input
                   v-model="property.address"
@@ -188,27 +188,27 @@
                   :readonly="!manualInput && !props.property"
                   type="text"
                   id="address"
-                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 read-only:opacity-70 read-only:cursor-not-allowed"
+                  class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200 read-only:opacity-70 read-only:cursor-not-allowed"
                   placeholder="123 Main St, City, State 12345"
                 />
               </div>
 
               <div>
-                <label for="property-type" class="block text-sm font-medium text-gray-300 mb-2">
+                <label for="property-type" class="block text-sm font-medium text-zinc-400 mb-2">
                   Property Type
                 </label>
                 <input
                   v-model="property.property_type"
                   type="text"
                   id="property-type"
-                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                   placeholder="Single Family"
                 />
               </div>
 
               <div>
-                <label for="bedrooms" class="block text-sm font-medium text-gray-300 mb-2">
-                  Bedrooms <span class="text-red-400">*</span>
+                <label for="bedrooms" class="block text-sm font-medium text-zinc-400 mb-2">
+                  Bedrooms <span class="text-accent-red">*</span>
                 </label>
                 <input
                   v-model.number="property.bedrooms"
@@ -217,14 +217,14 @@
                   step="1"
                   min="0"
                   id="bedrooms"
-                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                   placeholder="3"
                 />
               </div>
 
               <div>
-                <label for="bathrooms" class="block text-sm font-medium text-gray-300 mb-2">
-                  Bathrooms <span class="text-red-400">*</span>
+                <label for="bathrooms" class="block text-sm font-medium text-zinc-400 mb-2">
+                  Bathrooms <span class="text-accent-red">*</span>
                 </label>
                 <input
                   v-model.number="property.bathrooms"
@@ -233,14 +233,14 @@
                   step="0.5"
                   min="0"
                   id="bathrooms"
-                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                   placeholder="2.5"
                 />
               </div>
 
               <div>
-                <label for="price" class="block text-sm font-medium text-gray-300 mb-2">
-                  Price ($) <span class="text-red-400">*</span>
+                <label for="price" class="block text-sm font-medium text-zinc-400 mb-2">
+                  Price ($) <span class="text-accent-red">*</span>
                 </label>
                 <input
                   v-model.number="property.price"
@@ -249,13 +249,13 @@
                   step="0.01"
                   min="0"
                   id="price"
-                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                   placeholder="250000"
                 />
               </div>
 
               <div>
-                <label for="living-area" class="block text-sm font-medium text-gray-300 mb-2">
+                <label for="living-area" class="block text-sm font-medium text-zinc-400 mb-2">
                   Living Area (sq ft)
                 </label>
                 <input
@@ -263,13 +263,13 @@
                   type="number"
                   min="0"
                   id="living-area"
-                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                   placeholder="2000"
                 />
               </div>
 
               <div>
-                <label for="monthly_hoa_fee" class="block text-sm font-medium text-gray-300 mb-2">
+                <label for="monthly_hoa_fee" class="block text-sm font-medium text-zinc-400 mb-2">
                   Monthly HOA Fee ($)
                 </label>
                 <input
@@ -278,7 +278,7 @@
                   step="0.01"
                   min="0"
                   id="monthly_hoa_fee"
-                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                   placeholder="150"
                 />
               </div>
@@ -292,48 +292,48 @@
                       id="sold"
                       class="sr-only peer"
                     />
-                    <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-green-600 transition-colors duration-200"></div>
+                    <div class="w-11 h-6 bg-zinc-800 rounded-full peer peer-checked:bg-accent-green transition-colors duration-200"></div>
                     <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-5"></div>
                   </div>
-                  <span class="text-sm font-medium text-white group-hover:text-green-400 transition-colors duration-200">
+                  <span class="text-sm font-medium text-white group-hover:text-accent-green transition-colors duration-200">
                     Mark as Sold
                   </span>
                 </label>
               </div>
 
               <div class="sm:col-span-2 lg:col-span-3">
-                <label for="description" class="block text-sm font-medium text-gray-300 mb-2">
+                <label for="description" class="block text-sm font-medium text-zinc-400 mb-2">
                   Description
                 </label>
                 <textarea
                   v-model="property.description"
                   id="description"
                   rows="4"
-                  class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none"
+                  class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200 resize-none"
                   placeholder="Beautiful property with modern amenities..."
                 ></textarea>
               </div>
             </div>
           </div>
 
-          <!-- Additional Details (Collapsible) -->
-          <details class="group bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 shadow-xl overflow-hidden">
-            <summary class="cursor-pointer p-4 sm:p-6 hover:bg-gray-700/30 transition-colors duration-200 flex items-center justify-between">
+          <!-- Additional Details -->
+          <details class="group bg-zinc-900/50 backdrop-blur-sm rounded-xl border border-zinc-800 shadow-xl overflow-hidden">
+            <summary class="cursor-pointer p-4 sm:p-6 hover:bg-zinc-800/30 transition-colors duration-200 flex items-center justify-between">
               <h3 class="text-lg sm:text-xl font-semibold text-white flex items-center">
-                <svg class="w-5 h-5 mr-2 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5 mr-2 text-gold" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                 </svg>
                 Additional Details
               </h3>
-              <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-5 h-5 text-zinc-500 transform group-open:rotate-180 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
             </summary>
             
-            <div class="p-4 sm:p-6 pt-0 border-t border-gray-700">
+            <div class="p-4 sm:p-6 pt-0 border-t border-zinc-800">
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <label for="rent-zestimate" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="rent-zestimate" class="block text-sm font-medium text-zinc-400 mb-2">
                     Est. Rent (Zillow)
                   </label>
                   <input
@@ -342,13 +342,13 @@
                     step="1"
                     min="0"
                     id="rent-zestimate"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="2500"
                   />
                 </div>
 
                 <div>
-                  <label for="zestimate" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="zestimate" class="block text-sm font-medium text-zinc-400 mb-2">
                     Est. Value (Zillow)
                   </label>
                   <input
@@ -357,13 +357,13 @@
                     step="1"
                     min="0"
                     id="zestimate"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="300000"
                   />
                 </div>
 
                 <div>
-                  <label for="price_per_square_foot" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="price_per_square_foot" class="block text-sm font-medium text-zinc-400 mb-2">
                     Price Per Sq Ft
                   </label>
                   <input
@@ -372,13 +372,13 @@
                     step="0.01"
                     min="0"
                     id="price_per_square_foot"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="150"
                   />
                 </div>
 
                 <div>
-                  <label for="year-built" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="year-built" class="block text-sm font-medium text-zinc-400 mb-2">
                     Year Built
                   </label>
                   <input
@@ -388,13 +388,13 @@
                     min="1000"
                     max="2100"
                     id="year-built"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="1990"
                   />
                 </div>
 
                 <div>
-                  <label for="lot-size" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="lot-size" class="block text-sm font-medium text-zinc-400 mb-2">
                     Lot Size (sq ft)
                   </label>
                   <input
@@ -402,20 +402,20 @@
                     type="number"
                     min="0"
                     id="lot-size"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="5000"
                   />
                 </div>
 
                 <div>
-                  <label for="zoning" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="zoning" class="block text-sm font-medium text-zinc-400 mb-2">
                     Zoning
                   </label>
                   <input
                     v-model="property.zoning"
                     type="text"
                     id="zoning"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="R-1"
                   />
                 </div>
@@ -424,9 +424,9 @@
           </details>
 
           <!-- Images Section -->
-          <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-4 sm:p-6 shadow-xl">
+          <div class="bg-zinc-900/50 backdrop-blur-sm rounded-xl border border-zinc-800 p-4 sm:p-6 shadow-xl">
             <h3 class="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center">
-              <svg class="w-5 h-5 mr-2 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-5 h-5 mr-2 text-gold" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
               </svg>
               Property Images
@@ -441,13 +441,13 @@
                 <input
                   v-model.trim="property.images[index]"
                   type="url"
-                  class="flex-1 rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  class="flex-1 rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                   placeholder="https://example.com/image.jpg"
                 />
                 <button
                   @click.prevent="removeImage(index)"
                   type="button"
-                  class="sm:w-auto w-full rounded-lg bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-400 transition-all duration-200"
+                  class="sm:w-auto w-full rounded-lg bg-accent-red/20 hover:bg-accent-red/30 border border-accent-red/30 px-4 py-2.5 text-sm font-medium text-accent-red transition-all duration-200"
                 >
                   Remove
                 </button>
@@ -455,7 +455,7 @@
               <button
                 @click.prevent="addImage"
                 type="button"
-                class="w-full sm:w-auto rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 px-4 py-2.5 text-sm font-medium text-indigo-400 transition-all duration-200"
+                class="w-full sm:w-auto rounded-lg bg-gold/20 hover:bg-gold/30 border border-gold/30 px-4 py-2.5 text-sm font-medium text-gold transition-all duration-200"
               >
                 + Add Image URL
               </button>
@@ -463,26 +463,26 @@
           </div>
 
           <!-- Deal Information -->
-          <details class="group bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 shadow-xl overflow-hidden" open>
-            <summary class="cursor-pointer p-4 sm:p-6 hover:bg-gray-700/30 transition-colors duration-200 flex items-center justify-between">
+          <details class="group bg-zinc-900/50 backdrop-blur-sm rounded-xl border border-zinc-800 shadow-xl overflow-hidden" open>
+            <summary class="cursor-pointer p-4 sm:p-6 hover:bg-zinc-800/30 transition-colors duration-200 flex items-center justify-between">
               <h3 class="text-lg sm:text-xl font-semibold text-white flex items-center">
-                <svg class="w-5 h-5 mr-2 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5 mr-2 text-gold" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
                 </svg>
                 Deal Information
-                <span class="ml-2 text-xs text-red-400">* Required</span>
+                <span class="ml-2 text-xs text-accent-red">* Required</span>
               </h3>
-              <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-5 h-5 text-zinc-500 transform group-open:rotate-180 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
             </summary>
             
-            <div class="p-4 sm:p-6 pt-0 border-t border-gray-700">
+            <div class="p-4 sm:p-6 pt-0 border-t border-zinc-800">
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <label for="purchase_price" class="block text-sm font-medium text-gray-300 mb-2">
-                    Purchase Price <span class="text-red-400">*</span>
+                  <label for="purchase_price" class="block text-sm font-medium text-zinc-400 mb-2">
+                    Purchase Price <span class="text-accent-red">*</span>
                   </label>
                   <input
                     v-model.number="property.purchase_price"
@@ -491,14 +491,14 @@
                     min="0"
                     id="purchase_price"
                     required
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="250000"
                   />
                 </div>
 
                 <div>
-                  <label for="balance_to_close" class="block text-sm font-medium text-gray-300 mb-2">
-                    Balance to Close <span class="text-red-400">*</span>
+                  <label for="balance_to_close" class="block text-sm font-medium text-zinc-400 mb-2">
+                    Balance to Close <span class="text-accent-red">*</span>
                   </label>
                   <input
                     v-model.number="property.balance_to_close"
@@ -507,14 +507,14 @@
                     min="0"
                     id="balance_to_close"
                     required
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="10000"
                   />
                 </div>
 
                 <div>
-                  <label for="monthly_holding_cost" class="block text-sm font-medium text-gray-300 mb-2">
-                    Monthly Holding Cost <span class="text-red-400">*</span>
+                  <label for="monthly_holding_cost" class="block text-sm font-medium text-zinc-400 mb-2">
+                    Monthly Holding Cost <span class="text-accent-red">*</span>
                   </label>
                   <input
                     v-model.number="property.monthly_holding_cost"
@@ -523,14 +523,14 @@
                     min="0"
                     id="monthly_holding_cost"
                     required
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="1500"
                   />
                 </div>
 
                 <div>
-                  <label for="interest_rate" class="block text-sm font-medium text-gray-300 mb-2">
-                    Interest Rate (%) <span class="text-red-400">*</span>
+                  <label for="interest_rate" class="block text-sm font-medium text-zinc-400 mb-2">
+                    Interest Rate (%) <span class="text-accent-red">*</span>
                   </label>
                   <input
                     v-model.number="property.interest_rate"
@@ -540,13 +540,13 @@
                     max="100"
                     id="interest_rate"
                     required
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="5.5"
                   />
                 </div>
 
                 <div>
-                  <label for="assignment_fee" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="assignment_fee" class="block text-sm font-medium text-zinc-400 mb-2">
                     Assignment Fee
                   </label>
                   <input
@@ -555,13 +555,13 @@
                     step="0.01"
                     min="0"
                     id="assignment_fee"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="5000"
                   />
                 </div>
 
                 <div>
-                  <label for="escrow" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="escrow" class="block text-sm font-medium text-zinc-400 mb-2">
                     Escrow
                   </label>
                   <input
@@ -570,88 +570,88 @@
                     step="0.01"
                     min="0"
                     id="escrow"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="2000"
                   />
                 </div>
 
                 <div>
-                  <label for="deal_holder" class="block text-sm font-medium text-gray-300 mb-2">
-                    Deal Holder <span class="text-red-400">*</span>
+                  <label for="deal_holder" class="block text-sm font-medium text-zinc-400 mb-2">
+                    Deal Holder <span class="text-accent-red">*</span>
                   </label>
                   <input
                     v-model="property.deal_holder"
                     type="text"
                     id="deal_holder"
                     required
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="John Doe"
                   />
                 </div>
 
                 <div>
-                  <label for="deal_holder_phone" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="deal_holder_phone" class="block text-sm font-medium text-zinc-400 mb-2">
                     Deal Holder Phone
                   </label>
                   <input
                     v-model="property.deal_holder_phone"
                     type="tel"
                     id="deal_holder_phone"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="(123) 456-7890"
                   />
                 </div>
 
                 <div>
-                  <label for="deal_holder_email" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="deal_holder_email" class="block text-sm font-medium text-zinc-400 mb-2">
                     Deal Holder Email
                   </label>
                   <input
                     v-model="property.deal_holder_email"
                     type="email"
                     id="deal_holder_email"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="email@example.com"
                   />
                 </div>
 
                 <div class="sm:col-span-2 lg:col-span-3">
-                  <label for="transaction_document_url" class="block text-sm font-medium text-gray-300 mb-2">
-                    Transaction Document URL <span class="text-red-400">*</span>
+                  <label for="transaction_document_url" class="block text-sm font-medium text-zinc-400 mb-2">
+                    Transaction Document URL <span class="text-accent-red">*</span>
                   </label>
                   <input
                     v-model="property.transaction_document_url"
                     type="url"
                     id="transaction_document_url"
                     required
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="https://docs.google.com/..."
                   />
                 </div>
 
                 <div class="sm:col-span-2 lg:col-span-3">
-                  <label for="price_breakdown" class="block text-sm font-medium text-gray-300 mb-2">
-                    Price Breakdown Notes <span class="text-red-400">*</span>
+                  <label for="price_breakdown" class="block text-sm font-medium text-zinc-400 mb-2">
+                    Price Breakdown Notes <span class="text-accent-red">*</span>
                   </label>
                   <textarea
                     v-model="property.price_breakdown"
                     id="price_breakdown"
                     rows="3"
                     required
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200 resize-none"
                     placeholder="Breakdown of pricing details..."
                   ></textarea>
                 </div>
 
                 <div class="sm:col-span-2 lg:col-span-3">
-                  <label for="additional_benefits" class="block text-sm font-medium text-gray-300 mb-2">
+                  <label for="additional_benefits" class="block text-sm font-medium text-zinc-400 mb-2">
                     Additional Benefits
                   </label>
                   <textarea
                     v-model="property.additional_benefits"
                     id="additional_benefits"
                     rows="3"
-                    class="w-full rounded-lg bg-gray-700/50 border-gray-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none"
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200 resize-none"
                     placeholder="Additional benefits and notes..."
                   ></textarea>
                 </div>
@@ -665,10 +665,10 @@
                         id="in_house_deal"
                         class="sr-only peer"
                       />
-                      <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-indigo-600 transition-colors duration-200"></div>
+                      <div class="w-11 h-6 bg-zinc-800 rounded-full peer peer-checked:bg-gold transition-colors duration-200"></div>
                       <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-5"></div>
                     </div>
-                    <span class="text-sm font-medium text-white group-hover:text-indigo-400 transition-colors duration-200">
+                    <span class="text-sm font-medium text-white group-hover:text-gold transition-colors duration-200">
                       In House Deal
                     </span>
                   </label>
@@ -683,10 +683,10 @@
                         id="rental_restriction"
                         class="sr-only peer"
                       />
-                      <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-red-600 transition-colors duration-200"></div>
+                      <div class="w-11 h-6 bg-zinc-800 rounded-full peer peer-checked:bg-accent-red transition-colors duration-200"></div>
                       <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 peer-checked:translate-x-5"></div>
                     </div>
-                    <span class="text-sm font-medium text-white group-hover:text-red-400 transition-colors duration-200">
+                    <span class="text-sm font-medium text-white group-hover:text-accent-red transition-colors duration-200">
                       Rental Restriction
                     </span>
                   </label>
@@ -697,12 +697,12 @@
         </div>
 
         <!-- Form Actions -->
-        <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-4 sm:p-6 shadow-xl">
+        <div class="bg-zinc-900/50 backdrop-blur-sm rounded-xl border border-zinc-800 p-4 sm:p-6 shadow-xl">
           <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
             <NuxtLink :to="props.redirect" class="w-full sm:w-auto">
               <button
                 type="button"
-                class="w-full sm:w-auto rounded-lg bg-gray-700 hover:bg-gray-600 border border-gray-600 px-6 py-2.5 text-sm font-medium text-white transition-all duration-200"
+                class="w-full sm:w-auto rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-6 py-2.5 text-sm font-medium text-white transition-all duration-200"
               >
                 Cancel
               </button>
@@ -710,10 +710,10 @@
             <button
               :disabled="data.form.loading || data.loading || (!showForm && !manualInput && !props.property)"
               type="submit"
-              class="w-full sm:w-auto rounded-lg bg-indigo-600 hover:bg-indigo-500 px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-indigo-500/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-indigo-600"
+              class="w-full sm:w-auto rounded-lg bg-gold hover:bg-gold-light px-6 py-2.5 text-sm font-medium text-black shadow-lg shadow-gold/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gold"
             >
               <span v-if="data.form.loading" class="flex items-center justify-center">
-                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -729,7 +729,6 @@
 </template>
 <script setup>
 import { ref, reactive, onMounted, watch, computed } from "vue";
-import { usePropertiesStore } from "~/store/DataStore";
 import debounce from "lodash.debounce";
 import { useRoute, useRouter, navigateTo } from '#app';
 
@@ -755,7 +754,7 @@ const route = useRoute();
 
 const access_token = config.public.MAPBOX_API_TOKEN;
 const zillowApiKey = config.public.ZILLOW_API_KEY;
-const reApiKey = config.public.REAL_ESTATE_API_KEY;
+const apiBaseUrl = config.public.URDEAL_BASE_URL || 'http://localhost:8080';
 
 const manualInput = ref(false);
 const propertyNotFound = ref(false);
@@ -810,7 +809,7 @@ const defaultProperty = {
   balance_to_close: null,
   monthly_holding_cost: null,
   interest_rate: null,
-  transaction_document_url: null,
+  transaction_document_url: "",
   escrow: null,
   deal_holder: "",
   deal_holder_phone: "",
@@ -818,8 +817,8 @@ const defaultProperty = {
   assignment_fee: null,
   in_house_deal: false,
   rental_restriction: false,
-  price_breakdown: null,
-  additional_benefits: null,
+  price_breakdown: "",
+  additional_benefits: "",
   created_by: "user",
   re_api_id: null,
 };
@@ -934,51 +933,41 @@ const debouncedFetchPropertyData = debounce(async (addressToFetch) => {
       return;
   }
   
-  // First, get Real Estate API ID
   await fetchRealEstateApiId(addressToFetch);
-  
-  // Then fetch Zillow data
   const apiUrl = `https://zillow-com1.p.rapidapi.com/property?address=${encodeURIComponent(addressToFetch)}`;
   await fetchPropertyData(apiUrl);
 }, 800);
 
-// New function to fetch Real Estate API ID
 const fetchRealEstateApiId = async (address) => {
   try {
     data.loadingMessage = 'Looking up property ID...';
     
-    // Parse address to get just street address and city (not full zip/state)
-    // Extract the core address parts before the comma separations
     const addressParts = address.split(',');
     let searchAddress = address;
     
-    // If we have multiple parts, take street + city (first 2 parts typically)
     if (addressParts.length >= 2) {
       searchAddress = `${addressParts[0].trim()}, ${addressParts[1].trim()}`;
     }
     
     console.log('Searching Real Estate API with:', searchAddress);
     
-    // Call YOUR server API route instead of the external API directly
     const response = await $fetch('/api/real-estate-search', {
       method: 'POST',
       body: {
         search: searchAddress,
-        search_types: ['A'] // Only look for full addresses
+        search_types: ['A']
       }
     });
 
     console.log('Real Estate API Response:', response);
 
     if (response?.data && response.data.length > 0) {
-      // Find the best match - prioritize exact address matches (searchType: 'A')
       const exactMatch = response.data.find(item => item.searchType === 'A');
       
       if (exactMatch && exactMatch.id) {
         property.value.re_api_id = exactMatch.id;
         console.log('Found Real Estate API ID:', exactMatch.id);
       } else if (response.data[0].id) {
-        // Fallback to first result if no exact match
         property.value.re_api_id = response.data[0].id;
         console.log('Using first result ID:', response.data[0].id);
       } else {
@@ -1107,16 +1096,17 @@ const removeImage = (index) => {
 const handleSubmit = async () => {
   data.form.loading = true;
   data.errors = {};
-  const propertiesStore = usePropertiesStore();
 
+  // Create a clean copy of the property
   let propertyToSubmit = JSON.parse(JSON.stringify(property.value));
 
+  // Convert arrays and objects to JSON strings
   const stringifyField = (fieldName) => {
-     if (Array.isArray(propertyToSubmit[fieldName]) || typeof propertyToSubmit[fieldName] === 'object') {
-        propertyToSubmit[fieldName] = JSON.stringify(propertyToSubmit[fieldName]);
-     } else if (propertyToSubmit[fieldName] === null || propertyToSubmit[fieldName] === undefined) {
-         propertyToSubmit[fieldName] = '[]';
-     }
+    if (Array.isArray(propertyToSubmit[fieldName]) || (typeof propertyToSubmit[fieldName] === 'object' && propertyToSubmit[fieldName] !== null)) {
+      propertyToSubmit[fieldName] = JSON.stringify(propertyToSubmit[fieldName]);
+    } else if (propertyToSubmit[fieldName] === null || propertyToSubmit[fieldName] === undefined) {
+      propertyToSubmit[fieldName] = '[]';
+    }
   };
 
   stringifyField('images');
@@ -1126,36 +1116,62 @@ const handleSubmit = async () => {
   stringifyField('tax_history');
   stringifyField('contact_recipients');
 
+  // Set created_by
   propertyToSubmit.created_by = props.created_by;
+
+  // Clean up empty strings to null for numeric fields
+  const numericFields = [
+    'price', 'bedrooms', 'bathrooms', 'rent_zestimate', 'zestimate',
+    'year_built', 'lot_size', 'price_per_square_foot', 'living_area',
+    'purchase_price', 'balance_to_close', 'monthly_holding_cost',
+    'interest_rate', 'monthly_hoa_fee', 'escrow', 'assignment_fee'
+  ];
+
+  numericFields.forEach(field => {
+    if (propertyToSubmit[field] === '' || propertyToSubmit[field] === undefined) {
+      propertyToSubmit[field] = null;
+    }
+  });
+
+  // Clean up empty strings to null for string fields that can be null
+  const nullableStringFields = [
+    'description', 'property_type', 'zoning', 'deal_holder', 
+    'deal_holder_phone', 'deal_holder_email', 'price_breakdown', 
+    'additional_benefits', 're_api_id'
+  ];
+
+  nullableStringFields.forEach(field => {
+    if (propertyToSubmit[field] === '') {
+      propertyToSubmit[field] = null;
+    }
+  });
 
   try {
     let response;
-    if (props.property && props.property.ID) {
-       console.log("Updating property ID:", props.property.ID);
-       propertyToSubmit.ID = props.property.ID;
-       response = await propertiesStore.store({ property: propertyToSubmit });
-    } else {
-       console.log("Creating new property...");
-       response = await propertiesStore.store({ property: propertyToSubmit });
-    }
+    const url = props.property && props.property.ID 
+      ? `${apiBaseUrl}/properties/${props.property.ID}`
+      : `${apiBaseUrl}/properties`;
 
-    console.log("Store response:", response);
+    const method = props.property && props.property.ID ? 'PUT' : 'POST';
 
-     let createdOrUpdatedProperty = response;
-     if (typeof response === 'string') {
-        try {
-           createdOrUpdatedProperty = JSON.parse(response);
-        } catch (parseError) {
-           console.error("Failed to parse store response:", parseError);
-           createdOrUpdatedProperty = { ID: null };
-        }
-     }
+    console.log('Submitting to:', url);
+    console.log('Method:', method);
+    console.log('Payload:', propertyToSubmit);
 
-    if (!(props.property && props.property.ID) && createdOrUpdatedProperty && createdOrUpdatedProperty.ID) {
-       console.log("Sending webhook for new property ID:", createdOrUpdatedProperty.ID);
-       await sendWebHook({ ...property.value, ID: createdOrUpdatedProperty.ID });
-    } else if (!(props.property && props.property.ID)) {
-        console.warn("Could not send webhook: Missing ID in creation response.");
+    response = await $fetch(url, {
+      method: method,
+      body: propertyToSubmit,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log("API response:", response);
+
+    // Send webhook only for new properties
+    if (!(props.property && props.property.ID) && response && response.ID) {
+       console.log("Sending webhook for new property ID:", response.ID);
+       await sendWebHook({ ...property.value, ID: response.ID });
     }
 
     await navigateTo(props.redirect);
@@ -1201,30 +1217,30 @@ const sendWebHook = async (propertyData) => {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1f2937;
+  background: #18181b;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4b5563;
+  background: #3f3f46;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+  background: #52525b;
 }
 
 /* Mapbox styling */
 .mapboxgl-ctrl-geocoder {
   box-shadow: none !important;
-  border: 1px solid #4b5563;
+  border: 1px solid #3f3f46;
   border-radius: 0.5rem;
-  background: rgba(55, 65, 81, 0.5) !important;
+  background: rgba(39, 39, 42, 0.5) !important;
 }
 
 .mapboxgl-ctrl-geocoder--input {
   height: calc(1.5em + 0.75rem + 2px);
   padding: 0.625rem 1rem !important;
-  background-color: rgba(55, 65, 81, 0.5) !important;
+  background-color: rgba(39, 39, 42, 0.5) !important;
   color: white !important;
   border: none !important;
   border-radius: 0.5rem;
@@ -1233,22 +1249,22 @@ const sendWebHook = async (propertyData) => {
 .mapboxgl-ctrl-geocoder--input:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
-  box-shadow: 0 0 0 2px #1f2937, 0 0 0 4px #6366f1;
+  box-shadow: 0 0 0 2px #18181b, 0 0 0 4px #d4af37;
 }
 
 .mapboxgl-ctrl-geocoder--suggestion-list {
-  background-color: #1f2937 !important;
-  border: 1px solid #4b5563 !important;
+  background-color: #18181b !important;
+  border: 1px solid #3f3f46 !important;
   border-radius: 0.5rem;
   overflow: hidden;
   margin-top: 0.25rem;
 }
 
 .mapboxgl-ctrl-geocoder--suggestion {
-  color: #d1d5db !important;
+  color: #d4d4d8 !important;
   padding: 0.75rem 1rem !important;
   cursor: pointer;
-  border-bottom: 1px solid #374151;
+  border-bottom: 1px solid #27272a;
 }
 
 .mapboxgl-ctrl-geocoder--suggestion:last-child {
@@ -1257,16 +1273,16 @@ const sendWebHook = async (propertyData) => {
 
 .mapboxgl-ctrl-geocoder--suggestion:hover,
 .mapboxgl-ctrl-geocoder--suggestion.active {
-  background-color: #374151 !important;
+  background-color: #27272a !important;
   color: white !important;
 }
 
 .mapboxgl-ctrl-geocoder--icon-search {
-  fill: #9ca3af;
+  fill: #71717a;
 }
 
 .mapboxgl-ctrl-geocoder--icon-loading {
-  fill: #6366f1 !important;
+  fill: #d4af37 !important;
 }
 
 .mapboxgl-ctrl-geocoder--button {
@@ -1284,14 +1300,14 @@ details > summary::-webkit-details-marker {
 
 /* Read-only input styling */
 input:read-only {
-  background-color: rgba(55, 65, 81, 0.5);
+  background-color: rgba(39, 39, 42, 0.5);
   cursor: not-allowed;
   opacity: 0.7;
 }
 
 /* Select dropdown styling */
 select option {
-  color: #111827;
+  color: #09090b;
   background-color: white;
 }
 
@@ -1304,7 +1320,7 @@ select option {
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid #6366f1;
+  outline: 2px solid #d4af37;
   outline-offset: 2px;
 }
 
@@ -1340,16 +1356,6 @@ label {
   animation: spin 1s linear infinite;
 }
 
-/* Gradient background animation */
-@keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
 /* Backdrop blur support */
 @supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
   .backdrop-blur-sm {
@@ -1360,7 +1366,7 @@ label {
 
 /* Better focus indicators for keyboard navigation */
 *:focus-visible {
-  outline: 2px solid #6366f1;
+  outline: 2px solid #d4af37;
   outline-offset: 2px;
 }
 
@@ -1373,21 +1379,21 @@ button:disabled {
 
 /* Error message styling */
 .error-message {
-  color: #f87171;
+  color: #ef4444;
   font-size: 0.875rem;
   margin-top: 0.5rem;
 }
 
 /* Success message styling */
 .success-message {
-  color: #4ade80;
+  color: #10b981;
   font-size: 0.875rem;
   margin-top: 0.5rem;
 }
 
 /* Card hover effects */
-.bg-gray-800\/50:hover {
-  background-color: rgba(31, 41, 55, 0.6);
+.bg-zinc-900\/50:hover {
+  background-color: rgba(24, 24, 27, 0.6);
 }
 
 /* Smooth scroll behavior */
