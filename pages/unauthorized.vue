@@ -3,7 +3,7 @@
       <!-- Logo -->
       <div class="mb-12">
         <a href="https://urcreativeservices.com/" target="_blank">
-          <img src="/logo.svg" alt="Logo" class="h-20 w-auto" />
+          <img src="/logo.png" alt="Logo" class="h-20 w-auto" />
         </a>
       </div>
       

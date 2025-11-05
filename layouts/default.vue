@@ -7,7 +7,7 @@
           <!-- Logo or site name -->
           <div class="flex items-center">
             <NuxtLink to="/" class="flex items-center">
-              <img src="/logo.svg" alt="Logo" class="h-8 w-auto" />
+              <img src="/logo.png" alt="Logo" class="h-8 w-auto" />
             </NuxtLink>
           </div>
 

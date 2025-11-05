@@ -7,7 +7,7 @@
       <!-- Logo -->
       <div class="flex justify-center mb-8">
         <a href="https://urcreativeservices.com/" target="_blank">
-          <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
+          <img src="/logo.png" alt="Logo" class="h-16 md:h-24 w-auto" />
         </a>
       </div>
 
@@ -17,7 +17,7 @@
         class="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-wide mb-8 text-center"
       >
         <span class="text-gold">EXPLORE</span>
-        <span class="text-white">OUR LISTINGS</span>
+        <span class="text-white md:ml-2">OUR LISTINGS</span>
       </h1>
 
       <!-- Link to Sold Properties and Submit Property -->

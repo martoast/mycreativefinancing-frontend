@@ -3,7 +3,7 @@
     <!-- Logo -->
     <div class="mb-8">
       <a href="/">
-        <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
+        <img src="/logo.png" alt="Logo" class="h-16 w-auto" />
       </a>
     </div>
     

@@ -6,7 +6,7 @@
       >
         <div class="flex justify-center mb-8">
           <a href="https://urcreativeservices.com/" target="_blank">
-            <img src="/logo.svg" alt="Logo" class="h-16 w-auto" />
+            <img src="/logo.png" alt="Logo" class="h-16 w-auto" />
           </a>
         </div>
         <div class="mb-4">
