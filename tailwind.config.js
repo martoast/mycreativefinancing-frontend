@@ -32,6 +32,23 @@ export default {
           light: '#f9d776',
           dark: '#aa8c2c',
         },
+        // Red color palette (same format as gold)
+        red: {
+          50: '#fef2f2',
+          100: '#fee2e2',
+          200: '#fecaca',
+          300: '#fca5a5',
+          400: '#f87171',
+          500: '#ef4444',
+          600: '#dc2626',
+          700: '#b91c1c',
+          800: '#991b1b',
+          900: '#7f1d1d',
+          950: '#450a0a',
+          DEFAULT: '#dc3545',
+          light: '#ff6b6b',
+          dark: '#a71d2a',
+        },
         // Accent colors
         accent: {
           blue: '#3B82F6',
@@ -58,12 +75,12 @@ export default {
         // Keep some existing colors for compatibility
         primary: '#d4af37',
         secondary: '#5f915c',
-        'white': '#ffffff',
-        'black': '#000000',
-        'red': '#dc3545',
+        white: '#ffffff',
+        black: '#000000',
       },
       backgroundImage: {
         'gradient-gold': 'linear-gradient(135deg, #d4af37 0%, #f9d776 50%, #aa8c2c 100%)',
+        'gradient-red': 'linear-gradient(135deg, #dc3545 0%, #ff6b6b 50%, #a71d2a 100%)',
         'gradient-dark': 'linear-gradient(135deg, #09090b 0%, #18181b 50%, #27272a 100%)',
         'gradient-accent': 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
       },
@@ -85,9 +102,7 @@ export default {
     },
   },
   plugins: [
-    require('@tailwindcss/forms')({
-      strategy: 'class',
-    }),
+    require('@tailwindcss/forms')({ strategy: 'class' }),
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/typography')
   ],
