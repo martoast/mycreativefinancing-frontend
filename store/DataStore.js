@@ -38,8 +38,8 @@ export const usePropertiesStore = defineStore('properties', {
       
       // Use the protected API endpoint with authentication
       const url = isUpdate
-        ? `${config.public.apiBaseUrl}/api/properties/${params.property.ID}`
-        : `${config.public.apiBaseUrl}/api/properties`;
+        ? `${config.public.apiBaseUrl}/properties/${params.property.ID}`
+        : `${config.public.apiBaseUrl}/properties`;
       
       const method = isUpdate ? 'put' : 'post';
 
@@ -55,7 +55,7 @@ export const usePropertiesStore = defineStore('properties', {
       const { $auth } = useNuxtApp();
       
       // Use the protected API endpoint with authentication
-      const url = `${config.public.apiBaseUrl}/api/properties/${ID}`;
+      const url = `${config.public.apiBaseUrl}/properties/${ID}`;
       
       // Use auth.fetch for protected endpoints
       return $auth.fetch(url, {
