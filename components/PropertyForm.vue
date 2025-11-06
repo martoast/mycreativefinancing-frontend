@@ -754,7 +754,7 @@ const route = useRoute();
 
 const access_token = config.public.MAPBOX_API_TOKEN;
 const zillowApiKey = config.public.ZILLOW_API_KEY;
-const apiBaseUrl = config.public.URDEAL_BASE_URL;
+const apiBaseUrl = config.public.apiBaseUrl;
 
 console.log(apiBaseUrl)
 
