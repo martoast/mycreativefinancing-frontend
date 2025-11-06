@@ -21,6 +21,7 @@ export default defineNuxtConfig({
         GOOGLE_SHEETS_API_CREDENTIALS: process.env.GOOGLE_SHEETS_API_CREDENTIALS,
         SEND_GRID_API_KEY: process.env.SEND_GRID_API_KEY,
         apiBaseUrl: process.env.API_BASE_URL || 'https://shark-app-gfe6f.ondigitalocean.app',
+        URDEAL_BASE_URL: process.env.URDEAL_BASE_URL
     }
 }
 })
