@@ -740,10 +740,14 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, reactive, onMounted, watch, computed } from "vue";
 import debounce from "lodash.debounce";
 import { useRoute, useRouter, navigateTo } from '#app';
+import { usePropertiesStore } from '~/stores/DataStore';
+
+const propertiesStore = usePropertiesStore();
 
 const props = defineProps({
   property: {
@@ -1163,24 +1167,10 @@ const handleSubmit = async () => {
   });
 
   try {
-    let response;
-    const url = props.property && props.property.ID 
-      ? `${apiBaseUrl}/properties/${props.property.ID}`
-      : `${apiBaseUrl}/properties`;
-
-    const method = props.property && props.property.ID ? 'PUT' : 'POST';
-
-    console.log('Submitting to:', url);
-    console.log('Method:', method);
-    console.log('Payload:', propertyToSubmit);
-
-    response = await $fetch(url, {
-      method: method,
-      body: propertyToSubmit,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    console.log('Submitting property:', propertyToSubmit);
+    
+    // Use the store's method which handles /api routing automatically
+    const response = await propertiesStore.store({ property: propertyToSubmit });
 
     console.log("API response:", response);
 
