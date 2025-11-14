@@ -1,4 +1,4 @@
-// stores/DataStore.js
+// store/DataStore.js
 import { defineStore } from 'pinia';
 
 export const usePropertiesStore = defineStore('properties', {

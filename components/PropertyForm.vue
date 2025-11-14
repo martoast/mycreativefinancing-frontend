@@ -745,7 +745,7 @@
 import { ref, reactive, onMounted, watch, computed } from "vue";
 import debounce from "lodash.debounce";
 import { useRoute, useRouter, navigateTo } from '#app';
-import { usePropertiesStore } from '~/stores/DataStore';
+import { usePropertiesStore } from '~/store/DataStore.js';
 
 const propertiesStore = usePropertiesStore();
 
