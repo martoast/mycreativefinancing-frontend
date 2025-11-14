@@ -1136,8 +1136,10 @@ const handleSubmit = async () => {
   stringifyField('tax_history');
   stringifyField('contact_recipients');
 
-  // Set created_by
+  // Set created_by from props (this is already "user" or "admin")
   propertyToSubmit.created_by = props.created_by;
+
+  console.log("created by:", props.created_by)
 
   // Clean up empty strings to null for numeric fields
   const numericFields = [
@@ -1169,12 +1171,11 @@ const handleSubmit = async () => {
   try {
     console.log('Submitting property:', propertyToSubmit);
     
-    // Use the store's method which handles /api routing automatically
     const response = await propertiesStore.store({ property: propertyToSubmit });
 
     console.log("API response:", response);
 
-    // Send webhook only for new properties
+    // Send webhook for ALL new properties (both user and admin)
     if (!(props.property && props.property.ID) && response && response.ID) {
        console.log("Sending webhook for new property ID:", response.ID);
        await sendWebHook({ ...property.value, ID: response.ID });
