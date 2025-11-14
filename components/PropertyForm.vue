@@ -630,6 +630,20 @@
                 </div>
 
                 <div class="sm:col-span-2 lg:col-span-3">
+                  <label for="docs_url" class="block text-sm font-medium text-zinc-400 mb-2">
+                    Docs URL <span class="text-accent-red">*</span>
+                  </label>
+                  <input
+                    v-model="property.docs_url"
+                    type="url"
+                    id="docs_url"
+                    required
+                    class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
+                    placeholder="https://docs.google.com/..."
+                  />
+                </div>
+
+                <div class="sm:col-span-2 lg:col-span-3">
                   <label for="price_breakdown" class="block text-sm font-medium text-zinc-400 mb-2">
                     Price Breakdown Notes <span class="text-accent-red">*</span>
                   </label>
@@ -812,6 +826,7 @@ const defaultProperty = {
   monthly_holding_cost: null,
   interest_rate: null,
   transaction_document_url: "",
+  docs_url: "",
   escrow: null,
   deal_holder: "",
   deal_holder_phone: "",
