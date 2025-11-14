@@ -36,15 +36,23 @@ export const usePropertiesStore = defineStore('properties', {
       // Determine if we're updating or creating
       const isUpdate = !!params.property.ID;
       
-      // Use the protected API endpoint with authentication
+      // Updates go to protected /api endpoint, creates go to public endpoint
       const url = isUpdate
-        ? `${config.public.apiBaseUrl}/properties/${params.property.ID}`
+        ? `${config.public.apiBaseUrl}/api/properties/${params.property.ID}`
         : `${config.public.apiBaseUrl}/properties`;
       
-      const method = isUpdate ? 'put' : 'post';
+      const method = isUpdate ? 'PUT' : 'POST';
 
-      // Use auth.fetch for protected endpoints
-      return $auth.fetch(url, {
+      // Use auth.fetch for updates (protected), regular fetch for creates (public)
+      if (isUpdate) {
+        return $auth.fetch(url, {
+          method: method,
+          body: params.property
+        });
+      }
+      
+      // Public create - no authentication needed
+      return $fetch(url, {
         method: method,
         body: params.property
       });
@@ -55,11 +63,11 @@ export const usePropertiesStore = defineStore('properties', {
       const { $auth } = useNuxtApp();
       
       // Use the protected API endpoint with authentication
-      const url = `${config.public.apiBaseUrl}/properties/${ID}`;
+      const url = `${config.public.apiBaseUrl}/api/properties/${ID}`;
       
       // Use auth.fetch for protected endpoints
       return $auth.fetch(url, {
-        method: 'delete'
+        method: 'DELETE'
       });
     }
   },
