@@ -617,13 +617,12 @@
 
                 <div class="sm:col-span-2 lg:col-span-3">
                   <label for="transaction_document_url" class="block text-sm font-medium text-zinc-400 mb-2">
-                    Transaction Document URL <span class="text-accent-red">*</span>
+                    Transaction Document URL
                   </label>
                   <input
                     v-model="property.transaction_document_url"
                     type="url"
                     id="transaction_document_url"
-                    required
                     class="w-full rounded-lg bg-zinc-800/50 border-zinc-700 text-white px-4 py-2.5 focus:ring-2 focus:ring-gold focus:border-transparent transition-all duration-200"
                     placeholder="https://docs.google.com/..."
                   />

@@ -35,6 +35,8 @@ export const usePropertiesStore = defineStore('properties', {
       
       // Determine if we're updating or creating
       const isUpdate = !!params.property.ID;
+
+      console.log("is update:", isUpdate)
       
       // Updates go to protected /api endpoint, creates go to public endpoint
       const url = isUpdate
