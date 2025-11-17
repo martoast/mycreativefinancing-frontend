@@ -71,6 +71,19 @@ export const usePropertiesStore = defineStore('properties', {
       return $auth.fetch(url, {
         method: 'DELETE'
       });
+    },
+
+    // NEW: Write property to Google Sheets
+    async writeToSheet(propertyData) {
+      const config = useRuntimeConfig();
+      const url = `${config.public.apiBaseUrl}/properties/write-to-sheet`;
+      
+      return $fetch(url, {
+        method: 'POST',
+        body: {
+          property: propertyData
+        }
+      });
     }
   },
 
