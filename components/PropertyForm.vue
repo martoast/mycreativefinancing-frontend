@@ -1018,7 +1018,8 @@
       </form>
     </div>
   </div>
-</template><script setup>
+</template>
+<script setup>
 import { ref, reactive, onMounted, watch, computed } from "vue";
 import debounce from "lodash.debounce";
 import { useRoute, useRouter, navigateTo } from "#app";
@@ -1052,8 +1053,7 @@ const apiBaseUrl = config.public.apiBaseUrl;
 
 console.log(apiBaseUrl);
 
-const manualInput = ref(true); // Set to true to enable manual input by default
-
+const manualInput = ref(false);
 const propertyNotFound = ref(false);
 const fetchComplete = ref(false);
 
@@ -1073,25 +1073,22 @@ const data = reactive({
 });
 
 const defaultProperty = {
-  address: "123 Test Street, Miami, FL 33101",
-  price: 250000,
-  bedrooms: 3,
-  bathrooms: 2.5,
-  description: "Test property for Google Sheets integration",
-  images: [
-    "https://photos.zillowstatic.com/fp/test1.jpg",
-    "https://photos.zillowstatic.com/fp/test2.jpg"
-  ],
+  address: "",
+  price: null,
+  bedrooms: null,
+  bathrooms: null,
+  description: "",
+  images: [],
   sold: false,
-  rent_zestimate: 2500,
-  zestimate: 250000,
-  property_type: "Single Family",
-  zoning: "R-1",
-  lot_size: 5000,
-  living_area: 1800,
-  year_built: 2010,
-  price_per_square_foot: 139,
-  monthly_hoa_fee: 150,
+  rent_zestimate: null,
+  zestimate: null,
+  property_type: "",
+  zoning: "",
+  lot_size: null,
+  living_area: null,
+  year_built: null,
+  price_per_square_foot: null,
+  monthly_hoa_fee: null,
   nearby_hospitals: [],
   nearby_schools: [],
   nearby_homes: [],
@@ -1105,23 +1102,23 @@ const defaultProperty = {
       image_url: "",
     },
   ],
-  purchase_price: 240000,
-  balance_to_close: 10000,
-  monthly_holding_cost: 1500,
-  interest_rate: 5.5,
+  purchase_price: null,
+  balance_to_close: null,
+  monthly_holding_cost: null,
+  interest_rate: null,
   transaction_document_url: "",
-  docs_url: "https://docs.google.com/document/d/1ajafXDP_q5mb5ZRgMZFiR8JBHqJcbdUlp7ZyR9TwQnM/edit?tab=t.0#heading=h.o2xrgbirbzuf",
-  escrow: 2000,
-  deal_holder: "John Test Dealer",
-  deal_holder_phone: "(555) 123-4567",
-  deal_holder_email: "test@dealer.com",
-  assignment_fee: 5000,
-  in_house_deal: true,
+  docs_url: "",
+  escrow: null,
+  deal_holder: "",
+  deal_holder_phone: "",
+  deal_holder_email: "",
+  assignment_fee: null,
+  in_house_deal: false,
   rental_restriction: false,
-  price_breakdown: "Purchase Price: $240,000\nBalance to Close: $10,000\nAssignment Fee: $5,000\nEscrow: $2,000",
-  additional_benefits: "Prime location, near schools and shopping centers, excellent rental potential",
+  price_breakdown: "",
+  additional_benefits: "",
   created_by: "user",
-  re_api_id: "12345678",
+  re_api_id: null,
 };
 
 const property = ref({ ...JSON.parse(JSON.stringify(defaultProperty)) });
@@ -1422,7 +1419,6 @@ const removeImage = (index) => {
     property.value.images.splice(index, 1);
   }
 };
-
 const handleSubmit = async () => {
   data.form.loading = true;
   data.errors = {};
