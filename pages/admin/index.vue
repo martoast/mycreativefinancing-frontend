@@ -42,6 +42,14 @@
           </p>
         </div>
         <div class="mt-4 sm:ml-4 sm:mt-0 sm:flex space-x-3">
+          <NuxtLink to="/admin/change-password">
+            <button
+              type="button"
+              class="block rounded-md bg-gray-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+            >
+              Change Password
+            </button>
+          </NuxtLink>
           <button
             @click="openEmailModal"
             type="button"
