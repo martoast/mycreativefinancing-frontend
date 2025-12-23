@@ -42,6 +42,14 @@
           </p>
         </div>
         <div class="mt-4 sm:ml-4 sm:mt-0 sm:flex space-x-3">
+          <NuxtLink to="/admin/deleted-properties">
+            <button
+              type="button"
+              class="block rounded-md bg-red-800 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-800"
+            >
+              Deleted Properties
+            </button>
+          </NuxtLink>
           <NuxtLink to="/admin/change-password">
             <button
               type="button"
